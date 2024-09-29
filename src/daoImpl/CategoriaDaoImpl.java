@@ -6,14 +6,15 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Categoria;
 
-public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
+//public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
+public class CategoriaDaoImpl {
 
     
     public CategoriaDaoImpl() {
         
     }
 
-    @Override
+//    @Override
     public int obtenerId(String texto) {
         int id = -1;
         try {
@@ -26,7 +27,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return id;
     }
 
-    @Override
+//    @Override
     public String obtenerNombre(int id) {
         String nombre = "";
         try {
@@ -39,7 +40,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return nombre;
     }
 
-    @Override
+//    @Override
     public boolean agregar(Categoria obj) {
         try {
             
@@ -52,7 +53,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean actualizar(Categoria obj) {
         try {
             
@@ -65,7 +66,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean eliminar(Categoria obj) {
         try {
             
@@ -78,7 +79,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return false;
     }
 
-    @Override
+//    @Override
     public List<Categoria> listar() {
         List<Categoria> lista = new ArrayList<>();
         try {
@@ -92,7 +93,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return lista;
     }
 
-    @Override
+//    @Override
     public List<Categoria> listar(String texto) {
         List<Categoria> lista = new ArrayList<>();
         try {
@@ -106,7 +107,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return lista;
     }
 
-    @Override
+//    @Override
     public int total() {
         int totalRegistros = 0;
         try {

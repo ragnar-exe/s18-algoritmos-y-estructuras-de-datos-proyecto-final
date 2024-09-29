@@ -51,7 +51,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
         return false;
     }
 
-    @Override
+//    @Override
     public List<Contiene> listar() {
         List<Contiene> lista = new ArrayList<>();
         try {
@@ -65,7 +65,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
         return lista;
     }
 
-    @Override
+//    @Override
     public List<Contiene> listar(String texto) {
         List<Contiene> lista = new ArrayList<>();
         try {
@@ -90,6 +90,16 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
             
         }
         return totalRegistros;
+    }
+
+    @Override
+    public int obtenerIdAutoincrement() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void agregarCodigo(int codigo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

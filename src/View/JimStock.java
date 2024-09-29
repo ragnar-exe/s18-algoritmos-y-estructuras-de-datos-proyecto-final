@@ -34,13 +34,13 @@ public class JimStock extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         crudContiene = new ContieneDaoImpl();
-        iDaoProducto = new ProductoDaoImpl();
+//        iDaoProducto = new ProductoDaoImpl();
         producto = new ProductoDaoImpl();
-        iDaoCategoria = new CategoriaDaoImpl();
-        iDaoMarca = new MarcaDaoImpl();
+//        iDaoCategoria = new CategoriaDaoImpl();
+//        iDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
         iDaoColor = new ColorDaoImpl();
-        iDaoTalla = new TallaDaoImpl();
+//        iDaoTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         limpiarTabla();
         listarStockProductos();
@@ -48,17 +48,17 @@ public class JimStock extends javax.swing.JInternalFrame {
 
     private void listarStockProductos() {
         modelo = (DefaultTableModel) tblStockProducto.getModel();
-        for (Contiene c : crudContiene.listar("ordenar")) {
-            filaDatos[0] = c.getIdContiene();
-            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
-            filaDatos[2] = iDaoCategoria.obtenerNombre(producto.obtenerIdForeignKey(c.getIdProducto()));
-            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
-            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
-            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
-            filaDatos[6] = c.getPrecio();
-            filaDatos[7] = c.getStock();
-            modelo.addRow(filaDatos);
-        }
+//        for (Contiene c : crudContiene.listar("ordenar")) {
+//            filaDatos[0] = c.getIdContiene();
+//            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
+//            filaDatos[2] = iDaoCategoria.obtenerNombre(producto.obtenerIdForeignKey(c.getIdProducto()));
+//            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
+//            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
+//            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
+//            filaDatos[6] = c.getPrecio();
+//            filaDatos[7] = c.getStock();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudContiene.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -143,18 +143,18 @@ public class JimStock extends javax.swing.JInternalFrame {
             listarStockProductos();
             lblMensaje.setText("");
         } else {
-            for (Contiene co : crudContiene.listar(valorBuscar)) {
-                filaDatos[0] = co.getIdContiene();
-                filaDatos[1] = iDaoProducto.obtenerNombre(co.getIdProducto());
-                filaDatos[2] = iDaoCategoria.obtenerNombre(producto.obtenerIdForeignKey(co.getIdProducto()));
-                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
-                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
-                filaDatos[5] = iDaoColor.obtenerNombre(co.getIdColor());
-                filaDatos[6] = co.getPrecio();
-                filaDatos[7] = co.getStock();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Contiene co : crudContiene.listar(valorBuscar)) {
+//                filaDatos[0] = co.getIdContiene();
+//                filaDatos[1] = iDaoProducto.obtenerNombre(co.getIdProducto());
+//                filaDatos[2] = iDaoCategoria.obtenerNombre(producto.obtenerIdForeignKey(co.getIdProducto()));
+//                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
+//                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
+//                filaDatos[5] = iDaoColor.obtenerNombre(co.getIdColor());
+//                filaDatos[6] = co.getPrecio();
+//                filaDatos[7] = co.getStock();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
     }//GEN-LAST:event_txtBuscarKeyReleased

@@ -25,8 +25,8 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[5];
-        crudProveedor = new ProveedorDaoImpl();
-        crudPersona = new PersonaDaoImpl();
+//        crudProveedor = new ProveedorDaoImpl();
+//        crudPersona = new PersonaDaoImpl();
         modelo = new DefaultTableModel();
         limpiarTabla();
         listarProveedores();

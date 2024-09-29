@@ -20,7 +20,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[3];
-        crudTalla = new TallaDaoImpl();
+//        crudTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         listarTallas();
         habilitarCampo(false);
@@ -30,12 +30,12 @@ public class JimTalla extends javax.swing.JInternalFrame {
     
     private void listarTallas() {
         modelo = (DefaultTableModel) tblTalla.getModel();
-        for (Talla t : crudTalla.listar()) {
-            filaDatos[0] = t.getIdTalla();
-            filaDatos[1] = t.getNumero();
-            filaDatos[2] = t.getDescripcion();
-            modelo.addRow(filaDatos);
-        }
+//        for (Talla t : crudTalla.listar()) {
+//            filaDatos[0] = t.getIdTalla();
+//            filaDatos[1] = t.getNumero();
+//            filaDatos[2] = t.getDescripcion();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudTalla.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -207,13 +207,13 @@ public class JimTalla extends javax.swing.JInternalFrame {
             listarTallas();
             lblMensaje.setText("");
         } else {
-            for (Talla ta : crudTalla.listar(valorBuscar)) {
-                filaDatos[0] = ta.getIdTalla();
-                filaDatos[1] = ta.getNumero();
-                filaDatos[2] = ta.getDescripcion();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Talla ta : crudTalla.listar(valorBuscar)) {
+//                filaDatos[0] = ta.getIdTalla();
+//                filaDatos[1] = ta.getNumero();
+//                filaDatos[2] = ta.getDescripcion();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         habilitarCampo(false);

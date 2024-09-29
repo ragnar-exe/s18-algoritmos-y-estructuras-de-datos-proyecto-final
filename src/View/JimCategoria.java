@@ -20,7 +20,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-        crudCategoria = new CategoriaDaoImpl();
+//        crudCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         listarCategorias();
         habilitarCampo(false);
@@ -30,11 +30,11 @@ public class JimCategoria extends javax.swing.JInternalFrame {
 
     private void listarCategorias() {
         modelo = (DefaultTableModel) tblCategoria.getModel();
-        for (Categoria c : crudCategoria.listar()) {
-            filaDatos[0] = c.getIdCategoria();
-            filaDatos[1] = c.getNombre();
-            modelo.addRow(filaDatos);
-        }
+//        for (Categoria c : crudCategoria.listar()) {
+//            filaDatos[0] = c.getIdCategoria();
+//            filaDatos[1] = c.getNombre();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudCategoria.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -308,12 +308,12 @@ public class JimCategoria extends javax.swing.JInternalFrame {
             listarCategorias();
             lblMensaje.setText("");
         } else {
-            for (Categoria ca : crudCategoria.listar(valorBuscar)) {
-                filaDatos[0] = ca.getIdCategoria();
-                filaDatos[1] = ca.getNombre();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Categoria ca : crudCategoria.listar(valorBuscar)) {
+//                filaDatos[0] = ca.getIdCategoria();
+//                filaDatos[1] = ca.getNombre();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");

@@ -20,7 +20,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-        crudMarca = new MarcaDaoImpl();
+//        crudMarca = new MarcaDaoImpl();
         modelo = new DefaultTableModel();
         listarMarcas();
         habilitarCampo(false);
@@ -30,11 +30,11 @@ public class JimMarca extends javax.swing.JInternalFrame {
 
     private void listarMarcas() {
         modelo = (DefaultTableModel) tblMarca.getModel();
-        for (Marca m : crudMarca.listar()) {
-            filaDatos[0] = m.getIdMarca();
-            filaDatos[1] = m.getNombre();
-            modelo.addRow(filaDatos);
-        }
+//        for (Marca m : crudMarca.listar()) {
+//            filaDatos[0] = m.getIdMarca();
+//            filaDatos[1] = m.getNombre();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudMarca.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -292,12 +292,12 @@ public class JimMarca extends javax.swing.JInternalFrame {
             listarMarcas();
             lblMensaje.setText("");
         } else {
-            for (Marca ma : crudMarca.listar(valorBuscar)) {
-                filaDatos[0] = ma.getIdMarca();
-                filaDatos[1] = ma.getNombre();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Marca ma : crudMarca.listar(valorBuscar)) {
+//                filaDatos[0] = ma.getIdMarca();
+//                filaDatos[1] = ma.getNombre();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");

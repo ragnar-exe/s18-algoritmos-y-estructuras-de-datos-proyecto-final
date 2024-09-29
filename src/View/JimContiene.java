@@ -37,12 +37,12 @@ public class JimContiene extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         crudContiene = new ContieneDaoImpl();
-        iDaoProducto = new ProductoDaoImpl();
-        iDaoCategoria = new CategoriaDaoImpl();
-        iDaoMarca = new MarcaDaoImpl();
+//        iDaoProducto = new ProductoDaoImpl();
+//        iDaoCategoria = new CategoriaDaoImpl();
+//        iDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
         iDaoColor = new ColorDaoImpl();
-        iDaoTalla = new TallaDaoImpl();
+//        iDaoTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         cargarProductos();
         cargarMarcas();
@@ -65,38 +65,38 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private void cargarMarcas() {
         cboMarca.addItem("Seleccionar");
-        for (Marca m : iDaoMarca.listar()) {
-            cboMarca.addItem(m.getNombre());
-        }
+//        for (Marca m : iDaoMarca.listar()) {
+//            cboMarca.addItem(m.getNombre());
+//        }
     }
 
     private void cargarTallas() {
         cboTalla.addItem("Seleccionar");
-        for (Talla c : iDaoTalla.listar()) {
-            cboTalla.addItem(String.valueOf(c.getNumero()));
-        }
+//        for (Talla c : iDaoTalla.listar()) {
+//            cboTalla.addItem(String.valueOf(c.getNumero()));
+//        }
     }
 
     private void cargarColores() {
         cboColor.addItem("Seleccionar");
-        for (Color c : iDaoColor.listar()) {
-            cboColor.addItem(c.getNombre());
-        }
+//        for (Color c : iDaoColor.listar()) {
+//            cboColor.addItem(c.getNombre());
+//        }
     }
 
     private void listarStockProductos() {
         modelo = (DefaultTableModel) tblStockProducto.getModel();
-        for (Contiene c : crudContiene.listar()) {
-            filaDatos[0] = c.getIdContiene();
-            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
-            filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(c.getIdProducto()));
-            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
-            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
-            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
-            filaDatos[6] = c.getPrecio();
-            filaDatos[7] = c.getStock();
-            modelo.addRow(filaDatos);
-        }
+//        for (Contiene c : crudContiene.listar()) {
+//            filaDatos[0] = c.getIdContiene();
+//            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
+//            filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(c.getIdProducto()));
+//            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
+//            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
+//            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
+//            filaDatos[6] = c.getPrecio();
+//            filaDatos[7] = c.getStock();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudContiene.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -498,18 +498,18 @@ public class JimContiene extends javax.swing.JInternalFrame {
             listarStockProductos();
             lblMensaje.setText("");
         } else {
-            for (Contiene co : crudContiene.listar(valorBuscar)) {
-                filaDatos[0] = co.getIdContiene();
-                filaDatos[1] = iDaoProducto.obtenerNombre(co.getIdProducto());
-                filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(co.getIdProducto()));
-                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
-                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
-                filaDatos[5] = iDaoColor.obtenerNombre(co.getIdColor());
-                filaDatos[6] = co.getPrecio();
-                filaDatos[7] = co.getStock();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Contiene co : crudContiene.listar(valorBuscar)) {
+//                filaDatos[0] = co.getIdContiene();
+//                filaDatos[1] = iDaoProducto.obtenerNombre(co.getIdProducto());
+//                filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(co.getIdProducto()));
+//                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
+//                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
+//                filaDatos[5] = iDaoColor.obtenerNombre(co.getIdColor());
+//                filaDatos[6] = co.getPrecio();
+//                filaDatos[7] = co.getStock();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         limpiarCampos();

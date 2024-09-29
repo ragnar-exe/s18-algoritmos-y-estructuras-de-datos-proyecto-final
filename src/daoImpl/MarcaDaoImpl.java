@@ -6,12 +6,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Marca;
 
-public class MarcaDaoImpl implements IDaoExtendido<Marca> {
+public class MarcaDaoImpl {
 
     public MarcaDaoImpl() {
     }
 
-    @Override
+//    @Override
     public int obtenerId(String texto) {
         int id = -1;
         try {
@@ -24,7 +24,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return id;
     }
 
-    @Override
+//    @Override
     public String obtenerNombre(int id) {
         String nombre = "";
         try {
@@ -37,7 +37,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return nombre;
     }
 
-    @Override
+//    @Override
     public boolean agregar(Marca obj) {
         try {
             
@@ -50,7 +50,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean actualizar(Marca obj) {
         try {
             
@@ -63,7 +63,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean eliminar(Marca obj) {
         try {
             
@@ -76,7 +76,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return false;
     }
 
-    @Override
+//    @Override
     public List<Marca> listar() {
         List<Marca> lista = new ArrayList<>();
         try {
@@ -90,7 +90,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return lista;
     }
 
-    @Override
+//    @Override
     public List<Marca> listar(String texto) {
         List<Marca> lista = new ArrayList<>();
         try {
@@ -104,7 +104,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return lista;
     }
 
-    @Override
+//    @Override
     public int total() {
         int totalRegistros = 0;
         try {

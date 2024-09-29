@@ -7,8 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Color;
 
 public class JimColor extends javax.swing.JInternalFrame {
-
-    private IDaoGenerico<Color> crudColor;
+    private ColorDaoImpl crudColor = new ColorDaoImpl();
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idColor;
@@ -20,7 +19,6 @@ public class JimColor extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-        crudColor = new ColorDaoImpl();
         modelo = new DefaultTableModel();
         listarColores();
         habilitarCampo(false);
@@ -31,9 +29,11 @@ public class JimColor extends javax.swing.JInternalFrame {
     private void listarColores() {
         modelo = (DefaultTableModel) tblColor.getModel();
         for (Color c : crudColor.listar()) {
-            filaDatos[0] = c.getIdColor();
-            filaDatos[1] = c.getNombre();
-            modelo.addRow(filaDatos);
+            if(c != null) {
+                filaDatos[0] = c.getIdColor();
+                filaDatos[1] = c.getNombre();
+                modelo.addRow(filaDatos);
+            }
         }
         if (crudColor.total() > 1) {
             txtBuscar.setEnabled(true);
@@ -182,6 +182,7 @@ public class JimColor extends javax.swing.JInternalFrame {
         txtBuscar.setEnabled(true);
         tblColor.clearSelection();
         guardar = false;
+        lblMensaje.setText("");
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -198,13 +199,19 @@ public class JimColor extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo el color.");
                 }
             } else {
-                if (crudColor.agregar(new Color(title))) {
-                    lblMensaje.setText("Se agrego correctamente el color.");
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
+                if (crudColor.obtenerId(title) == -1) {
+                    if(crudColor.agregar(new Color(crudColor.obtenerIdAutoincrement(), title))) {
+                        lblMensaje.setText("Se agrego correctamente el color.");
+                        crudColor.agregarCodigo(crudColor.obtenerIdAutoincrement());
+                        habilitarCampo(false);
+                        registroBotones(false);
+                        crudBotones(false);
+                    } else {
+                        lblMensaje.setText("No se agrego el color.");
+                    }
                 } else {
-                    lblMensaje.setText("No se agrego el color.");
+                    txtNombre.requestFocus();
+                    lblMensaje.setText("No se agrego el color porque color ya existe.");
                 }
             }
             tblColor.clearSelection();
@@ -290,12 +297,12 @@ public class JimColor extends javax.swing.JInternalFrame {
             listarColores();
             lblMensaje.setText("");
         } else {
-            for (Color co : crudColor.listar(valorBuscar)) {
-                filaDatos[0] = co.getIdColor();
-                filaDatos[1] = co.getNombre();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Color co : crudColor.listar(valorBuscar)) {
+//                filaDatos[0] = co.getIdColor();
+//                filaDatos[1] = co.getNombre();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");

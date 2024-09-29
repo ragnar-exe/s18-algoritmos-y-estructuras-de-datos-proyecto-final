@@ -23,8 +23,8 @@ public class JimProducto extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[4];
-        crudProducto = new ProductoDaoImpl();
-        iDaoCategoria = new CategoriaDaoImpl();
+//        crudProducto = new ProductoDaoImpl();
+//        iDaoCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         cargarCategorias();
         listarProductos();
@@ -35,9 +35,9 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
     private void cargarCategorias() {
         cboCategoria.addItem("Seleccionar");
-        for (Categoria c : iDaoCategoria.listar()) {
-            cboCategoria.addItem(c.getNombre());
-        }
+//        for (Categoria c : iDaoCategoria.listar()) {
+//            cboCategoria.addItem(c.getNombre());
+//        }
     }
 
     private void limpiarTabla() {
@@ -48,13 +48,13 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
     private void listarProductos() {
         modelo = (DefaultTableModel) tblProducto.getModel();
-        for (Producto p : crudProducto.listar()) {
-            filaDatos[0] = p.getIdProducto();
-            filaDatos[1] = iDaoCategoria.obtenerNombre(p.getIdCategoria());
-            filaDatos[2] = p.getNombre();
-            filaDatos[3] = p.getDescripcion();
-            modelo.addRow(filaDatos);
-        }
+//        for (Producto p : crudProducto.listar()) {
+//            filaDatos[0] = p.getIdProducto();
+//            filaDatos[1] = iDaoCategoria.obtenerNombre(p.getIdCategoria());
+//            filaDatos[2] = p.getNombre();
+//            filaDatos[3] = p.getDescripcion();
+//            modelo.addRow(filaDatos);
+//        }
         if (crudProducto.total() > 1) {
             buscarCampo(true);
         } else {
@@ -381,14 +381,14 @@ public class JimProducto extends javax.swing.JInternalFrame {
             listarProductos();
             lblMensaje.setText("");
         } else {
-            for (Producto pr : crudProducto.listar(valorBuscar)) {
-                filaDatos[0] = pr.getIdProducto();
-                filaDatos[1] = iDaoCategoria.obtenerNombre(pr.getIdCategoria());
-                filaDatos[2] = pr.getNombre();
-                filaDatos[3] = pr.getDescripcion();
-                modelo.addRow(filaDatos);
-                n++;
-            }
+//            for (Producto pr : crudProducto.listar(valorBuscar)) {
+//                filaDatos[0] = pr.getIdProducto();
+//                filaDatos[1] = iDaoCategoria.obtenerNombre(pr.getIdCategoria());
+//                filaDatos[2] = pr.getNombre();
+//                filaDatos[3] = pr.getDescripcion();
+//                modelo.addRow(filaDatos);
+//                n++;
+//            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");

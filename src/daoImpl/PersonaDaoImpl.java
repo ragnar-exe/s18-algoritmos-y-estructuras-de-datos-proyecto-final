@@ -5,12 +5,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Persona;
 
-public class PersonaDaoImpl implements IDaoExtendido<Persona>{
+public class PersonaDaoImpl {
 
     public PersonaDaoImpl() {
     }
 
-    @Override
+//    @Override
     public int obtenerId(String texto) {
         int id = -1;
         try {
@@ -23,12 +23,12 @@ public class PersonaDaoImpl implements IDaoExtendido<Persona>{
         return id;
     }
 
-    @Override
+//    @Override
     public String obtenerNombre(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
+//    @Override
     public boolean agregar(Persona obj) {
         try {
            
@@ -41,7 +41,7 @@ public class PersonaDaoImpl implements IDaoExtendido<Persona>{
         return false;
     }
 
-    @Override
+//    @Override
     public boolean actualizar(Persona obj) {
         try {
             
@@ -54,7 +54,7 @@ public class PersonaDaoImpl implements IDaoExtendido<Persona>{
         return false;
     }
 
-    @Override
+//    @Override
     public boolean eliminar(Persona obj) {
         try {
            
@@ -67,17 +67,17 @@ public class PersonaDaoImpl implements IDaoExtendido<Persona>{
         return false;
     }
 
-    @Override
+//    @Override
     public List<Persona> listar() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
+//    @Override
     public List<Persona> listar(String texto) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
+//    @Override
     public int total() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
