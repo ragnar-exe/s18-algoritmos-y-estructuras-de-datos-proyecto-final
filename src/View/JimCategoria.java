@@ -1,16 +1,14 @@
 package View;
 
-import dao.IDaoGenerico;
 import daoImpl.CategoriaDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Categoria;
 
 public class JimCategoria extends javax.swing.JInternalFrame {
-
     private CategoriaDaoImpl crudCategoria;
     private DefaultTableModel modelo;
-    private Object[] filaDatos;
+    private final Object[] filaDatos;
     private int idCategoria;
     private boolean guardar = false;
 
@@ -206,7 +204,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                     crudBotones(false);
                     guardar = false;
                 } else {
-                    lblMensaje.setText("No se actualizo la categoria.");
+                    lblMensaje.setText("No se actualizo la categoria ya exite.");
                 }
             } else {
                 if (crudCategoria.obtenerId(title) == -1) {
@@ -223,7 +221,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                 } else {
                     lblMensaje.setText("La categoria ya existe.");
                     txtNombre.requestFocus();
-                }
+                } 
             }
             tblCategoria.clearSelection();
             limpiarTabla();
@@ -294,11 +292,9 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                 if (crudCategoria.eliminar(new Categoria(idCategoria, crudCategoria.obtenerNombre(idCategoria)))) {
                     lblMensaje.setText("Se eliminó correctamente la categoria seleccionada.");
                 } else {
-                    lblMensaje.setText("No se pudo eliminar la categoria seleccionada.");
+                    lblMensaje.setText("El registro NO se pudo eliminar");
                 }
             }
-            limpiarTabla();
-            listarCategorias();
             registroBotones(false);
             crudBotones(false);
             txtNombre.setText("");

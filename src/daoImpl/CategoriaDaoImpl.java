@@ -10,7 +10,6 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
     int[] idCategoria = new int[200];
 
     public CategoriaDaoImpl() {
-
     }
 
     @Override
@@ -91,5 +90,4 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
     public int total() {
         return categorias.size();
     }
-
 }
