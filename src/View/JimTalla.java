@@ -1,6 +1,5 @@
 package View;
 
-import dao.IDaoGenerico;
 import daoImpl.TallaDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -8,7 +7,7 @@ import model.Talla;
 
 public class JimTalla extends javax.swing.JInternalFrame {
     
-    private IDaoGenerico<Talla> crudTalla;
+    private TallaDaoImpl crudTalla;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idTalla;
@@ -20,7 +19,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[3];
-//        crudTalla = new TallaDaoImpl();
+        crudTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         listarTallas();
         habilitarCampo(false);
@@ -30,12 +29,16 @@ public class JimTalla extends javax.swing.JInternalFrame {
     
     private void listarTallas() {
         modelo = (DefaultTableModel) tblTalla.getModel();
-//        for (Talla t : crudTalla.listar()) {
-//            filaDatos[0] = t.getIdTalla();
-//            filaDatos[1] = t.getNumero();
-//            filaDatos[2] = t.getDescripcion();
-//            modelo.addRow(filaDatos);
-//        }
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 5; j++) {
+                if(crudTalla.listar(i, j) != null) {
+                    filaDatos[0] = crudTalla.listar(i, j).getIdTalla();
+                    filaDatos[1] = crudTalla.listar(i, j).getNumero();
+                    filaDatos[2] = crudTalla.listar(i, j).getDescripcion();
+                    modelo.addRow(filaDatos);
+                }
+            }
+        }
         if (crudTalla.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -61,10 +64,13 @@ public class JimTalla extends javax.swing.JInternalFrame {
     }
     
     private void habilitarCampo(boolean f) {
-        txtNumero.setText("");
-        taDescripcion.setText("");
-        taDescripcion.setEnabled(f);
+        cboDescripcion.setEnabled(f);
         txtNumero.setEnabled(f);
+    }
+    
+    private void limpiarCampo(){
+        txtNumero.setText("");
+        cboDescripcion.setSelectedIndex(0);
     }
     
     @SuppressWarnings("unchecked")
@@ -74,8 +80,6 @@ public class JimTalla extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        taDescripcion = new javax.swing.JTextArea();
         btnGuardar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -87,6 +91,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         txtBuscar = new javax.swing.JTextField();
         txtNumero = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
+        cboDescripcion = new javax.swing.JComboBox<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -101,12 +106,6 @@ public class JimTalla extends javax.swing.JInternalFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel10.setText("Descripcion:");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 150, -1, 30));
-
-        taDescripcion.setColumns(20);
-        taDescripcion.setRows(5);
-        jScrollPane2.setViewportView(taDescripcion);
-
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, 280, -1));
 
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnGuardar.setText("Guardar");
@@ -124,7 +123,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 190, 80, 31));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 190, 80, 30));
 
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -133,7 +132,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 190, -1, 31));
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 190, -1, 31));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Buscar:");
@@ -185,12 +184,17 @@ public class JimTalla extends javax.swing.JInternalFrame {
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 230, 340, 30));
 
+        cboDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboDescripcion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Bebe", "Niño", "Adolescente", "Adulto" }));
+        getContentPane().add(cboDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 152, 180, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         crudBotones(false);
         registroBotones(false);
+        limpiarCampo();
         habilitarCampo(false);
         txtBuscar.setEnabled(true);
         tblTalla.clearSelection();
@@ -230,7 +234,11 @@ public class JimTalla extends javax.swing.JInternalFrame {
             habilitarCampo(false);
             idTalla = Integer.parseInt(tblTalla.getValueAt(fila, 0).toString());
             txtNumero.setText(tblTalla.getValueAt(fila, 1).toString());
-            taDescripcion.setText(tblTalla.getValueAt(fila,2).toString());
+            if(tblTalla.getValueAt(fila, 2).toString().isEmpty()) {
+                cboDescripcion.setSelectedIndex(0);
+            } else {
+                cboDescripcion.setSelectedItem(tblTalla.getValueAt(fila,2));
+            }
             lblMensaje.setText("");
             registroBotones(false);
             crudBotones(true);
@@ -241,6 +249,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         byte numero;
+        String descripcion= "";
         try {
             numero = Byte.parseByte(txtNumero.getText().strip());
         } catch (Exception e) {
@@ -252,9 +261,14 @@ public class JimTalla extends javax.swing.JInternalFrame {
             return;
         }
         if (numero > 0 && numero <= 127) {
+            descripcion = cboDescripcion.getSelectedItem().toString();
+            if(descripcion.equalsIgnoreCase("Seleccionar")) {
+                descripcion = "";
+            }
             if (guardar) {
-                if (crudTalla.actualizar(new Talla(idTalla, numero, taDescripcion.getText().strip()))) {
+                if (crudTalla.actualizar(new Talla(idTalla, numero, descripcion))) {
                     lblMensaje.setText("Se actualizo correctamente la talla.");
+                    limpiarCampo();
                     habilitarCampo(false);
                     registroBotones(false);
                     crudBotones(false);
@@ -263,13 +277,20 @@ public class JimTalla extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo la talla.");
                 }
             } else {
-                if (crudTalla.agregar(new Talla(numero, taDescripcion.getText().strip()))) {
-                    lblMensaje.setText("Se agrego correctamente la talla.");
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
+                if (crudTalla.obtenerId(String.valueOf(numero)) == -1) {
+                    if (crudTalla.agregar(new Talla(crudTalla.obtenerIdAutoincrement(),numero, descripcion))) {
+                        crudTalla.agregarCodigo(crudTalla.obtenerIdAutoincrement());
+                        lblMensaje.setText("Se agrego correctamente la talla.");
+                        limpiarCampo();
+                        habilitarCampo(false);
+                        registroBotones(false);
+                        crudBotones(false);
+                    } else {
+                        lblMensaje.setText("No se agrego la talla.");
+                    }
                 } else {
-                    lblMensaje.setText("No se agrego la talla.");
+                    txtNumero.requestFocus();
+                    lblMensaje.setText("La talla ya existe.");
                 }
             }
             tblTalla.clearSelection();
@@ -298,8 +319,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         guardar = true;
-        txtNumero.setEnabled(true);
-        taDescripcion.setEnabled(true);
+        habilitarCampo(true);
         registroBotones(true);
         crudBotones(false);
         btnNuevo.setEnabled(false);
@@ -335,14 +355,13 @@ public class JimTalla extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cboDescripcion;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblMensaje;
-    private javax.swing.JTextArea taDescripcion;
     private javax.swing.JTable tblTalla;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtNumero;

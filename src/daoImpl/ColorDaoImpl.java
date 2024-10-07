@@ -1,13 +1,9 @@
 package daoImpl;
 
 import dao.IDaoExtendido;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
 import model.Color;
 
 public class ColorDaoImpl implements IDaoExtendido<Color> {
-
     Color[] colores = new Color[100];
     int[] idColores = new int[colores.length * 2];
 
@@ -70,22 +66,12 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
 
     @Override
     public boolean actualizar(Color obj) {
-//        for (int i = 0; i < colores.length; i++) {
-//            if(obtenerId(obj.getNombre()) == obj.getIdColor()) {
-//                if(colores[i] != null && colores[i].getIdColor() == obj.getIdColor()) {
-//                    colores[i] = obj;
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
         for (int i = 0; i < colores.length; i++) {
             if (colores[i] != null && colores[i].getNombre().equalsIgnoreCase(obj.getNombre()) && colores[i].getIdColor() != obj.getIdColor()) {
-                return false; // Ya existe un color con el mismo nombre
+                return false; 
             }
         }
 
-        // Proceder con la actualización si no hay conflictos de nombre
         for (int i = 0; i < colores.length; i++) {
             if (colores[i] != null && colores[i].getIdColor() == obj.getIdColor()) {
                 colores[i] = obj;
