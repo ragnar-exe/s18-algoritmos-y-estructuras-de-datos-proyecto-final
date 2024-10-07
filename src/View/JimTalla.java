@@ -6,7 +6,6 @@ import javax.swing.table.DefaultTableModel;
 import model.Talla;
 
 public class JimTalla extends javax.swing.JInternalFrame {
-    
     private TallaDaoImpl crudTalla;
     private DefaultTableModel modelo;
     private Object[] filaDatos;

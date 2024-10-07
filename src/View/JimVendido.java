@@ -1,18 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package View;
 
-/**
- *
- * @author Victor
- */
+import javax.swing.JDesktopPane;
+
+
 public class JimVendido extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form JimVendidos
-     */
+//    public static JDesktopPane jDesktopPane_menu;
     public JimVendido() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;

@@ -1,18 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package View;
 
-/**
- *
- * @author LAB-USR-PIUR-A301
- */
-public class JimCliente extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form JimCliente
-     */
+public class JimCliente extends javax.swing.JInternalFrame {
     public JimCliente() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;

@@ -1,6 +1,5 @@
 package dao;
 
-import java.util.List;
 
 public interface IDaoGenerico<T> {
     public int obtenerIdAutoincrement();

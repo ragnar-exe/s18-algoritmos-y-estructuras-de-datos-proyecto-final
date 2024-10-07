@@ -87,7 +87,6 @@ public class TallaDaoImpl implements IDaoExtendido<Talla>{
                 }
             }
         }
-
         return false;
     }
 

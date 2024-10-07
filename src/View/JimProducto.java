@@ -1,6 +1,5 @@
 package View;
 
-import dao.IDaoExtendido;
 import daoImpl.CategoriaDaoImpl;
 import daoImpl.ProductoDaoImpl;
 import javax.swing.JOptionPane;
@@ -10,9 +9,9 @@ import model.Producto;
 
 public class JimProducto extends javax.swing.JInternalFrame {
 
-    private IDaoExtendido<Producto> crudProducto;
+    private ProductoDaoImpl crudProducto;
     private DefaultTableModel modelo;
-    private IDaoExtendido<Categoria> iDaoCategoria;
+    private CategoriaDaoImpl IDaoCategoria = new CategoriaDaoImpl();
     private Object[] filaDatos;
     private int idProducto;
     private boolean guardar = false;
@@ -23,8 +22,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[4];
-//        crudProducto = new ProductoDaoImpl();
-//        iDaoCategoria = new CategoriaDaoImpl();
+        crudProducto = new ProductoDaoImpl();
         modelo = new DefaultTableModel();
         cargarCategorias();
         listarProductos();
@@ -34,10 +32,31 @@ public class JimProducto extends javax.swing.JInternalFrame {
     }
 
     private void cargarCategorias() {
-        cboCategoria.addItem("Seleccionar");
-//        for (Categoria c : iDaoCategoria.listar()) {
-//            cboCategoria.addItem(c.getNombre());
+//        cboCategoria.addItem("Seleccionar");
+//        System.out.println("aaaaaaaaaaa");
+//        for (Categoria ca : IDaoCategoria.listar()) {
+//            if (ca != null) {
+//                cboCategoria.addItem(ca.getNombre());
+//                System.out.println(""+ca.getNombre());
+//            }
 //        }
+// Limpiar el JComboBox antes de agregar nuevos elementos
+        cboCategoria.removeAllItems();
+
+        // Agregar la opción por defecto
+        cboCategoria.addItem("Seleccionar");
+
+        // Verificar que IDaoCategoria no sea nulo y listar las categorías
+        if (IDaoCategoria != null) {
+            for (Categoria ca : IDaoCategoria.listar()) {
+                if (ca != null) {
+                    cboCategoria.addItem(ca.getNombre());
+                    System.out.println(ca.getNombre());
+                }
+            }
+        } else {
+            System.out.println("IDaoCategoria es nulo.");
+        }
     }
 
     private void limpiarTabla() {
@@ -250,7 +269,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
                 cboCategoria.requestFocus();
                 return;
             }
-            int idCategoria = iDaoCategoria.obtenerId(cboCategoria.getSelectedItem().toString());
+            int idCategoria = IDaoCategoria.obtenerId(cboCategoria.getSelectedItem().toString());
             if (guardar) {
                 if (crudProducto.actualizar(new Producto(idProducto, title, descripcion, idCategoria))) {
                     lblMensaje.setText("Se actualizo correctamente el producto con id " + idProducto + ".");

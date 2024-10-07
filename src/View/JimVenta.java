@@ -1,26 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package View;
 
-import static View.FrmMenu.jDesktopPane_menu;
 import javax.swing.JDesktopPane;
 
-/**
- *
- * @author Victor
- */
 public class JimVenta extends javax.swing.JInternalFrame {
-    
     public static JDesktopPane jDesktopPane_menu;
-
     public JimVenta() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto-106);
-        
     }
 
     /**

@@ -6,7 +6,7 @@ import model.Color;
 public class ColorDaoImpl implements IDaoExtendido<Color> {
     Color[] colores = new Color[100];
     int[] idColores = new int[colores.length * 2];
-
+    
     public ColorDaoImpl() {
     }
 
