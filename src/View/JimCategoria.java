@@ -295,7 +295,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
                 if (crudCategoria.eliminar(new Categoria(idCategoria))) {
                     limpiarTabla();
-                    listarCategorias();
+                    listarCategorias();  
                     lblMensaje.setText("El registro se eliminó correctamente");
                 } else {
                     lblMensaje.setText("El registro NO se pudo eliminar");

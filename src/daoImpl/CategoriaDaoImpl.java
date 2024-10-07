@@ -91,7 +91,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
     }
 
     @Override
-    public int total() {
+    public int total() {  
          return categorias.size();
     }
 }
