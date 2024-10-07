@@ -1,6 +1,5 @@
 package View;
 
-import dao.IDaoGenerico;
 import daoImpl.ColorDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -210,8 +209,8 @@ public class JimColor extends javax.swing.JInternalFrame {
                         lblMensaje.setText("No se agrego el color.");
                     }
                 } else {
-                    txtNombre.requestFocus();
                     lblMensaje.setText("No se agrego el color porque color ya existe.");
+                    txtNombre.requestFocus();
                 }
             }
             tblColor.clearSelection();

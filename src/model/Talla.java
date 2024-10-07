@@ -16,15 +16,6 @@ public class Talla {
         this.numero = numero;
     }
 
-    public Talla(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    
-    public Talla(byte numero, String descripcion) {
-        this.numero = numero;
-        this.descripcion = descripcion;
-    }
-
     public Talla(int idTalla, byte numero, String descripcion) {
         this.idTalla = idTalla;
         this.numero = numero;
