@@ -8,9 +8,10 @@ import model.Categoria;
 
 public class JimCategoria extends javax.swing.JInternalFrame {
 
-    private IDaoGenerico<Categoria> crudCategoria;
+//    private IDaoGenerico<Categoria> crudCategoria;
+    private CategoriaDaoImpl crudCategoria = new CategoriaDaoImpl();
     private DefaultTableModel modelo;
-    private Object[] filaDatos;
+    private final Object[] filaDatos;
     private int idCategoria;
     private boolean guardar = false;
 
@@ -20,7 +21,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-//        crudCategoria = new CategoriaDaoImpl();
+       crudCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         listarCategorias();
         habilitarCampo(false);
@@ -30,11 +31,11 @@ public class JimCategoria extends javax.swing.JInternalFrame {
 
     private void listarCategorias() {
         modelo = (DefaultTableModel) tblCategoria.getModel();
-//        for (Categoria c : crudCategoria.listar()) {
-//            filaDatos[0] = c.getIdCategoria();
-//            filaDatos[1] = c.getNombre();
-//            modelo.addRow(filaDatos);
-//        }
+        for (Categoria c : crudCategoria.listar()) {
+            filaDatos[0] = c.getIdCategoria();
+            filaDatos[1] = c.getNombre();
+            modelo.addRow(filaDatos);
+        }
         if (crudCategoria.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -205,17 +206,25 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                     crudBotones(false);
                     guardar = false;
                 } else {
-                    lblMensaje.setText("No se actualizo la categoria.");
+                    lblMensaje.setText("No se actualizo la categoria ya exite.");
                 }
             } else {
-                if (crudCategoria.agregar(new Categoria(title))) {
+                if (crudCategoria.obtenerId(title)==-1) {              
+                     if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerIdAutoincrement(),title))) {
                     lblMensaje.setText("Se agrego correctamente la categoria.");
+                     crudCategoria.agregarCodigo(crudCategoria.obtenerIdAutoincrement());
+                    limpiarCampo();
                     habilitarCampo(false);
                     registroBotones(false);
                     crudBotones(false);
+                  
                 } else {
                     lblMensaje.setText("No se agrego la categoria.");
                 }
+                }else{
+                    lblMensaje.setText("Esta Categoria ya exite");
+                    txtNombre.requestFocus();
+                }  
             }
             tblCategoria.clearSelection();
             limpiarTabla();
@@ -278,19 +287,21 @@ public class JimCategoria extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+
         int fila = tblCategoria.getSelectedRow();
         if (fila < 0) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
         } else {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
                 if (crudCategoria.eliminar(new Categoria(idCategoria))) {
-                    lblMensaje.setText("Se eliminó correctamente la categoria seleccionada.");
+                    limpiarTabla();
+                    listarCategorias();  
+                    lblMensaje.setText("El registro se eliminó correctamente");
                 } else {
-                    lblMensaje.setText("No se pudo eliminar la categoria seleccionada.");
+                    lblMensaje.setText("El registro NO se pudo eliminar");
                 }
+                System.out.println(""+crudCategoria.eliminar(new Categoria(idCategoria, crudCategoria.obtenerNombre(idCategoria))));
             }
-            limpiarTabla();
-            listarCategorias();
             registroBotones(false);
             crudBotones(false);
             txtNombre.setText("");
