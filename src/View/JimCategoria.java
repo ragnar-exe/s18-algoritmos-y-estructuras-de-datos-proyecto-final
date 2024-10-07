@@ -8,7 +8,7 @@ import model.Categoria;
 
 public class JimCategoria extends javax.swing.JInternalFrame {
 
-    private IDaoGenerico<Categoria> crudCategoria;
+    private CategoriaDaoImpl crudCategoria;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idCategoria;
@@ -20,7 +20,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-//        crudCategoria = new CategoriaDaoImpl();
+        crudCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         listarCategorias();
         habilitarCampo(false);
@@ -30,11 +30,11 @@ public class JimCategoria extends javax.swing.JInternalFrame {
 
     private void listarCategorias() {
         modelo = (DefaultTableModel) tblCategoria.getModel();
-//        for (Categoria c : crudCategoria.listar()) {
-//            filaDatos[0] = c.getIdCategoria();
-//            filaDatos[1] = c.getNombre();
-//            modelo.addRow(filaDatos);
-//        }
+        for (Categoria c : crudCategoria.listar()) {
+            filaDatos[0] = c.getIdCategoria();
+            filaDatos[1] = c.getNombre();
+            modelo.addRow(filaDatos);
+        }
         if (crudCategoria.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
@@ -190,6 +190,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         habilitarCampo(false);
         buscarCampo(true);
         tblCategoria.clearSelection();
+        lblMensaje.setText("");
         guardar = false;
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -208,13 +209,20 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo la categoria.");
                 }
             } else {
-                if (crudCategoria.agregar(new Categoria(title))) {
-                    lblMensaje.setText("Se agrego correctamente la categoria.");
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
+                if (crudCategoria.obtenerId(title) == -1) {
+                    if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerIdAutoincrement(),title))) {
+                        crudCategoria.agregarCodigo(crudCategoria.obtenerIdAutoincrement());
+                        lblMensaje.setText("Se agrego correctamente la categoria.");
+                        limpiarCampo();
+                        habilitarCampo(false);
+                        registroBotones(false);
+                        crudBotones(false);
+                    } else {
+                        lblMensaje.setText("No se agrego la categoria.");
+                    }
                 } else {
-                    lblMensaje.setText("No se agrego la categoria.");
+                    lblMensaje.setText("La categoria ya existe.");
+                    txtNombre.requestFocus();
                 }
             }
             tblCategoria.clearSelection();
@@ -283,7 +291,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
         } else {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
-                if (crudCategoria.eliminar(new Categoria(idCategoria))) {
+                if (crudCategoria.eliminar(new Categoria(idCategoria, crudCategoria.obtenerNombre(idCategoria)))) {
                     lblMensaje.setText("Se eliminó correctamente la categoria seleccionada.");
                 } else {
                     lblMensaje.setText("No se pudo eliminar la categoria seleccionada.");
