@@ -2,12 +2,14 @@ package View;
 
 import daoImpl.CategoriaDaoImpl;
 import daoImpl.ProductoDaoImpl;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Categoria;
 import model.Producto;
 
 public class JimProducto extends javax.swing.JInternalFrame {
+
     private final ProductoDaoImpl crudProducto;
     private DefaultTableModel modelo;
     private final CategoriaDaoImpl IDaoCategoria;
@@ -265,7 +267,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo el producto.");
                 }
             } else {
-                if (crudProducto.agregar(new Producto(crudProducto.obtenerUltimoId(),title, descripcion, idCategoria))) {
+                if (crudProducto.agregar(new Producto(crudProducto.obtenerUltimoId(), title, descripcion, idCategoria))) {
                     lblMensaje.setText("Se agrego correctamente el producto.");
                     limpiarCampos();
                     habilitarCampo(false);
@@ -374,26 +376,35 @@ public class JimProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        limpiarTabla();
-        int n = 0;
-        modelo = (DefaultTableModel) tblProducto.getModel();
-        String valorBuscar = txtBuscar.getText().strip();
+        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
+        int n = 0;       // Contador de resultados
+        modelo = (DefaultTableModel) tblProducto.getModel();  // Obtiene el modelo de la tabla
+        String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
+
         if (valorBuscar.equalsIgnoreCase("")) {
+            // Si el campo de búsqueda está vacío, muestra todos los productos
             limpiarTabla();
-            listarProductos();
+            listarProductos();  // Método para listar todos los productos
             lblMensaje.setText("");
         } else {
-//            for (Producto pr : crudProducto.listar(valorBuscar)) {
-//                filaDatos[0] = pr.getIdProducto();
-//                filaDatos[1] = IDaoCategoria.obtenerNombre(pr.getIdCategoria());
-//                filaDatos[2] = pr.getNombre();
-//                filaDatos[3] = pr.getDescripcion();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
-            lblMensaje.setText(n + " registros encontrados.");
+            // Llama al método buscar() de ProductoDaoImpl
+            List<Producto> productosEncontrados = crudProducto.buscar(valorBuscar);
+
+            // Itera sobre los productos encontrados y los agrega a la tabla
+            for (Producto pr : productosEncontrados) {
+                Object[] filaDatos = new Object[4];  // Crea un array para los datos de cada fila
+                filaDatos[0] = pr.getIdProducto();   // ID del producto
+                filaDatos[1] = IDaoCategoria.obtenerNombre(pr.getIdCategoria());  // ID de la categoría (puedes adaptarlo si tienes el nombre de la categoría en otro lugar)
+                filaDatos[2] = pr.getNombre();       // Nombre del producto
+                filaDatos[3] = pr.getDescripcion();  // Descripción del producto
+
+                modelo.addRow(filaDatos);  // Agrega los datos a la tabla
+                n++;  // Incrementa el contador de resultados
+            }
+
+            lblMensaje.setText(n + " registros encontrados.");  // Muestra el número de resultados encontrados
         }
-        txtNombre.setText("");
+        txtNombre.setText("");  // Limpia el campo de nombre
     }//GEN-LAST:event_txtBuscarKeyReleased
 
 
