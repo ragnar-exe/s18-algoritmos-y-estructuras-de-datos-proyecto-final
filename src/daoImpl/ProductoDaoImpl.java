@@ -3,6 +3,7 @@ package daoImpl;
 import dao.IDaoExtendido;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import model.Categoria;
 import model.Producto;
 
 
@@ -19,7 +21,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     private static final String FILE_PRODUCTOS = "productos.txt";
     private static final String FILE_IDSPRODUCTOS = "idsproductos.txt";
     public ProductoDaoImpl() {
-        
+        cargarDatos();
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSPRODUCTOS))) {
                 writer.write("0\n");
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idscategoria", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsproductos", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -69,7 +71,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de categorias", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de productos", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return id;
     }
@@ -80,7 +82,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSPRODUCTOS, true))) {
             codigos.write(obj.getIdProducto()+ "\n");
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error al agregar el codigo", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return productos.add(obj);
@@ -120,12 +122,34 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
 
     @Override
     public void guardarEnArchivo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRODUCTOS))) {
+            for (Producto producto : productos) {
+                writer.write(producto.getIdProducto()+";"+producto.getNombre()+";"+producto.getDescripcion()+";"+producto.getIdCategoria());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Error al guardar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void cargarDatos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        File fileProductos = new File(FILE_PRODUCTOS);
+        if (fileProductos.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileProductos))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(";");
+                    int id = Integer.parseInt(datos[0]);
+                    String nombre = datos[1];
+                    String descripcion = datos[2];
+                    int idCategoria = Integer.parseInt(datos[3]);
+                    productos.add(new Producto(id, nombre,descripcion,idCategoria));
+                }
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
 }

@@ -8,11 +8,10 @@ import model.Categoria;
 import model.Producto;
 
 public class JimProducto extends javax.swing.JInternalFrame {
-
-    private ProductoDaoImpl crudProducto;
+    private final ProductoDaoImpl crudProducto;
     private DefaultTableModel modelo;
-    private CategoriaDaoImpl IDaoCategoria = new CategoriaDaoImpl();
-    private Object[] filaDatos;
+    private final CategoriaDaoImpl IDaoCategoria;
+    private final Object[] filaDatos;
     private int idProducto;
     private boolean guardar = false;
 
@@ -23,6 +22,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[4];
         crudProducto = new ProductoDaoImpl();
+        IDaoCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         cargarCategorias();
         listarProductos();
@@ -32,31 +32,14 @@ public class JimProducto extends javax.swing.JInternalFrame {
     }
 
     private void cargarCategorias() {
-//        cboCategoria.addItem("Seleccionar");
-//        System.out.println("aaaaaaaaaaa");
-//        for (Categoria ca : IDaoCategoria.listar()) {
-//            if (ca != null) {
-//                cboCategoria.addItem(ca.getNombre());
-//                System.out.println(""+ca.getNombre());
-//            }
-//        }
-// Limpiar el JComboBox antes de agregar nuevos elementos
         cboCategoria.removeAllItems();
-
-        // Agregar la opción por defecto
         cboCategoria.addItem("Seleccionar");
-
-        // Verificar que IDaoCategoria no sea nulo y listar las categorías
-        if (IDaoCategoria != null) {
-            for (Categoria ca : IDaoCategoria.listar()) {
-                if (ca != null) {
-                    cboCategoria.addItem(ca.getNombre());
-                    System.out.println(ca.getNombre());
-                }
+        for (Categoria ca : IDaoCategoria.listar()) {
+            if (ca != null) {
+                cboCategoria.addItem(ca.getNombre());
             }
-        } else {
-            System.out.println("IDaoCategoria es nulo.");
         }
+
     }
 
     private void limpiarTabla() {
@@ -67,13 +50,13 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
     private void listarProductos() {
         modelo = (DefaultTableModel) tblProducto.getModel();
-//        for (Producto p : crudProducto.listar()) {
-//            filaDatos[0] = p.getIdProducto();
-//            filaDatos[1] = iDaoCategoria.obtenerNombre(p.getIdCategoria());
-//            filaDatos[2] = p.getNombre();
-//            filaDatos[3] = p.getDescripcion();
-//            modelo.addRow(filaDatos);
-//        }
+        for (Producto p : crudProducto.listar()) {
+            filaDatos[0] = p.getIdProducto();
+            filaDatos[1] = IDaoCategoria.obtenerNombre(p.getIdCategoria());
+            filaDatos[2] = p.getNombre();
+            filaDatos[3] = p.getDescripcion();
+            modelo.addRow(filaDatos);
+        }
         if (crudProducto.total() > 1) {
             buscarCampo(true);
         } else {
@@ -282,7 +265,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo el producto.");
                 }
             } else {
-                if (crudProducto.agregar(new Producto(title, descripcion, idCategoria))) {
+                if (crudProducto.agregar(new Producto(crudProducto.obtenerUltimoId(),title, descripcion, idCategoria))) {
                     lblMensaje.setText("Se agrego correctamente el producto.");
                     limpiarCampos();
                     habilitarCampo(false);
@@ -402,7 +385,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         } else {
 //            for (Producto pr : crudProducto.listar(valorBuscar)) {
 //                filaDatos[0] = pr.getIdProducto();
-//                filaDatos[1] = iDaoCategoria.obtenerNombre(pr.getIdCategoria());
+//                filaDatos[1] = IDaoCategoria.obtenerNombre(pr.getIdCategoria());
 //                filaDatos[2] = pr.getNombre();
 //                filaDatos[3] = pr.getDescripcion();
 //                modelo.addRow(filaDatos);

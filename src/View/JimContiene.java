@@ -21,7 +21,7 @@ import dao.IDaoObtenerId;
 public class JimContiene extends javax.swing.JInternalFrame {
 
     private IDaoGenerico<Contiene> crudContiene;
-    private IDaoObtenerId<Producto> iDaoProducto;
+    private ProductoDaoImpl IDaoProducto;
     private IDaoExtendido<Categoria> iDaoCategoria;
     private IDaoExtendido<Color> iDaoColor;
     private IDaoExtendido<Marca> iDaoMarca;
@@ -37,7 +37,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         crudContiene = new ContieneDaoImpl();
-//        iDaoProducto = new ProductoDaoImpl();
+        IDaoProducto = new ProductoDaoImpl();
 //        iDaoCategoria = new CategoriaDaoImpl();
 //        iDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
@@ -58,7 +58,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private void cargarProductos() {
         cboProducto.addItem("Seleccionar");
-        for (Producto c : iDaoProducto.listar()) {
+        for (Producto c : IDaoProducto.listar()) {
             cboProducto.addItem(c.getNombre());
         }
     }
@@ -97,11 +97,11 @@ public class JimContiene extends javax.swing.JInternalFrame {
 //            filaDatos[7] = c.getStock();
 //            modelo.addRow(filaDatos);
 //        }
-        if (crudContiene.total() > 1) {
-            txtBuscar.setEnabled(true);
-        } else {
-            txtBuscar.setEnabled(false);
-        }
+//        if (crudContiene.total() > 1) {
+//            txtBuscar.setEnabled(true);
+//        } else {
+//            txtBuscar.setEnabled(false);
+//        }
     }
 
     private void limpiarTabla() {
@@ -372,7 +372,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
             return;
         }
         
-        int idProducto = iDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
+        int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
         int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
         int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
         int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
@@ -500,7 +500,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
         } else {
 //            for (Contiene co : crudContiene.listar(valorBuscar)) {
 //                filaDatos[0] = co.getIdContiene();
-//                filaDatos[1] = iDaoProducto.obtenerNombre(co.getIdProducto());
+//                filaDatos[1] = IDaoProducto.obtenerNombre(co.getIdProducto());
 //                filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(co.getIdProducto()));
 //                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
 //                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
