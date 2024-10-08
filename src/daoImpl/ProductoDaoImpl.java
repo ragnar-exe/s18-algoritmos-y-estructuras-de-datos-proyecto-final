@@ -15,11 +15,12 @@ import javax.swing.JOptionPane;
 import model.Categoria;
 import model.Producto;
 
+public class ProductoDaoImpl implements IDaoExtendido<Producto> {
 
-public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     LinkedList<Producto> productos = new LinkedList<>();
     private static final String FILE_PRODUCTOS = "productos.txt";
     private static final String FILE_IDSPRODUCTOS = "idsproductos.txt";
+
     public ProductoDaoImpl() {
         cargarDatos();
     }
@@ -76,11 +77,10 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
         return id;
     }
 
-
     @Override
     public boolean agregar(Producto obj) {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSPRODUCTOS, true))) {
-            codigos.write(obj.getIdProducto()+ "\n");
+            codigos.write(obj.getIdProducto() + "\n");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -91,11 +91,11 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     @Override
     public boolean actualizar(Producto obj) {
         for (Producto producto : productos) {
-            if (producto.getNombre().equalsIgnoreCase(obj.getNombre()) && producto.getIdProducto()!= obj.getIdProducto()) {
-                return false; 
+            if (producto.getNombre().equalsIgnoreCase(obj.getNombre()) && producto.getIdProducto() != obj.getIdProducto()) {
+                return false;
             }
         }
-        
+
         for (int i = 0; i < productos.size(); i++) {
             if (productos.get(i).getIdProducto() == obj.getIdProducto()) {
                 productos.set(i, obj);
@@ -107,9 +107,9 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
 
     @Override
     public boolean eliminar(Producto obj) {
-       return productos.remove(obj);
+        return productos.remove(obj);
     }
-    
+
     public List<Producto> listar() {
         guardarEnArchivo();
         return productos;
@@ -124,7 +124,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRODUCTOS))) {
             for (Producto producto : productos) {
-                writer.write(producto.getIdProducto()+";"+producto.getNombre()+";"+producto.getDescripcion()+";"+producto.getIdCategoria());
+                writer.write(producto.getIdProducto() + ";" + producto.getNombre() + ";" + producto.getDescripcion() + ";" + producto.getIdCategoria());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -144,12 +144,35 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
                     String nombre = datos[1];
                     String descripcion = datos[2];
                     int idCategoria = Integer.parseInt(datos[3]);
-                    productos.add(new Producto(id, nombre,descripcion,idCategoria));
+                    productos.add(new Producto(id, nombre, descripcion, idCategoria));
                 }
             } catch (IOException e) {
                 JOptionPane.showConfirmDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public List<Producto> buscar(String texto) {
+        List<Producto> resultado = new LinkedList<>();
+        String valorBuscar = texto.toLowerCase();  // Convierte el texto de búsqueda a minúsculas para comparación
+        IDaoExtendido<Categoria> idaoCategoria = new CategoriaDaoImpl();
+
+        for (Producto producto : productos) {
+            // Verifica si el texto coincide con el ID o nombre del producto
+            boolean coincideConId = String.valueOf(producto.getIdProducto()).contains(valorBuscar);
+            boolean coincideConNombre = producto.getNombre().toLowerCase().contains(valorBuscar);
+            boolean coincideConDescripcion = producto.getDescripcion().toLowerCase().contains(valorBuscar);
+
+            // También puedes agregar la verificación de idCategoria si lo deseas
+            String categoria = idaoCategoria.obtenerNombre(producto.getIdCategoria());
+            boolean coincideConCategoria = String.valueOf(categoria).contains(valorBuscar);
+
+            // Si coincide con alguna de las condiciones, agregar a la lista de resultados
+            if (coincideConId || coincideConNombre || coincideConDescripcion || coincideConCategoria) {
+                resultado.add(producto);
+            }
+        }
+        return resultado;
     }
 
 }

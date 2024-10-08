@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Victor/Desktop/u/2024-agosto/algoritmos-y-estructura-de-datos/avance01/S18AlgoritmosYEstructuraDeDatosProyectoFinal/src/View/JimCategoria.java</file>
-            <file>file:/C:/Users/Victor/Desktop/u/2024-agosto/algoritmos-y-estructura-de-datos/avance01/S18AlgoritmosYEstructuraDeDatosProyectoFinal/src/View/JimColor.java</file>
-            <file>file:/C:/Users/Victor/Desktop/u/2024-agosto/algoritmos-y-estructura-de-datos/avance01/S18AlgoritmosYEstructuraDeDatosProyectoFinal/src/View/JimProducto.java</file>
-            <file>file:/C:/Users/Victor/Desktop/u/2024-agosto/algoritmos-y-estructura-de-datos/avance01/S18AlgoritmosYEstructuraDeDatosProyectoFinal/src/model/Producto.java</file>
+            <file>file:/C:/Users/Aldair_Suarez.MILTON/Documents/FINAL_ESTRUCTURA/s18-algoritmos-y-estructuras-de-datos-proyecto-final/src/View/JimProducto.java</file>
+            <file>file:/C:/Users/Aldair_Suarez.MILTON/Documents/FINAL_ESTRUCTURA/s18-algoritmos-y-estructuras-de-datos-proyecto-final/src/View/JimCategoria.java</file>
+            <file>file:/C:/Users/Aldair_Suarez.MILTON/Documents/FINAL_ESTRUCTURA/s18-algoritmos-y-estructuras-de-datos-proyecto-final/src/daoImpl/CategoriaDaoImpl.java</file>
+            <file>file:/C:/Users/Aldair_Suarez.MILTON/Documents/FINAL_ESTRUCTURA/s18-algoritmos-y-estructuras-de-datos-proyecto-final/src/daoImpl/ProductoDaoImpl.java</file>
+            <file>file:/C:/Users/Aldair_Suarez.MILTON/Documents/FINAL_ESTRUCTURA/s18-algoritmos-y-estructuras-de-datos-proyecto-final/src/View/FrmLogin.java</file>
         </group>
     </open-files>
 </project-private>
