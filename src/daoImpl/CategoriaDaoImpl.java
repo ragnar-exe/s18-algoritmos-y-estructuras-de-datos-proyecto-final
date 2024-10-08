@@ -117,7 +117,33 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
     public int total() {
         return categorias.size();
     }
+    public List<Categoria> filtrarCategoria(String valorBuscar) {
+     List<Categoria> categoriaFiltradas = new ArrayList<>();
+        valorBuscar = valorBuscar.toLowerCase();
 
+        if (!Files.exists(Paths.get(FILE_CATEGORIAS))) {
+            return null;
+        }
+
+        try (BufferedReader archivo = new BufferedReader(new FileReader(FILE_CATEGORIAS))) {
+            String linea;
+            while ((linea = archivo.readLine()) != null) {
+                String[] parts = linea.strip().split(";");
+                if (parts.length >=2 && (parts[0].toLowerCase().contains(valorBuscar)||
+                                          parts[1].toLowerCase().contains(valorBuscar) )) {
+                    Categoria categoria = new Categoria(
+                        Integer.parseInt(parts[0]), // ID
+                        parts[1] // Nombre
+                               );
+                    categoriaFiltradas.add(categoria);
+                }
+            }
+              } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return categoriaFiltradas;
+    }
     @Override
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CATEGORIAS))) {

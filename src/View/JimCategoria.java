@@ -313,12 +313,12 @@ public class JimCategoria extends javax.swing.JInternalFrame {
             listarCategorias();
             lblMensaje.setText("");
         } else {
-//            for (Categoria ca : crudCategoria.listar(valorBuscar)) {
-//                filaDatos[0] = ca.getIdCategoria();
-//                filaDatos[1] = ca.getNombre();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
+            for (Categoria ca : crudCategoria.filtrarCategoria(valorBuscar)) {
+                filaDatos[0] = ca.getIdCategoria();
+                filaDatos[1] = ca.getNombre();
+                modelo.addRow(filaDatos);
+                n++;
+            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");
