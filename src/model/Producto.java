@@ -1,6 +1,6 @@
 package model;
 
-public class Producto {
+public class Producto{
     private int idProducto;
     private String nombre;
     private String descripcion;
@@ -61,5 +61,6 @@ public class Producto {
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
     }
+    
     
 }

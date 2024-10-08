@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -178,12 +180,23 @@ public class ProductoDaoImpl implements IDaoObtenerLista<Producto> {
 
     @Override
     public List<Producto> listarOrdenarAscendete() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collections.sort(productos, Comparator.comparing(Producto::getNombre));
+        return productos;
     }
 
     @Override
     public List<Producto> listarOrdenarDescendete() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collections.sort(productos, Comparator.comparing(Producto::getNombre).reversed());
+        return productos;
     }
 
+    public List<Producto> listarOrdenarIdDescendente() {
+        Collections.sort(productos, Comparator.comparing(Producto::getIdProducto).reversed());
+        return productos;
+    }
+
+    public List<Producto> listarOrdenarIdAscendente() {
+        Collections.sort(productos, Comparator.comparing(Producto::getIdProducto));
+        return productos;
+    }
 }

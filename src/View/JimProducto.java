@@ -2,6 +2,7 @@ package View;
 
 import daoImpl.CategoriaDaoImpl;
 import daoImpl.ProductoDaoImpl;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -94,6 +95,17 @@ public class JimProducto extends javax.swing.JInternalFrame {
         txtBuscar.setEnabled(f);
     }
 
+    private void ordenarProducto(List<Producto> productos) {
+        for (Producto p : productos) {
+            Object[] filaDatos = new Object[4];
+            filaDatos[0] = p.getIdProducto();
+            filaDatos[1] = IDaoCategoria.obtenerNombre(p.getIdCategoria());
+            filaDatos[2] = p.getNombre();
+            filaDatos[3] = p.getDescripcion();
+            modelo.addRow(filaDatos);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -118,6 +130,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         taDescripcion = new javax.swing.JTextArea();
         lblMensaje = new javax.swing.JLabel();
+        cboOrdenar = new javax.swing.JComboBox<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -230,6 +243,14 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, 420, 30));
+
+        cboOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Id producto descendente", "Ascendente", "Descendente" }));
+        cboOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboOrdenarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cboOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 210, 170, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -406,6 +427,26 @@ public class JimProducto extends javax.swing.JInternalFrame {
         txtNombre.setText("");  // Limpia el campo de nombre
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void cboOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboOrdenarActionPerformed
+        String selectedItem = cboOrdenar.getSelectedItem().toString();
+        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
+
+        // Ordenar los productos según la opción seleccionada
+        if (selectedItem.equals("Ascendente")) {
+            // Ordenar alfabéticamente ascendente
+            ordenarProducto(crudProducto.listarOrdenarAscendete());
+
+        } else if (selectedItem.equals("Descendente")) {
+            ordenarProducto(crudProducto.listarOrdenarDescendete()); // Ordenar alfabéticamente descendente
+        } else if (selectedItem.equals("Id producto descendente")) {
+            // Si se selecciona "Seleccionar", volver a listar por ID
+            ordenarProducto(crudProducto.listarOrdenarIdDescendente()); // Ordenar por ID
+        } else {
+            ordenarProducto(crudProducto.listarOrdenarIdAscendente());
+        }
+
+    }//GEN-LAST:event_cboOrdenarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -414,6 +455,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboCategoria;
+    private javax.swing.JComboBox<String> cboOrdenar;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel12;
