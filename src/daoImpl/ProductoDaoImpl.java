@@ -64,7 +64,7 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
             List<String> lines = Files.readAllLines(Paths.get(FILE_IDSPRODUCTOS));
             if (!lines.isEmpty()) {
                 try {
-                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).trim());
+                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).strip());
                     id = lastCode + 1;
                 } catch (NumberFormatException e) {
                     id = 1;

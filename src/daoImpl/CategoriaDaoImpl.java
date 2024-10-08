@@ -63,7 +63,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
             List<String> lines = Files.readAllLines(Paths.get(FILE_IDSCATEGORIAS));
             if (!lines.isEmpty()) {
                 try {
-                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).trim());
+                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).strip());
                     id = lastCode + 1;
                 } catch (NumberFormatException e) {
                     id = 1;
