@@ -199,9 +199,8 @@ public class JimColor extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudColor.obtenerId(title) == -1) {
-                    if(crudColor.agregar(new Color(crudColor.obtenerIdAutoincrement(), title))) {
+                    if(crudColor.agregar(new Color(crudColor.obtenerUltimoId(), title))) {
                         lblMensaje.setText("Se agrego correctamente el color.");
-                        crudColor.agregarCodigo(crudColor.obtenerIdAutoincrement());
                         habilitarCampo(false);
                         registroBotones(false);
                         crudBotones(false);

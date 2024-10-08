@@ -277,8 +277,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudTalla.obtenerId(String.valueOf(numero)) == -1) {
-                    if (crudTalla.agregar(new Talla(crudTalla.obtenerIdAutoincrement(),numero, descripcion))) {
-                        crudTalla.agregarCodigo(crudTalla.obtenerIdAutoincrement());
+                    if (crudTalla.agregar(new Talla(crudTalla.obtenerUltimoId(),numero, descripcion))) {
                         lblMensaje.setText("Se agrego correctamente la talla.");
                         limpiarCampo();
                         habilitarCampo(false);

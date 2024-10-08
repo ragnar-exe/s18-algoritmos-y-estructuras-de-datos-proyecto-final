@@ -1,13 +1,23 @@
 package daoImpl;
 
 import dao.IDaoExtendido;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import model.Producto;
 
 
 public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     LinkedList<Producto> productos = new LinkedList<>();
-    int[] idProductos = new int[200];
+    private static final String FILE_PRODUCTOS = "productos.txt";
+    private static final String FILE_IDSPRODUCTOS = "idsproductos.txt";
     public ProductoDaoImpl() {
         
     }
@@ -35,28 +45,44 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     }
 
     @Override
-    public int obtenerIdAutoincrement() {
-        int codigo = 0;
-        for (int i = 0; i < idProductos.length; i++) {
-            if (idProductos[i] != 0) {
-                codigo = idProductos[i];
+    public int obtenerUltimoId() {
+        int id = 1;
+
+        // Verificar si el archivo existe
+        if (!Files.exists(Paths.get(FILE_IDSPRODUCTOS))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSPRODUCTOS))) {
+                writer.write("0\n");
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idscategoria", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        return codigo + 1;
+
+        // Leer el último código del archivo
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSPRODUCTOS))) {
+            List<String> lines = Files.readAllLines(Paths.get(FILE_IDSPRODUCTOS));
+            if (!lines.isEmpty()) {
+                try {
+                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).trim());
+                    id = lastCode + 1;
+                } catch (NumberFormatException e) {
+                    id = 1;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de categorias", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return id;
     }
 
-    @Override
-    public void agregarCodigo(int codigo) {
-        for (int i = 0; i < idProductos.length; i++) {
-            if (idProductos[i] == 0) {
-                idProductos[i] = codigo;
-                return;
-            }
-        }
-    }
 
     @Override
     public boolean agregar(Producto obj) {
+        try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSPRODUCTOS, true))) {
+            codigos.write(obj.getIdProducto()+ "\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error al agregar el codigo", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         return productos.add(obj);
     }
 
@@ -81,10 +107,25 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto>{
     public boolean eliminar(Producto obj) {
        return productos.remove(obj);
     }
+    
+    public List<Producto> listar() {
+        guardarEnArchivo();
+        return productos;
+    }
 
     @Override
     public int total() {
         return productos.size();
+    }
+
+    @Override
+    public void guardarEnArchivo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void cargarDatos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

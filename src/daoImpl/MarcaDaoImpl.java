@@ -20,7 +20,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
     }
 
     @Override
-    public int obtenerIdAutoincrement() {
+    public int obtenerUltimoId() {
         int codigo = 0;
         for (int i = 0; i < idMarcas.length; i++) {
             if (idMarcas[i] != 0) {
@@ -30,15 +30,6 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         return codigo + 1;
     }
 
-    @Override
-    public void agregarCodigo(int codigo) {
-        for (int i = 0; i < idMarcas.length; i++) {
-            if (idMarcas[i] == 0) {
-                idMarcas[i] = codigo;
-                return;
-            }
-        }
-    }
 
     @Override
     public boolean agregar(Marca obj) {
@@ -57,6 +48,16 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
 
     @Override
     public int total() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void guardarEnArchivo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void cargarDatos() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

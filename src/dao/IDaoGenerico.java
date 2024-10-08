@@ -1,12 +1,11 @@
 package dao;
 
-
 public interface IDaoGenerico<T> {
-    public int obtenerIdAutoincrement();
-    public void agregarCodigo(int codigo);
+    public int obtenerUltimoId();
     public boolean agregar(T obj);
     public boolean actualizar(T obj);
     public boolean eliminar(T obj);
+    public void guardarEnArchivo();
+    public void cargarDatos();
     public int total();
-
 }

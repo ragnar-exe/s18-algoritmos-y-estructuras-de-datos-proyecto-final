@@ -11,7 +11,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
     }
 
     @Override
-    public int obtenerIdAutoincrement() {
+    public int obtenerUltimoId() {
         int codigo = 0;
         for (int i = 0; i < idColores.length; i++) {
             if (idColores[i] != 0) {
@@ -19,16 +19,6 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
             }
         }
         return codigo + 1;
-    }
-
-    @Override
-    public void agregarCodigo(int codigo) {
-        for (int i = 0; i < idColores.length; i++) {
-            if (idColores[i] == 0) {
-                idColores[i] = codigo;
-                return;
-            }
-        }
     }
 
     @Override
@@ -105,6 +95,16 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
             }
         }
         return totalRegistros;
+    }
+
+    @Override
+    public void guardarEnArchivo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void cargarDatos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

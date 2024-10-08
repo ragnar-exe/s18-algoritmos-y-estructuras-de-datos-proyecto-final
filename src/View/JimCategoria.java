@@ -208,8 +208,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudCategoria.obtenerId(title) == -1) {
-                    if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerIdAutoincrement(),title))) {
-                        crudCategoria.agregarCodigo(crudCategoria.obtenerIdAutoincrement());
+                    if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerUltimoId(),title))) {
                         lblMensaje.setText("Se agrego correctamente la categoria.");
                         limpiarCampo();
                         habilitarCampo(false);
@@ -291,6 +290,8 @@ public class JimCategoria extends javax.swing.JInternalFrame {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
                 if (crudCategoria.eliminar(new Categoria(idCategoria, crudCategoria.obtenerNombre(idCategoria)))) {
                     lblMensaje.setText("Se eliminó correctamente la categoria seleccionada.");
+                    limpiarTabla();
+                    listarCategorias();
                 } else {
                     lblMensaje.setText("El registro NO se pudo eliminar");
                 }
