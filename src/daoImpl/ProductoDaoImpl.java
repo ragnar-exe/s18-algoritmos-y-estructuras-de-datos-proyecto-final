@@ -1,6 +1,6 @@
 package daoImpl;
 
-import dao.IDaoExtendido;
+import dao.IDaoObtenerLista;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import model.Categoria;
 import model.Producto;
 
-public class ProductoDaoImpl implements IDaoExtendido<Producto> {
+public class ProductoDaoImpl implements IDaoObtenerLista<Producto> {
 
     LinkedList<Producto> productos = new LinkedList<>();
     private static final String FILE_PRODUCTOS = "productos.txt";
@@ -152,10 +152,11 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto> {
         }
     }
 
-    public List<Producto> buscar(String texto) {
+    @Override
+    public List<Producto> listar(String texto) {
         List<Producto> resultado = new LinkedList<>();
         String valorBuscar = texto.toLowerCase();  // Convierte el texto de búsqueda a minúsculas para comparación
-        IDaoExtendido<Categoria> idaoCategoria = new CategoriaDaoImpl();
+        IDaoObtenerLista<Categoria> idaoCategoria = new CategoriaDaoImpl();
 
         for (Producto producto : productos) {
             // Verifica si el texto coincide con el ID o nombre del producto
@@ -173,6 +174,16 @@ public class ProductoDaoImpl implements IDaoExtendido<Producto> {
             }
         }
         return resultado;
+    }
+
+    @Override
+    public List<Producto> listarOrdenarAscendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Producto> listarOrdenarDescendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

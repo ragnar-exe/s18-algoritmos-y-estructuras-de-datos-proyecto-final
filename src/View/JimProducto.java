@@ -380,7 +380,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
         int n = 0;       // Contador de resultados
         modelo = (DefaultTableModel) tblProducto.getModel();  // Obtiene el modelo de la tabla
         String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
-
         if (valorBuscar.equalsIgnoreCase("")) {
             // Si el campo de búsqueda está vacío, muestra todos los productos
             limpiarTabla();
@@ -388,7 +387,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
             lblMensaje.setText("");
         } else {
             // Llama al método buscar() de ProductoDaoImpl
-            List<Producto> productosEncontrados = crudProducto.buscar(valorBuscar);
+            List<Producto> productosEncontrados = crudProducto.listar(valorBuscar);
 
             // Itera sobre los productos encontrados y los agrega a la tabla
             for (Producto pr : productosEncontrados) {

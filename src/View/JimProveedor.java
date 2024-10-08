@@ -7,12 +7,12 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Persona;
 import model.Proveedor;
-import dao.IDaoObtenerId;
+import dao.IDaoObtenerLista;
 
 public class JimProveedor extends javax.swing.JInternalFrame {
 
     private DefaultTableModel modelo;
-    private IDaoObtenerId<Proveedor> crudProveedor;
+    private IDaoObtenerLista<Proveedor> crudProveedor;
     private IDaoExtendido<Persona> crudPersona;
     private Object[] filaDatos;
     private int idProveedor;
@@ -330,7 +330,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         }
         String datos = nombres+' '+apellidos;
         if (guardar) {
-            idPersona = crudProveedor.obtenerIdForeignKey(idProveedor);
+//            idPersona = crudProveedor.obtenerIdForeignKey(idProveedor);
             if ( crudPersona.actualizar(new Persona(idPersona, nombres, apellidos, correo)) && crudProveedor.actualizar(new Proveedor(idProveedor, telefono))) {
                 lblMensaje.setText("Se actualizo correctamente el proveedor con id " + idProveedor + ".");
                 limpiarCampos();

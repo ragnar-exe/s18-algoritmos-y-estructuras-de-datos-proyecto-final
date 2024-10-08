@@ -35,11 +35,11 @@ public class JimMarca extends javax.swing.JInternalFrame {
 //            filaDatos[1] = m.getNombre();
 //            modelo.addRow(filaDatos);
 //        }
-        if (crudMarca.total() > 1) {
-            txtBuscar.setEnabled(true);
-        } else {
-            txtBuscar.setEnabled(false);
-        }
+//        if (crudMarca.total() > 1) {
+//            txtBuscar.setEnabled(true);
+//        } else {
+//            txtBuscar.setEnabled(false);
+//        }
     }
 
     private void limpiarTabla() {

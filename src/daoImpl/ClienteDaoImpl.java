@@ -1,8 +1,8 @@
 package daoImpl;
 
-import dao.IDaoObtenerId;
 import java.util.List;
 import model.Cliente;
+import dao.IDaoObtenerLista;
 
 public class ClienteDaoImpl{
 

@@ -1,6 +1,6 @@
 package daoImpl;
 
-import dao.IDaoExtendido;
+import dao.IDaoObtenerLista;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Categoria;
 
-public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
+public class CategoriaDaoImpl implements IDaoObtenerLista<Categoria> {
     private ArrayList<Categoria> categorias = new ArrayList<>();
     private static final String FILE_CATEGORIAS = "categorias.txt";
     private static final String FILE_IDSCATEGORIAS = "idscategorias.txt";
@@ -108,6 +108,7 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
         return categorias.remove(obj);
     }
 
+    @Override
     public List<Categoria> listar() {
         guardarEnArchivo();
         return categorias;
@@ -117,7 +118,9 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
     public int total() {
         return categorias.size();
     }
-    public List<Categoria> filtrarCategoria(String valorBuscar) {
+    
+    @Override
+    public List<Categoria> listar(String valorBuscar) {
      List<Categoria> categoriaFiltradas = new ArrayList<>();
         valorBuscar = valorBuscar.toLowerCase();
 
@@ -172,5 +175,15 @@ public class CategoriaDaoImpl implements IDaoExtendido<Categoria> {
                 JOptionPane.showConfirmDialog(null, "Error al cargar las categorias", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    @Override
+    public List<Categoria> listarOrdenarAscendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Categoria> listarOrdenarDescendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

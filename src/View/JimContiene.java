@@ -16,7 +16,7 @@ import model.Contiene;
 import model.Marca;
 import model.Producto;
 import model.Talla;
-import dao.IDaoObtenerId;
+import dao.IDaoObtenerLista;
 
 public class JimContiene extends javax.swing.JInternalFrame {
 
