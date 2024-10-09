@@ -1,17 +1,19 @@
 package View;
 
 import daoImpl.TallaDaoImpl;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Talla;
 
 public class JimTalla extends javax.swing.JInternalFrame {
+
     private TallaDaoImpl crudTalla;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idTalla;
     private boolean guardar = false;
-    
+
     public JimTalla() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -25,12 +27,12 @@ public class JimTalla extends javax.swing.JInternalFrame {
         crudBotones(false);
         registroBotones(false);
     }
-    
+
     private void listarTallas() {
         modelo = (DefaultTableModel) tblTalla.getModel();
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 5; j++) {
-                if(crudTalla.listar(i, j) != null) {
+                if (crudTalla.listar(i, j) != null) {
                     filaDatos[0] = crudTalla.listar(i, j).getIdTalla();
                     filaDatos[1] = crudTalla.listar(i, j).getNumero();
                     filaDatos[2] = crudTalla.listar(i, j).getDescripcion();
@@ -44,34 +46,34 @@ public class JimTalla extends javax.swing.JInternalFrame {
             txtBuscar.setEnabled(false);
         }
     }
-    
+
     private void limpiarTabla() {
         modelo = (DefaultTableModel) tblTalla.getModel();
         modelo.getDataVector().removeAllElements();
         tblTalla.removeAll();
     }
-    
+
     private void registroBotones(boolean f) {
         btnGuardar.setEnabled(f);
         btnCancelar.setEnabled(f);
     }
-    
+
     private void crudBotones(boolean f) {
         btnNuevo.setEnabled(!f);
         btnEditar.setEnabled(f);
         btnEliminar.setEnabled(f);
     }
-    
+
     private void habilitarCampo(boolean f) {
         cboDescripcion.setEnabled(f);
         txtNumero.setEnabled(f);
     }
-    
-    private void limpiarCampo(){
+
+    private void limpiarCampo() {
         txtNumero.setText("");
         cboDescripcion.setSelectedIndex(0);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -91,6 +93,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         txtNumero = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
         cboDescripcion = new javax.swing.JComboBox<>();
+        cboOrdenar = new javax.swing.JComboBox<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -172,11 +175,6 @@ public class JimTalla extends javax.swing.JInternalFrame {
         });
         getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 290, 90, 29));
 
-        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarActionPerformed(evt);
-            }
-        });
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyReleased(evt);
@@ -192,6 +190,9 @@ public class JimTalla extends javax.swing.JInternalFrame {
         cboDescripcion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Bebe", "Niño", "Adolescente", "Adulto" }));
         getContentPane().add(cboDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 152, 180, 30));
 
+        cboOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Ascendente", "Descendente", "Id Descendente" }));
+        getContentPane().add(cboOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 210, 180, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -206,25 +207,38 @@ public class JimTalla extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        limpiarTabla();
-        int n = 0;
-        modelo = (DefaultTableModel) tblTalla.getModel();
-        String valorBuscar = txtBuscar.getText().strip();
+        limpiarTabla(); // Limpia la tabla antes de mostrar los resultados
+        int n = 0; // Contador de resultados
+        modelo = (DefaultTableModel) tblTalla.getModel(); // Obtiene el modelo de la tabla
+        String valorBuscar = txtBuscar.getText().strip(); // Obtiene el texto de búsqueda
+
         if (valorBuscar.equalsIgnoreCase("")) {
+            // Si el campo de búsqueda está vacío, muestra todas las tallas
             limpiarTabla();
-            listarTallas();
+            listarTallas(); // Método para listar todas las tallas
             lblMensaje.setText("");
         } else {
-//            for (Talla ta : crudTalla.listar(valorBuscar)) {
-//                filaDatos[0] = ta.getIdTalla();
-//                filaDatos[1] = ta.getNumero();
-//                filaDatos[2] = ta.getDescripcion();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
-            lblMensaje.setText(n + " registros encontrados.");
+            // Llama al método listar() de crudTalla
+            List<Talla> tallasEncontradas = crudTalla.BuscarTalla(valorBuscar); // Asegúrate de que crudTalla esté inicializado
+
+            // Verifica si la lista de tallas encontradas no es nula o vacía
+            if (tallasEncontradas != null && !tallasEncontradas.isEmpty()) {
+                // Itera sobre las tallas encontradas y las agrega a la tabla
+                for (Talla ta : tallasEncontradas) {
+                    if (ta != null) { // Comprueba que talla no sea null
+                        filaDatos[0] = ta.getIdTalla(); // ID de la talla
+                        filaDatos[1] = ta.getNumero();   // Número de la talla
+                        filaDatos[2] = ta.getDescripcion(); // Descripción de la talla
+                        modelo.addRow(filaDatos); // Agrega los datos a la tabla
+                        n++; // Incrementa el contador de resultados
+                    }
+                }
+                lblMensaje.setText(n + " registros encontrados."); // Muestra el número de resultados encontrados
+            } else {
+                lblMensaje.setText("No se encontraron registros."); // Mensaje si no hay resultados
+            }
         }
-        habilitarCampo(false);
+        habilitarCampo(false); // Deshabilita el campo si es necesario
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     private void tblTallaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTallaMouseReleased
@@ -238,10 +252,10 @@ public class JimTalla extends javax.swing.JInternalFrame {
             habilitarCampo(false);
             idTalla = Integer.parseInt(tblTalla.getValueAt(fila, 0).toString());
             txtNumero.setText(tblTalla.getValueAt(fila, 1).toString());
-            if(tblTalla.getValueAt(fila, 2).toString().isEmpty()) {
+            if (tblTalla.getValueAt(fila, 2).toString().isEmpty()) {
                 cboDescripcion.setSelectedIndex(0);
             } else {
-                cboDescripcion.setSelectedItem(tblTalla.getValueAt(fila,2));
+                cboDescripcion.setSelectedItem(tblTalla.getValueAt(fila, 2));
             }
             lblMensaje.setText("");
             registroBotones(false);
@@ -253,7 +267,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         byte numero;
-        String descripcion= "";
+        String descripcion = "";
         try {
             numero = Byte.parseByte(txtNumero.getText().strip());
         } catch (Exception e) {
@@ -266,7 +280,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         }
         if (numero > 0 && numero <= 127) {
             descripcion = cboDescripcion.getSelectedItem().toString();
-            if(descripcion.equalsIgnoreCase("Seleccionar")) {
+            if (descripcion.equalsIgnoreCase("Seleccionar")) {
                 descripcion = "";
             }
             if (guardar) {
@@ -282,7 +296,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudTalla.obtenerId(String.valueOf(numero)) == -1) {
-                    if (crudTalla.agregar(new Talla(crudTalla.obtenerUltimoId(),numero, descripcion))) {
+                    if (crudTalla.agregar(new Talla(crudTalla.obtenerUltimoId(), numero, descripcion))) {
                         lblMensaje.setText("Se agrego correctamente la talla.");
                         limpiarCampo();
                         habilitarCampo(false);
@@ -352,10 +366,6 @@ public class JimTalla extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -364,6 +374,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboDescripcion;
+    private javax.swing.JComboBox<String> cboOrdenar;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;

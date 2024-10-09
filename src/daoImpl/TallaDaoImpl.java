@@ -9,6 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import model.Talla;
@@ -198,4 +201,29 @@ public class TallaDaoImpl implements IDaoExtendido<Talla> {
     public Talla listar(int i, int j) {
         return tallas[i][j];
     }
+
+    public List<Talla> BuscarTalla(String texto) {
+        List<Talla> resultado = new LinkedList<>();
+        String valorBuscar = texto.toLowerCase(); // Convierte el texto a minúsculas para comparación
+
+        // Aquí deberías iterar sobre tu arreglo bidimensional de tallas
+        for (int i = 0; i < tallas.length; i++) {
+            for (int j = 0; j < tallas[i].length; j++) {
+                Talla talla = tallas[i][j]; // Obtén la talla
+
+                if (talla != null) { // Asegúrate de que la talla no sea nula
+                    boolean coincideConId = String.valueOf(talla.getIdTalla()).contains(valorBuscar);
+                    boolean coincideConNumero = String.valueOf(talla.getNumero()).contains(valorBuscar);
+
+                    // Si coincide con alguna de las condiciones, agregar a la lista de resultados
+                    if (coincideConId || coincideConNumero) {
+                        resultado.add(talla);
+                    }
+                }
+            }
+        }
+        return resultado; // Retorna la lista de tallas encontradas
+    }
+
+
 }
