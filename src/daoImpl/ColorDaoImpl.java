@@ -1,24 +1,56 @@
 package daoImpl;
 
 import dao.IDaoExtendido;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import javax.swing.JOptionPane;
 import model.Color;
 
 public class ColorDaoImpl implements IDaoExtendido<Color> {
+
     Color[] colores = new Color[100];
-    int[] idColores = new int[colores.length * 2];
-    
+    private static final String FILE_COLORES = "colores.txt";
+    private static final String FILE_IDSCOLORES = "idscolores.txt";
+
     public ColorDaoImpl() {
+        cargarDatos();
     }
 
     @Override
     public int obtenerUltimoId() {
-        int codigo = 0;
-        for (int i = 0; i < idColores.length; i++) {
-            if (idColores[i] != 0) {
-                codigo = idColores[i];
+        int id = 1;
+
+        // Verificar si el archivo existe
+        if (!Files.exists(Paths.get(FILE_IDSCOLORES))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSCOLORES))) {
+                writer.write("0\n");
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idscolores", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        return codigo + 1;
+
+        // Leer el último código del archivo
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSCOLORES))) {
+            List<String> lines = Files.readAllLines(Paths.get(FILE_IDSCOLORES));
+            if (!lines.isEmpty()) {
+                try {
+                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).strip());
+                    id = lastCode + 1;
+                } catch (NumberFormatException e) {
+                    id = 1;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de color", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return id;
     }
 
     @Override
@@ -48,6 +80,12 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         for (int i = 0; i < colores.length; i++) {
             if (colores[i] == null) {
                 colores[i] = obj;
+                try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCOLORES, true))) {
+                    codigos.write(obj.getIdColor() + "\n");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al agregar el codigo del color", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
                 return true;
             }
         }
@@ -58,7 +96,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
     public boolean actualizar(Color obj) {
         for (int i = 0; i < colores.length; i++) {
             if (colores[i] != null && colores[i].getNombre().equalsIgnoreCase(obj.getNombre()) && colores[i].getIdColor() != obj.getIdColor()) {
-                return false; 
+                return false;
             }
         }
 
@@ -83,6 +121,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
     }
 
     public Color[] listar() {
+        guardarEnArchivo();
         return colores;
     }
 
@@ -99,12 +138,42 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
 
     @Override
     public void guardarEnArchivo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_COLORES))) {
+            for (int i = 0; i < colores.length; i++) {
+                if (colores[i] != null) {
+                    writer.write(colores[i].getIdColor() + ";" + colores[i].getNombre());
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al guardar los colores", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void cargarDatos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        File fileColores = new File(FILE_COLORES);
+        if (fileColores.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileColores))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(";");
+                    if (datos.length == 2) {
+                        try {
+                            int id = Integer.parseInt(datos[0].strip());
+                            String nombre = datos[1].strip();
+                            agregar(new Color(id, nombre));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Error al parsear el ID del color: " + datos[0], "ERROR", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Formato de línea incorrecto: " + linea, "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al cargar los colores", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
 }
