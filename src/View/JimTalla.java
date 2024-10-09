@@ -394,7 +394,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
         // Limpiar la tabla o el componente donde mostrarás las tallas
         limpiarTabla();
 
-        if (selectedItem.equals("Ascendente")) {  // Asegúrate de que esta opción coincida con tus ítems
+        if (selectedItem.equals("Ascendente")) {  // Asegúrate de que esta opción coincida con tus ítems 
             // Aquí llamamos al método para ordenar y obtener las tallas ordenadas
             Talla[][] tallasOrdenadas = crudTalla.ordenarTallasNumero(); // Ajusta los índices según tus necesidades
             // Ahora muestra las tallas ordenadas en la interfaz
