@@ -236,7 +236,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
         if (title.length() > 0 && title.length() <= 50) {
             if (guardar) {
                 if (crudMarca.actualizar(new Marca(idMarca, title))) {
-                    lblMensaje.setText("Se actualizo correctamente la marca con ID "+idMarca+".");
+                    lblMensaje.setText("Se actualizo correctamente la marca con ID " + idMarca + ".");
                     habilitarCampo(false);
                     registroBotones(false);
                     crudBotones(false);
@@ -346,12 +346,16 @@ public class JimMarca extends javax.swing.JInternalFrame {
             listarMarcas();
             lblMensaje.setText("");
         } else {
-//            for (Marca ma : crudMarca.listar(valorBuscar)) {
-//                filaDatos[0] = ma.getIdMarca();
-//                filaDatos[1] = ma.getNombre();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
+            Nodo temp = crudMarca.inicio;
+            while (temp != null) {
+                if (String.valueOf(temp.getMarca().getIdMarca()).contains(valorBuscar) || temp.getMarca().getNombre().contains(valorBuscar)) {
+                    filaDatos[0] = temp.getMarca().getIdMarca();
+                    filaDatos[1] = temp.getMarca().getNombre();
+                    modelo.addRow(filaDatos);
+                    n++;
+                }
+                temp = temp.siguiente;
+            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");
@@ -406,7 +410,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
         if (posicion > 0) {
             if (title.length() > 0 && title.length() <= 50) {
                 if (crudMarca.obtenerId(title) == -1) {
-                    if (crudMarca.agregarPosicion(new Marca(crudMarca.obtenerUltimoId(), title), posicion-1)) {
+                    if (crudMarca.agregarPosicion(new Marca(crudMarca.obtenerUltimoId(), title), posicion - 1)) {
                         limpiarTabla();
                         listarMarcas();
                         habilitarCampo(false);
