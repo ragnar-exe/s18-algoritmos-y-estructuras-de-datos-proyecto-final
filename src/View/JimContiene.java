@@ -17,6 +17,7 @@ import model.Marca;
 import model.Producto;
 import model.Talla;
 import dao.IDaoObtenerLista;
+import model.Nodo;
 
 public class JimContiene extends javax.swing.JInternalFrame {
 
@@ -24,8 +25,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
     private ProductoDaoImpl IDaoProducto;
     private IDaoExtendido<Categoria> iDaoCategoria;
     private IDaoExtendido<Color> iDaoColor;
-    private IDaoExtendido<Marca> iDaoMarca;
-    private IDaoExtendido<Talla> iDaoTalla;
+    private MarcaDaoImpl iDaoMarca;
+    private TallaDaoImpl iDaoTalla;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idContiene;
@@ -39,10 +40,10 @@ public class JimContiene extends javax.swing.JInternalFrame {
         crudContiene = new ContieneDaoImpl();
         IDaoProducto = new ProductoDaoImpl();
 //        iDaoCategoria = new CategoriaDaoImpl();
-//        iDaoMarca = new MarcaDaoImpl();
+        iDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
         iDaoColor = new ColorDaoImpl();
-//        iDaoTalla = new TallaDaoImpl();
+        iDaoTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         cargarProductos();
         cargarMarcas();
@@ -57,6 +58,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
     }
 
     private void cargarProductos() {
+        cboProducto.removeAllItems();
         cboProducto.addItem("Seleccionar");
         for (Producto c : IDaoProducto.listar()) {
             cboProducto.addItem(c.getNombre());
@@ -64,17 +66,25 @@ public class JimContiene extends javax.swing.JInternalFrame {
     }
 
     private void cargarMarcas() {
+        cboMarca.removeAllItems();
         cboMarca.addItem("Seleccionar");
-//        for (Marca m : iDaoMarca.listar()) {
-//            cboMarca.addItem(m.getNombre());
-//        }
+        Nodo temp = iDaoMarca.inicio;
+        while (temp != null) {
+            cboMarca.addItem(temp.getMarca().getNombre());
+            temp = temp.siguiente;
+        }
     }
 
     private void cargarTallas() {
+        cboTalla.removeAllItems();
         cboTalla.addItem("Seleccionar");
-//        for (Talla c : iDaoTalla.listar()) {
-//            cboTalla.addItem(String.valueOf(c.getNumero()));
-//        }
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 5; j++) {
+                if(iDaoTalla.listar(i, j) != null) {
+                    cboTalla.addItem(String.valueOf(iDaoTalla.listar(i, j).getNumero()));
+                }
+            }
+        }
     }
 
     private void cargarColores() {
