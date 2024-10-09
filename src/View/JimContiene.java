@@ -23,8 +23,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private IDaoGenerico<Contiene> crudContiene;
     private ProductoDaoImpl IDaoProducto;
-    private IDaoExtendido<Categoria> iDaoCategoria;
-    private IDaoExtendido<Color> iDaoColor;
+    private CategoriaDaoImpl iDaoCategoria;
+    private ColorDaoImpl iDaoColor;
     private MarcaDaoImpl iDaoMarca;
     private TallaDaoImpl iDaoTalla;
     private DefaultTableModel modelo;
@@ -39,7 +39,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
         this.setSize(ancho, alto - 106);
         crudContiene = new ContieneDaoImpl();
         IDaoProducto = new ProductoDaoImpl();
-//        iDaoCategoria = new CategoriaDaoImpl();
+        iDaoCategoria = new CategoriaDaoImpl();
         iDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
         iDaoColor = new ColorDaoImpl();
@@ -88,10 +88,13 @@ public class JimContiene extends javax.swing.JInternalFrame {
     }
 
     private void cargarColores() {
+        cboColor.removeAllItems();
         cboColor.addItem("Seleccionar");
-//        for (Color c : iDaoColor.listar()) {
-//            cboColor.addItem(c.getNombre());
-//        }
+        for (Color c : iDaoColor.listar()) {
+            if (c != null) {
+                cboColor.addItem(c.getNombre());
+            }
+        }
     }
 
     private void listarStockProductos() {

@@ -237,6 +237,7 @@ public class JimColor extends javax.swing.JInternalFrame {
 
     private void tblColorMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblColorMouseReleased
         int fila = tblColor.getSelectedRow();
+        System.out.println(""+fila);
         if (fila < 0) {
             JOptionPane.showMessageDialog(null,
                     "Debe seleccionar una fila.",
