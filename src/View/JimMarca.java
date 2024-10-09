@@ -31,6 +31,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
 
     private void listarMarcas() {
         modelo = (DefaultTableModel) tblMarca.getModel();
+        crudMarca.guardarEnArchivo();
         Nodo temp = crudMarca.inicio;
         while (temp != null) {
             filaDatos[0] = temp.getMarca().getIdMarca();
@@ -200,13 +201,18 @@ public class JimMarca extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo la marca.");
                 }
             } else {
-                if (crudMarca.agregar(new Marca(title))) {
-                    lblMensaje.setText("Se agrego correctamente la marca.");
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
+                if (crudMarca.obtenerId(title) == -1) {
+                    if (crudMarca.agregar(new Marca(crudMarca.obtenerUltimoId(), title))) {
+                        lblMensaje.setText("Se agrego correctamente la marca.");
+                        habilitarCampo(false);
+                        registroBotones(false);
+                        crudBotones(false);
+                    } else {
+                        lblMensaje.setText("No se agrego la marca.");
+                    }
                 } else {
-                    lblMensaje.setText("No se agrego la marca.");
+                    txtNombre.requestFocus();
+                    lblMensaje.setText("La marca ya existe.");
                 }
             }
             tblMarca.clearSelection();

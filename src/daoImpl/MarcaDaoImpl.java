@@ -16,7 +16,7 @@ import model.Nodo;
 
 public class MarcaDaoImpl implements IDaoExtendido<Marca> {
 
-    private static final String FILE_MARCAS = "marca.txt";
+    private static final String FILE_MARCAS = "marcas.txt";
     private static final String FILE_IDSMARCAS = "idsmarcas.txt";
     public Nodo inicio;
     public Nodo fin;
@@ -32,7 +32,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         int id = -1;
         Nodo temp = inicio;
         while (temp != null) {
-            if (temp.getMarca().getNombre() == texto) {
+            if (temp.getMarca().getNombre().equalsIgnoreCase(texto)) {
                 id = temp.getMarca().getIdMarca();
             }
             temp = temp.getSiguiente();
@@ -85,17 +85,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
 
     @Override
     public boolean agregar(Marca obj) {
-        // Agregar al inicio
-        Nodo nuevo = new Nodo(obj, inicio);
-        inicio = nuevo;
-        if (fin == null) {
-            fin = inicio;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean agregarFinal(Marca obj) {
+        // Agregar al final
         boolean guardar = false;
         Nodo nuevo = new Nodo(obj, null);
         if (inicio == null) {
@@ -107,14 +97,54 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
             fin = nuevo;
             guardar = true;
         }
+        if (guardar) {
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
+                codigos.write(obj.getIdMarca() + "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
         return guardar;
+    }
+
+    public boolean agregarInicio(Marca obj) {
+        Nodo nuevo = new Nodo(obj, inicio);
+        inicio = nuevo;
+        if (fin == null) {
+            fin = inicio;
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
+                codigos.write(obj.getIdMarca() + "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean agregarPosicion(Marca obj) {
+        Nodo nuevo = new Nodo(obj, inicio);
+        inicio = nuevo;
+        if (fin == null) {
+            fin = inicio;
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
+                codigos.write(obj.getIdMarca() + "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean actualizar(Marca obj) {
         Nodo temp = inicio;
         while (temp != null) {
-            if (temp.getMarca()== obj) {
+            if (temp.getMarca() == obj) {
                 return true;
             }
             temp = temp.getSiguiente();
@@ -124,7 +154,8 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
 
     @Override
     public boolean eliminar(Marca obj) {
-        // Eliminar inicio
+        // Eliminar por posición (ID)
+        // Elimina inicio -- modificar
         if (inicio == null || fin == null) {
             return false;
         } else {
@@ -133,6 +164,15 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         }
     }
     
+    public boolean eliminarInicio(Marca obj) {
+        if (inicio == null || fin == null) {
+            return false;
+        } else {
+            inicio = inicio.siguiente;
+            return true;
+        }
+    }
+
     public boolean eliminarFinal(Marca obj) {
         boolean eliminar = false;
         if (inicio == null || fin == null) {
