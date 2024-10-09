@@ -1,11 +1,13 @@
 package View;
 
 import daoImpl.CategoriaDaoImpl;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Categoria;
 
 public class JimCategoria extends javax.swing.JInternalFrame {
+
     private CategoriaDaoImpl crudCategoria;
     private DefaultTableModel modelo;
     private final Object[] filaDatos;
@@ -40,6 +42,14 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         }
     }
 
+    private void OrdenarCategorias(List<Categoria> categorias) {
+        for (Categoria c : categorias) {
+            filaDatos[0] = c.getIdCategoria();
+            filaDatos[1] = c.getNombre();
+            modelo.addRow(filaDatos);
+        }
+    }
+
     private void limpiarTabla() {
         modelo = (DefaultTableModel) tblCategoria.getModel();
         modelo.getDataVector().removeAllElements();
@@ -56,7 +66,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         btnEditar.setEnabled(f);
         btnEliminar.setEnabled(f);
     }
-    
+
     private void limpiarCampo() {
         txtNombre.setText("");
     }
@@ -64,7 +74,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
     private void habilitarCampo(boolean f) {
         txtNombre.setEnabled(f);
     }
-    
+
     private void buscarCampo(boolean f) {
         txtBuscar.setText("");
         txtBuscar.setEnabled(f);
@@ -87,6 +97,8 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         txtNombre = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        cboOrdenar = new javax.swing.JComboBox<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -176,6 +188,19 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 270, 324, 30));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel1.setText("Ordenar por:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 130, -1, 30));
+
+        cboOrdenar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Ascendente", "Descendente", "Id_Descendente" }));
+        cboOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboOrdenarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cboOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 130, 190, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -197,7 +222,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         if (title.length() > 0 && title.length() <= 100) {
             if (guardar) {
                 if (crudCategoria.actualizar(new Categoria(idCategoria, title))) {
-                    lblMensaje.setText("Se actualizo correctamente la categoria con id "+idCategoria+".");
+                    lblMensaje.setText("Se actualizo correctamente la categoria con id " + idCategoria + ".");
                     limpiarCampo();
                     habilitarCampo(false);
                     registroBotones(false);
@@ -208,7 +233,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudCategoria.obtenerId(title) == -1) {
-                    if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerUltimoId(),title))) {
+                    if (crudCategoria.agregar(new Categoria(crudCategoria.obtenerUltimoId(), title))) {
                         lblMensaje.setText("Se agrego correctamente la categoria.");
                         limpiarCampo();
                         habilitarCampo(false);
@@ -220,7 +245,7 @@ public class JimCategoria extends javax.swing.JInternalFrame {
                 } else {
                     lblMensaje.setText("La categoria ya existe.");
                     txtNombre.requestFocus();
-                } 
+                }
             }
             tblCategoria.clearSelection();
             limpiarTabla();
@@ -324,6 +349,20 @@ public class JimCategoria extends javax.swing.JInternalFrame {
         txtNombre.setText("");
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void cboOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboOrdenarActionPerformed
+        String ordenar = cboOrdenar.getSelectedItem().toString().strip();
+        limpiarTabla();
+        if ("Ascendente".equals(ordenar)) {
+            OrdenarCategorias(crudCategoria.listarOrdenarAscendete());
+        } else if ("Descendente".equals(ordenar)) {
+            OrdenarCategorias(crudCategoria.listarOrdenarDescendete());
+        } else if ("Id_Descendente".equals(ordenar)) {
+            OrdenarCategorias(crudCategoria.ordenarCatPorIdDESC());
+        } else {
+            OrdenarCategorias(crudCategoria.ordenarCatPorIdASCD());
+        }
+    }//GEN-LAST:event_cboOrdenarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -331,6 +370,8 @@ public class JimCategoria extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cboOrdenar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;

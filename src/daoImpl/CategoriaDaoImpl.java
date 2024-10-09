@@ -1,6 +1,8 @@
 package daoImpl;
 
 import dao.IDaoObtenerLista;
+import java.util.Collections;
+import java.util.Comparator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -179,11 +181,22 @@ public class CategoriaDaoImpl implements IDaoObtenerLista<Categoria> {
 
     @Override
     public List<Categoria> listarOrdenarAscendete() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collections.sort(categorias, Comparator.comparing(Categoria::getNombre));
+        return categorias;
     }
 
     @Override
     public List<Categoria> listarOrdenarDescendete() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Collections.sort(categorias, Comparator.comparing(Categoria::getNombre).reversed());
+        return categorias;
+    }
+    
+    public List<Categoria> ordenarCatPorIdASCD() {
+        Collections.sort(categorias, Comparator.comparing(Categoria::getIdCategoria));
+        return categorias;
+    }
+    public List<Categoria> ordenarCatPorIdDESC() {
+        Collections.sort(categorias, Comparator.comparing(Categoria::getIdCategoria).reversed());
+        return categorias;
     }
 }
