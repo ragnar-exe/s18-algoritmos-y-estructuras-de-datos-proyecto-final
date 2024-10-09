@@ -37,19 +37,19 @@ public class JimProveedor extends javax.swing.JInternalFrame {
 
     private void listarProveedores() {
         modelo = (DefaultTableModel) tblProveedor.getModel();
-        for (Proveedor p : crudProveedor.listar()) {
-            filaDatos[0] = p.getIdProveedor();
-            filaDatos[1] = p.getNombres();
-            filaDatos[2] = p.getApellidos();
-            filaDatos[3] = p.getCorreo();
-            filaDatos[4] = p.getTelefono();
-            modelo.addRow(filaDatos);
-        }
-        if (crudProveedor.total() > 1) {
-            buscarCampo(true);
-        } else {
-            buscarCampo(false);
-        }
+//        for (Proveedor p : crudProveedor.listar()) {
+//            filaDatos[0] = p.getIdProveedor();
+//            filaDatos[1] = p.getNombres();
+//            filaDatos[2] = p.getApellidos();
+//            filaDatos[3] = p.getCorreo();
+//            filaDatos[4] = p.getTelefono();
+//            modelo.addRow(filaDatos);
+//        }
+//        if (crudProveedor.total() > 1) {
+//            buscarCampo(true);
+//        } else {
+//            buscarCampo(false);
+//        }
     }
 
     private void limpiarTabla() {
