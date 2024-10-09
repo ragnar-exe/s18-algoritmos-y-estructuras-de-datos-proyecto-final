@@ -5,10 +5,11 @@ import daoImpl.MarcaDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Marca;
+import model.Nodo;
 
 public class JimMarca extends javax.swing.JInternalFrame {
 
-    private IDaoGenerico<Marca> crudMarca;
+    private MarcaDaoImpl crudMarca;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
     private int idMarca;
@@ -20,7 +21,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[2];
-//        crudMarca = new MarcaDaoImpl();
+        crudMarca = new MarcaDaoImpl();
         modelo = new DefaultTableModel();
         listarMarcas();
         habilitarCampo(false);
@@ -30,16 +31,18 @@ public class JimMarca extends javax.swing.JInternalFrame {
 
     private void listarMarcas() {
         modelo = (DefaultTableModel) tblMarca.getModel();
-//        for (Marca m : crudMarca.listar()) {
-//            filaDatos[0] = m.getIdMarca();
-//            filaDatos[1] = m.getNombre();
-//            modelo.addRow(filaDatos);
-//        }
-//        if (crudMarca.total() > 1) {
-//            txtBuscar.setEnabled(true);
-//        } else {
-//            txtBuscar.setEnabled(false);
-//        }
+        Nodo temp = crudMarca.inicio;
+        while (temp != null) {
+            filaDatos[0] = temp.getMarca().getIdMarca();
+            filaDatos[1] = temp.getMarca().getNombre();
+            modelo.addRow(filaDatos);
+            temp = temp.siguiente;
+        }
+        if (crudMarca.total() > 1) {
+            txtBuscar.setEnabled(true);
+        } else {
+            txtBuscar.setEnabled(false);
+        }
     }
 
     private void limpiarTabla() {
