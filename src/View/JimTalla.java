@@ -74,6 +74,23 @@ public class JimTalla extends javax.swing.JInternalFrame {
         cboDescripcion.setSelectedIndex(0);
     }
 
+    private void mostrarTallas(Talla[][] tallasOrdenadas) {
+        limpiarTabla(); // Limpia la tabla existente
+        // Suponiendo que tallasOrdenadas tiene el formato correcto
+        for (Talla[] fila : tallasOrdenadas) {
+            for (Talla talla : fila) {
+                if (talla != null) {
+                    // Crear una fila de datos para la tabla
+                    filaDatos[0] = talla.getIdTalla(); // Asignar ID de talla
+                    filaDatos[1] = talla.getNumero();   // Asignar número de talla
+                    filaDatos[2] = talla.getDescripcion(); // Asignar descripción de talla
+
+                    modelo.addRow(filaDatos); // Añadir la fila a la tabla
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -191,6 +208,11 @@ public class JimTalla extends javax.swing.JInternalFrame {
         getContentPane().add(cboDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 152, 180, 30));
 
         cboOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Ascendente", "Descendente", "Id Descendente" }));
+        cboOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboOrdenarActionPerformed(evt);
+            }
+        });
         getContentPane().add(cboOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 210, 180, -1));
 
         pack();
@@ -252,7 +274,7 @@ public class JimTalla extends javax.swing.JInternalFrame {
             habilitarCampo(false);
             idTalla = Integer.parseInt(tblTalla.getValueAt(fila, 0).toString());
             txtNumero.setText(tblTalla.getValueAt(fila, 1).toString());
-            if (tblTalla.getValueAt(fila, 2).toString().isEmpty()) {
+            if (tblTalla.getValueAt(fila, 2) == null) {
                 cboDescripcion.setSelectedIndex(0);
             } else {
                 cboDescripcion.setSelectedItem(tblTalla.getValueAt(fila, 2));
@@ -365,6 +387,29 @@ public class JimTalla extends javax.swing.JInternalFrame {
             limpiarCampo();
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void cboOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboOrdenarActionPerformed
+        String selectedItem = cboOrdenar.getSelectedItem().toString();
+
+        // Limpiar la tabla o el componente donde mostrarás las tallas
+        limpiarTabla();
+
+        if (selectedItem.equals("Ascendente")) {  // Asegúrate de que esta opción coincida con tus ítems
+            // Aquí llamamos al método para ordenar y obtener las tallas ordenadas
+            Talla[][] tallasOrdenadas = crudTalla.ordenarTallasNumero(); // Ajusta los índices según tus necesidades
+            // Ahora muestra las tallas ordenadas en la interfaz
+            mostrarTallas(tallasOrdenadas);
+        } else if (selectedItem.equals("Descendente")) {  // Asegúrate de que esta opción coincida con tus ítems
+            Talla[][] tallasOrdenadas = crudTalla.ordenarTallasNumeroDescendente(); // Ajusta los índices según tus necesidades
+            mostrarTallas(tallasOrdenadas);
+        }else if (selectedItem.equals("Id Descendente")) {  // Asegúrate de que esta opción coincida con tus ítems
+            Talla[][] tallasOrdenadas = crudTalla.ordenarTallasPorIdDescendente(); // Ajusta los índices según tus necesidades
+            mostrarTallas(tallasOrdenadas);
+        }else{
+            Talla[][] tallasOrdenadas = crudTalla.ordenarTallasPorIdAscendente(); // Ajusta los índices según tus necesidades
+            mostrarTallas(tallasOrdenadas);
+        }
+    }//GEN-LAST:event_cboOrdenarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
