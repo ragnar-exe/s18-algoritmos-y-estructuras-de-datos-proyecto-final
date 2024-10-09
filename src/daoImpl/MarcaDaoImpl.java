@@ -22,9 +22,9 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
     public Nodo fin;
 
     public MarcaDaoImpl() {
-        cargarDatos();
         this.inicio = null;
         this.fin = null;
+        cargarDatos();
     }
 
     @Override
@@ -113,38 +113,75 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         inicio = nuevo;
         if (fin == null) {
             fin = inicio;
-            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
-                codigos.write(obj.getIdMarca() + "\n");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            return true;
         }
-        return false;
+        try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
+            codigos.write(obj.getIdMarca() + "\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
-    public boolean agregarPosicion(Marca obj) {
-        Nodo nuevo = new Nodo(obj, inicio);
-        inicio = nuevo;
-        if (fin == null) {
-            fin = inicio;
-            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
-                codigos.write(obj.getIdMarca() + "\n");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+    public boolean agregarPosicion(Marca obj, int posicion) {
+        if (posicion < 0) {
+            JOptionPane.showMessageDialog(null, "Posición inválida", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        Nodo nuevo = new Nodo(obj, null);
+        if (posicion == 0) {
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+            if (fin == null) {
+                fin = inicio;
+            }
+        } else {
+            Nodo actual = inicio;
+            int contador = 0;
+
+            while (actual != null && contador < posicion - 1) {
+                actual = actual.getSiguiente();
+                contador++;
+            }
+
+            if (actual == null) {
+                JOptionPane.showMessageDialog(null, "Posición fuera de rango", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            return true;
+
+            nuevo.setSiguiente(actual.getSiguiente());
+            actual.setSiguiente(nuevo);
+
+            if (nuevo.getSiguiente() == null) {
+                fin = nuevo;
+            }
         }
-        return false;
+
+        try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSMARCAS, true))) {
+            codigos.write(obj.getIdMarca() + "\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de marca", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public boolean actualizar(Marca obj) {
         Nodo temp = inicio;
         while (temp != null) {
-            if (temp.getMarca() == obj) {
+            if (temp.getMarca().getIdMarca() == obj.getIdMarca()) {
+                Nodo check = inicio;
+                while (check != null) {
+                    if (check != temp && check.getMarca().getNombre().equalsIgnoreCase(obj.getNombre())) {
+                        JOptionPane.showMessageDialog(null, "La marca ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    check = check.getSiguiente();
+                }
+                temp.setMarca(obj);
                 return true;
             }
             temp = temp.getSiguiente();
@@ -154,17 +191,35 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
 
     @Override
     public boolean eliminar(Marca obj) {
-        // Eliminar por posición (ID)
-        // Elimina inicio -- modificar
-        if (inicio == null || fin == null) {
-            return false;
-        } else {
-            inicio = inicio.siguiente;
+        if (inicio == null) {
+            return false; 
+        }
+
+        // Si el nodo a eliminar es el primero
+        if (inicio.getMarca().getIdMarca() == obj.getIdMarca()) {
+            inicio = inicio.getSiguiente();
+            if (inicio == null) {
+                fin = null; // La lista se ha vaciado
+            }
             return true;
         }
+
+        Nodo actual = inicio;
+        while (actual.getSiguiente() != null) {
+            if (actual.getSiguiente().getMarca().getIdMarca() == obj.getIdMarca()) {
+                actual.setSiguiente(actual.getSiguiente().getSiguiente());
+                if (actual.getSiguiente() == null) {
+                    fin = actual; // Actualizar fin si se eliminó el último nodo
+                }
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false; // No se encontró el nodo con el ID especificado
     }
-    
-    public boolean eliminarInicio(Marca obj) {
+
+    public boolean eliminarInicio() {
         if (inicio == null || fin == null) {
             return false;
         } else {
@@ -173,7 +228,7 @@ public class MarcaDaoImpl implements IDaoExtendido<Marca> {
         }
     }
 
-    public boolean eliminarFinal(Marca obj) {
+    public boolean eliminarFinal() {
         boolean eliminar = false;
         if (inicio == null || fin == null) {
             eliminar = false;
