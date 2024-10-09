@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import javax.swing.JOptionPane;
 import model.Talla;
 
@@ -48,16 +51,32 @@ public class TallaDaoImpl implements IDaoExtendido<Talla> {
 
     @Override
     public int obtenerUltimoId() {
-        int codigo = 0;
+        int id = 1;
+
+        // Verificar si el archivo existe
+        if (!Files.exists(Paths.get(FILE_IDSTALLAS))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSTALLAS))) {
+                writer.write("0\n");
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsmarcas", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // Leer el último código del archivo
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSTALLAS))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                codigo = Integer.parseInt(linea);
+            List<String> lines = Files.readAllLines(Paths.get(FILE_IDSTALLAS));
+            if (!lines.isEmpty()) {
+                try {
+                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).strip());
+                    id = lastCode + 1;
+                } catch (NumberFormatException e) {
+                    id = 1;
+                }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de tallas", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de marcas", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        return codigo + 1;
+        return id;
     }
 
     @Override
