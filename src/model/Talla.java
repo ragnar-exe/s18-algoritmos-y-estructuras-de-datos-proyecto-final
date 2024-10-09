@@ -22,6 +22,12 @@ public class Talla {
         this.descripcion = descripcion;
     }
 
+    public Talla(int idTalla, byte numero) {
+        this.idTalla = idTalla;
+        this.numero = numero;
+    }
+    
+    
     public int getIdTalla() {
         return idTalla;
     }

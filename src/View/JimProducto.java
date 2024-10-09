@@ -97,7 +97,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
     private void ordenarProducto(List<Producto> productos) {
         for (Producto p : productos) {
-            Object[] filaDatos = new Object[4];
             filaDatos[0] = p.getIdProducto();
             filaDatos[1] = IDaoCategoria.obtenerNombre(p.getIdCategoria());
             filaDatos[2] = p.getNombre();
@@ -412,7 +411,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
 
             // Itera sobre los productos encontrados y los agrega a la tabla
             for (Producto pr : productosEncontrados) {
-                Object[] filaDatos = new Object[4];  // Crea un array para los datos de cada fila
                 filaDatos[0] = pr.getIdProducto();   // ID del producto
                 filaDatos[1] = IDaoCategoria.obtenerNombre(pr.getIdCategoria());  // ID de la categoría (puedes adaptarlo si tienes el nombre de la categoría en otro lugar)
                 filaDatos[2] = pr.getNombre();       // Nombre del producto
