@@ -1,6 +1,6 @@
 package model;
 
-public class Talla {
+public class Talla implements Comparable<Talla>{
     private int idTalla;
     private byte numero;
     private String descripcion;
@@ -50,6 +50,11 @@ public class Talla {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @Override
+    public int compareTo(Talla o) {
+        return Byte.compare(this.numero, o.numero);
     }
     
 }

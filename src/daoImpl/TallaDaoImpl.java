@@ -9,11 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import model.Producto;
 import model.Talla;
 
 public class TallaDaoImpl implements IDaoExtendido<Talla> {
@@ -225,5 +227,152 @@ public class TallaDaoImpl implements IDaoExtendido<Talla> {
         return resultado; // Retorna la lista de tallas encontradas
     }
 
+    public Talla[][] ordenarTallasNumero() {
+        // Crear una lista para almacenar las tallas no nulas
+        List<Talla> tallitasList = new LinkedList<>();
+
+        // Recoger tallas no nulas en una lista
+        for (int i = 0; i < tallas.length; i++) {
+            for (int j = 0; j < tallas[i].length; j++) {
+                if (tallas[i][j] != null) {
+                    tallitasList.add(tallas[i][j]);
+                }
+            }
+        }
+
+        // Convertir la lista a un array
+        Talla[] tallitas = tallitasList.toArray(new Talla[0]);
+
+        // Ordenar el array unidimensional
+        Arrays.sort(tallitas); // Utiliza la implementación de compareTo en la clase Talla
+
+        // Crear el array de tallas ordenadas
+        Talla[][] tallasOrdenadas = new Talla[100][5];
+        int incremento = 0;
+
+        // Llenar el array 2D con tallas ordenadas
+        for (int i = 0; i < tallasOrdenadas.length; i++) {
+            for (int j = 0; j < tallasOrdenadas[i].length; j++) {
+                if (incremento < tallitas.length) {
+                    tallasOrdenadas[i][j] = tallitas[incremento++];
+                } else {
+                    break; // Salir si no hay más tallas
+                }
+            }
+        }
+
+        return tallasOrdenadas; // Devuelve el array de tallas ordenadas
+    }
+
+    public Talla[][] ordenarTallasNumeroDescendente() {
+        // Crear una lista para almacenar las tallas no nulas
+        List<Talla> tallitasList = new LinkedList<>();
+
+        // Recoger tallas no nulas en una lista
+        for (int i = 0; i < tallas.length; i++) {
+            for (int j = 0; j < tallas[i].length; j++) {
+                if (tallas[i][j] != null) {
+                    tallitasList.add(tallas[i][j]);
+                }
+            }
+        }
+
+        // Convertir la lista a un array
+        Talla[] tallitas = tallitasList.toArray(new Talla[0]);
+
+        // Ordenar el array unidimensional en orden descendente
+        Arrays.sort(tallitas, Collections.reverseOrder()); // Usa la implementación de compareTo en Talla
+
+        // Crear el array de tallas ordenadas
+        Talla[][] tallasOrdenadas = new Talla[100][5];
+        int incremento = 0;
+
+        // Llenar el array 2D con tallas ordenadas
+        for (int i = 0; i < tallasOrdenadas.length; i++) {
+            for (int j = 0; j < tallasOrdenadas[i].length; j++) {
+                if (incremento < tallitas.length) {
+                    tallasOrdenadas[i][j] = tallitas[incremento++];
+                } else {
+                    break; // Salir si no hay más tallas
+                }
+            }
+        }
+
+        return tallasOrdenadas; // Devuelve el array de tallas ordenadas
+    }
+
+    public Talla[][] ordenarTallasPorIdAscendente() {
+        // Crear una lista para almacenar las tallas no nulas
+        List<Talla> tallitasList = new LinkedList<>();
+
+        // Recoger tallas no nulas en una lista
+        for (int i = 0; i < tallas.length; i++) {
+            for (int j = 0; j < tallas[i].length; j++) {
+                if (tallas[i][j] != null) {
+                    tallitasList.add(tallas[i][j]);
+                }
+            }
+        }
+
+        // Convertir la lista a un array
+        Talla[] tallitas = tallitasList.toArray(new Talla[0]);
+
+        // Ordenar el array unidimensional por ID en orden ascendente
+        Arrays.sort(tallitas, Comparator.comparingInt(Talla::getIdTalla));
+
+        // Crear el array de tallas ordenadas
+        Talla[][] tallasOrdenadas = new Talla[100][5];
+        int incremento = 0;
+
+        // Llenar el array 2D con tallas ordenadas
+        for (int i = 0; i < tallasOrdenadas.length; i++) {
+            for (int j = 0; j < tallasOrdenadas[i].length; j++) {
+                if (incremento < tallitas.length) {
+                    tallasOrdenadas[i][j] = tallitas[incremento++];
+                } else {
+                    break; // Salir si no hay más tallas
+                }
+            }
+        }
+
+        return tallasOrdenadas; // Devuelve el array de tallas ordenadas
+    }
+
+    public Talla[][] ordenarTallasPorIdDescendente() {
+        // Crear una lista para almacenar las tallas no nulas
+        List<Talla> tallitasList = new LinkedList<>();
+
+        // Recoger tallas no nulas en una lista
+        for (int i = 0; i < tallas.length; i++) {
+            for (int j = 0; j < tallas[i].length; j++) {
+                if (tallas[i][j] != null) {
+                    tallitasList.add(tallas[i][j]);
+                }
+            }
+        }
+
+        // Convertir la lista a un array
+        Talla[] tallitas = tallitasList.toArray(new Talla[0]);
+
+        // Ordenar el array unidimensional por ID en orden descendente
+        Arrays.sort(tallitas, Comparator.comparingInt(Talla::getIdTalla).reversed());
+
+        // Crear el array de tallas ordenadas
+        Talla[][] tallasOrdenadas = new Talla[100][5];
+        int incremento = 0;
+
+        // Llenar el array 2D con tallas ordenadas
+        for (int i = 0; i < tallasOrdenadas.length; i++) {
+            for (int j = 0; j < tallasOrdenadas[i].length; j++) {
+                if (incremento < tallitas.length) {
+                    tallasOrdenadas[i][j] = tallitas[incremento++];
+                } else {
+                    break; // Salir si no hay más tallas
+                }
+            }
+        }
+
+        return tallasOrdenadas; // Devuelve el array de tallas ordenadas
+    }
 
 }
