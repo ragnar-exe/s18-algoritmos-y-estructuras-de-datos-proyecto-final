@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Color;
 
 public class JimColor extends javax.swing.JInternalFrame {
+
     private ColorDaoImpl crudColor = new ColorDaoImpl();
     private DefaultTableModel modelo;
     private Object[] filaDatos;
@@ -28,7 +29,7 @@ public class JimColor extends javax.swing.JInternalFrame {
     private void listarColores() {
         modelo = (DefaultTableModel) tblColor.getModel();
         for (Color c : crudColor.listar()) {
-            if(c != null) {
+            if (c != null) {
                 filaDatos[0] = c.getIdColor();
                 filaDatos[1] = c.getNombre();
                 modelo.addRow(filaDatos);
@@ -38,6 +39,16 @@ public class JimColor extends javax.swing.JInternalFrame {
             txtBuscar.setEnabled(true);
         } else {
             txtBuscar.setEnabled(false);
+        }
+    }
+    
+    private void OrdenarColores(Color[] colores) {
+        for (Color c : colores) {
+            if ( c != null ) {
+                filaDatos[0] = c.getIdColor();
+                filaDatos[1] = c.getNombre();
+                modelo.addRow(filaDatos);
+            }
         }
     }
 
@@ -81,6 +92,8 @@ public class JimColor extends javax.swing.JInternalFrame {
         txtNombre = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        cboOrdenar = new javax.swing.JComboBox<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -170,6 +183,19 @@ public class JimColor extends javax.swing.JInternalFrame {
         });
         getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 270, 324, 30));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel1.setText("Ordenar por:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 126, 110, 40));
+
+        cboOrdenar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cboOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "ID Descendente", "Nombre Ascendente", "Nombre Descendente" }));
+        cboOrdenar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboOrdenarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cboOrdenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 130, 170, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -199,7 +225,7 @@ public class JimColor extends javax.swing.JInternalFrame {
                 }
             } else {
                 if (crudColor.obtenerId(title) == -1) {
-                    if(crudColor.agregar(new Color(crudColor.obtenerUltimoId(), title))) {
+                    if (crudColor.agregar(new Color(crudColor.obtenerUltimoId(), title))) {
                         lblMensaje.setText("Se agrego correctamente el color.");
                         habilitarCampo(false);
                         registroBotones(false);
@@ -237,7 +263,7 @@ public class JimColor extends javax.swing.JInternalFrame {
 
     private void tblColorMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblColorMouseReleased
         int fila = tblColor.getSelectedRow();
-        System.out.println(""+fila);
+        System.out.println("" + fila);
         if (fila < 0) {
             JOptionPane.showMessageDialog(null,
                     "Debe seleccionar una fila.",
@@ -296,16 +322,34 @@ public class JimColor extends javax.swing.JInternalFrame {
             listarColores();
             lblMensaje.setText("");
         } else {
-//            for (Color co : crudColor.listar(valorBuscar)) {
-//                filaDatos[0] = co.getIdColor();
-//                filaDatos[1] = co.getNombre();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
+            limpiarTabla();
+            for (Color co : crudColor.listar(valorBuscar)) {
+                if (co != null) {
+                    Object[] filaDat = new Object[2];
+                    filaDat[0] = co.getIdColor();
+                    filaDat[1] = co.getNombre();
+                    modelo.addRow(filaDat);
+                    n++;
+                }
+            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         txtNombre.setText("");
     }//GEN-LAST:event_txtBuscarKeyReleased
+
+    private void cboOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboOrdenarActionPerformed
+        String ordenar = cboOrdenar.getSelectedItem().toString().strip();
+        limpiarTabla();
+        if ("Nombre Ascendente".equals(ordenar)) {
+            OrdenarColores(crudColor.ordenarPorNombreAscendente());
+        } else if ("Nombre Descendente".equals(ordenar)) {
+            OrdenarColores(crudColor.ordenarPorNombreDescendente());
+        } else if ("ID Descendente".equals(ordenar)) {
+            OrdenarColores(crudColor.ordenarPorIdDescendente());
+        } else {
+            OrdenarColores(crudColor.ordenarPorIdAscendente());
+        }
+    }//GEN-LAST:event_cboOrdenarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -314,6 +358,8 @@ public class JimColor extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cboOrdenar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;

@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.JOptionPane;
 import model.Color;
@@ -125,6 +127,17 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         return colores;
     }
 
+    public Color[] listar(String texto) {
+        Color[] colors = new Color[colores.length];
+        int index = 0;
+        for (int i = 0; i < colores.length; i++) {
+            if (colores[i] != null && (String.valueOf(colores[i].getIdColor()).equalsIgnoreCase(texto) || colores[i].getNombre().contains(texto))) {
+                colors[index++] = colores[i];
+            }
+        }
+        return colors;
+    }
+
     @Override
     public int total() {
         int totalRegistros = 0;
@@ -134,6 +147,58 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
             }
         }
         return totalRegistros;
+    }
+
+    public Color[] ordenarPorIdAscendente() {
+        Color[] colors = new Color[colores.length];
+        int index = 0;
+        for (int i = 0; i < colores.length; i++) {
+            if (colores[i] != null ) {
+                colors[index++] = colores[i];
+            }
+        }
+        Color[] colorsNoNulos = Arrays.copyOf(colors, index);
+        Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getIdColor));
+        return colorsNoNulos;
+    }
+
+    public Color[] ordenarPorIdDescendente() {
+        Color[] colors = new Color[colores.length];
+        int index = 0;
+        for (int i = 0; i < colores.length; i++) {
+            if (colores[i] != null ) {
+                colors[index++] = colores[i];
+            }
+        }
+        Color[] colorsNoNulos = Arrays.copyOf(colors, index);
+        Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getIdColor).reversed());
+        return colorsNoNulos;
+    }
+    
+    public Color[] ordenarPorNombreAscendente() {
+        Color[] colors = new Color[colores.length];
+        int index = 0;
+        for (int i = 0; i < colores.length; i++) {
+            if (colores[i] != null ) {
+                colors[index++] = colores[i];
+            }
+        }
+        Color[] colorsNoNulos = Arrays.copyOf(colors, index);
+        Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getNombre));
+        return colorsNoNulos;
+    }
+    
+    public Color[] ordenarPorNombreDescendente() {
+        Color[] colors = new Color[colores.length];
+        int index = 0;
+        for (int i = 0; i < colores.length; i++) {
+            if (colores[i] != null ) {
+                colors[index++] = colores[i];
+            }
+        }
+        Color[] colorsNoNulos = Arrays.copyOf(colors, index);
+        Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getNombre).reversed());
+        return colorsNoNulos;
     }
 
     @Override
