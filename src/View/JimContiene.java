@@ -401,7 +401,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
                     lblMensaje.setText("No se actualizo el registro de stock.");
                 }
             } else {
-                if (crudContiene.agregar(new Contiene(idProducto, idTalla, idColor, idMarca, precio, stock))) {
+                if (crudContiene.agregar(new Contiene(crudContiene.obtenerUltimoId(),idProducto, idTalla, idColor, idMarca, precio, stock))) {
                     lblMensaje.setText("Se agrego correctamente el registro de stock.");
                     limpiarCampos();
                     habilitarCampo(false);
