@@ -16,15 +16,6 @@ public class Contiene {
         this.idContiene = idContiene;
     }
 
-    public Contiene(int idProducto, int idTalla, int idColor, int idMarca, float precio, byte stock) {
-        this.idProducto = idProducto;
-        this.idTalla = idTalla;
-        this.idColor = idColor;
-        this.idMarca = idMarca;
-        this.precio = precio;
-        this.stock = stock;
-    }
-
     public Contiene(int idContiene, int idProducto, int idTalla, int idColor, int idMarca, float precio, byte stock) {
         this.idContiene = idContiene;
         this.idProducto = idProducto;
