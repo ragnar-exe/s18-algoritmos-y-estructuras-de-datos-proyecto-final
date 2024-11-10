@@ -1,12 +1,86 @@
 package View;
 
+import daoImpl.ClienteDaoImpl;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
 
 public class JimCliente extends javax.swing.JInternalFrame {
+
+    private final ClienteDaoImpl crudCliente;
+    private DefaultTableModel modelo;
+    private final Object[] filaDatos;
+    private int idCliente;
+    private boolean guardar = false;
+
     public JimCliente() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.setSize(ancho, alto-106);
+        this.setSize(ancho, alto - 106);
+        filaDatos = new Object[6];
+        crudCliente = new ClienteDaoImpl();
+        modelo = new DefaultTableModel();
+        listarClientes();
+        habilitarCampo(false);
+        registroBotones(false);
+        crudBotones(false);
+    }
+
+    private void limpiarTabla() {
+        modelo = (DefaultTableModel) tblClientes.getModel();
+        modelo.getDataVector().removeAllElements();
+        tblClientes.removeAll();
+    }
+
+    private void listarClientes() {
+        modelo = (DefaultTableModel) tblClientes.getModel();
+        for (Cliente c : crudCliente.listar()) {
+            filaDatos[0] = c.getIdPersona();
+            filaDatos[1] = c.getDni();
+            filaDatos[2] = c.getNombres();
+            filaDatos[3] = c.getApellidos();
+            filaDatos[4] = c.getCorreo();
+            filaDatos[5] = c.getDireccion();
+            modelo.addRow(filaDatos);
+        }
+        if (crudCliente.total() > 1) {
+            buscarCampo(true);
+        } else {
+            buscarCampo(false);
+        }
+    }
+
+    private void registroBotones(boolean f) {
+        btnAgregar1.setEnabled(f);
+        btnCancelar.setEnabled(f);
+    }
+
+    private void crudBotones(boolean f) {
+        btnNuevo.setEnabled(!f);
+        btnEditar.setEnabled(f);
+        btnEliminar.setEnabled(f);
+    }
+
+    private void habilitarCampo(boolean f) {
+        txtNombre2.setEnabled(f);
+        txtApellido.setEnabled(f);
+        txtDni.setEnabled(f);
+        txtCorreo.setEnabled(f);
+        txtDireccion.setEnabled(f);
+    }
+
+    private void limpiarCampos() {
+        txtNombre2.setText("");
+        txtApellido.setText("");
+        txtDni.setText("");
+        txtCorreo.setText("");
+        txtDireccion.setText("");
+    }
+
+    private void buscarCampo(boolean f) {
+        txtBuscar.setText("");
+        txtBuscar.setEnabled(f);
     }
 
     /**
@@ -20,160 +94,420 @@ public class JimCliente extends javax.swing.JInternalFrame {
 
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtDni = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jTextField2 = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
+        txtCorreo = new javax.swing.JTextField();
+        btnEliminarTodo = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        txtBuscar = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblClientes = new javax.swing.JTable();
+        lblMensaje = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        btnAgregar1 = new javax.swing.JButton();
+        btnCancelar1 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        txtDireccion = new javax.swing.JTextField();
+        txtNombre2 = new javax.swing.JTextField();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel4.setText("Clientes");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(753, 6, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel5.setText("Nombre");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 80, -1, -1));
-        getContentPane().add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 83, 245, 30));
+        jLabel5.setText("Dni");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 130, -1, -1));
+        getContentPane().add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 130, 245, 30));
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel17.setText("Dirección");
-        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 80, -1, -1));
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
-
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 80, 257, 134));
-        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 131, 245, 30));
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, -1, -1));
+        getContentPane().add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 245, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("Apellidos");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 130, -1, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel8.setText("Correo");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 190, -1, -1));
-        getContentPane().add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 187, 245, 30));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, -1, -1));
+        getContentPane().add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, 245, 30));
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setText("Agregar");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarTodo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminarTodo.setText("Eliminar Todo");
+        btnEliminarTodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnEliminarTodoActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 230, -1, 31));
+        getContentPane().add(btnEliminarTodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 200, -1, 31));
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("Nuevo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 230, -1, 31));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 150, -1, 31));
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setText("Cancelar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 230, 90, 31));
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 200, 90, 31));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Editar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 320, -1, 31));
+        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 330, -1, 31));
 
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setText("Eliminar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 320, -1, 31));
-        getContentPane().add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 320, 293, 31));
+        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 330, -1, 31));
+        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 330, 293, 31));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Buscar:");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 320, -1, -1));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 330, -1, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Nombres", "Apellidos", "Correo", "DNI", "Dirección"
+                "ID", "Dni", "Nombres", "Apellidos", "Correo", "Dirección"
             }
         ));
-        jScrollPane4.setViewportView(jTable1);
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblClientesMouseReleased(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tblClientes);
 
-        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 1100, 200));
+        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 380, 1100, 200));
+
+        lblMensaje.setBorder(new javax.swing.border.MatteBorder(null));
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 600, 410, 30));
+
+        jLabel1.setText("TOTAL:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 600, 50, 30));
+        getContentPane().add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 600, 50, 30));
+
+        btnAgregar1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregar1.setText("Agregar");
+        btnAgregar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregar1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAgregar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 150, -1, 31));
+
+        btnCancelar1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelar1.setText("Cancelar");
+        btnCancelar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelar1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnCancelar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, 90, 31));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel7.setText("Nombre");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, -1));
+        getContentPane().add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 245, 30));
+        getContentPane().add(txtNombre2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, 245, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnEliminarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTodoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        int fila = tblClientes.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
+                if (crudCliente.eliminar(new Cliente(idCliente))) {
+                    lblMensaje.setText("El registro se eliminó correctamente");
+                } else {
+                    lblMensaje.setText("El registro NO se pudo eliminar");
+                }
+            }
+            buscarCampo(true);
+            limpiarTabla();
+            listarClientes();
+            limpiarCampos();
+            registroBotones(false);
+            crudBotones(false);
+            txtNombre2.setText("");
+            tblClientes.clearSelection();
+        }
+    }//GEN-LAST:event_btnEliminarTodoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        habilitarCampo(true);
+        limpiarCampos();
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarClientes();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+        guardar = false;
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        limpiarCampos();
+        limpiarTabla();
+        listarClientes();
+        habilitarCampo(false);
+        crudBotones(false);
+        registroBotones(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+        guardar = false;
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        guardar = true;
+        habilitarCampo(true);
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarClientes();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+    }//GEN-LAST:event_btnEditarActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar1ActionPerformed
+        // TODO add your handling code here:
+        String nombre = txtNombre2.getText().strip();
+        String dni = txtDni.getText().strip();
+        String direccion = txtDireccion.getText().strip();
+        String correo = txtCorreo.getText().strip();
+        String apellido = txtApellido.getText().strip();
+
+// Validación para el campo "Nombre"
+        if (!nombre.isEmpty()) {
+            if (nombre.length() > 50) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, El nombre es muy largo.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                txtNombre2.requestFocus();
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Ingresar el nombre del cliente",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtNombre2.requestFocus();
+            return;
+        }
+
+// Validación para el campo "DNI"
+        if (!dni.isEmpty()) {
+            if (dni.length() != 8 || !dni.matches("\\d+")) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, El DNI debe tener 8 dígitos numéricos.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                txtDni.requestFocus();
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Ingresar el DNI del cliente",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtDni.requestFocus();
+            return;
+        }
+
+// Validación para el campo "Apellido"
+        if (!apellido.isEmpty()) {
+            if (apellido.length() > 50) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, El apellido es muy largo.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                txtApellido.requestFocus();
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Ingresar el apellido del cliente",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtApellido.requestFocus();
+            return;
+        }
+
+// Validación para el campo "Correo" (solo verificar si ya existe)
+        if (!correo.isEmpty()) {
+            if (crudCliente.existeCorreo(correo)) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, El correo ya está en uso.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                txtCorreo.requestFocus();
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Ingresar el correo del cliente",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtCorreo.requestFocus();
+            return;
+        }
+
+// Validación para el campo "Dirección"
+        if (!direccion.isEmpty()) {
+            if (direccion.length() > 100) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, La dirección es muy larga.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+                txtDireccion.requestFocus();
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Ingresar la dirección del cliente",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtDireccion.requestFocus();
+            return;
+        }
+
+        if (guardar) {
+            if (crudCliente.actualizar(new Cliente(dni, idCliente, nombre, apellido, direccion, correo))) {
+                lblMensaje.setText("Se actualizo correctamente el cliente con id " + idCliente + ".");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+                guardar = false;
+            } else {
+                lblMensaje.setText("No se actualizo el cliente.");
+            }
+        } else {
+            if (crudCliente.agregar(new Cliente(dni, crudCliente.obtenerUltimoId(), nombre, apellido, direccion, correo))) {
+                lblMensaje.setText("Se agrego correctamente el cliente.");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+            } else {
+                lblMensaje.setText("No se agrego el cliente.");
+            }
+        }
+
+        tblClientes.clearSelection();
+        limpiarTabla();
+        listarClientes();
+    }//GEN-LAST:event_btnAgregar1ActionPerformed
+
+    private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
+        // TODO add your handling code here:
+        limpiarCampos();
+        limpiarTabla();
+        listarClientes();
+        habilitarCampo(false);
+        crudBotones(false);
+        registroBotones(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+        guardar = false;
+    }//GEN-LAST:event_btnCancelar1ActionPerformed
+
+    private void tblClientesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseReleased
+        // TODO add your handling code here:
+        int fila = tblClientes.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Debe seleccionar una fila.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            habilitarCampo(false);
+            idCliente = Integer.parseInt(tblClientes.getValueAt(fila, 0).toString());
+            txtApellido.setText(tblClientes.getValueAt(fila, 3).toString());
+            txtCorreo.setText(tblClientes.getValueAt(fila, 4).toString());
+            txtDni.setText(tblClientes.getValueAt(fila, 1).toString());
+            txtDireccion.setText(tblClientes.getValueAt(fila, 5).toString());
+            lblMensaje.setText("");
+            buscarCampo(false);
+            registroBotones(false);
+            crudBotones(true);
+            btnCancelar.setEnabled(true);
+        }
+        
+    }//GEN-LAST:event_tblClientesMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAgregar1;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancelar1;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEliminarTodo;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel lblMensaje;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtNombre2;
     // End of variables declaration//GEN-END:variables
 }
