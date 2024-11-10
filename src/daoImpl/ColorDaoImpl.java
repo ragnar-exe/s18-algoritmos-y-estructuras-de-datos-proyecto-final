@@ -153,7 +153,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         Color[] colors = new Color[colores.length];
         int index = 0;
         for (int i = 0; i < colores.length; i++) {
-            if (colores[i] != null ) {
+            if (colores[i] != null) {
                 colors[index++] = colores[i];
             }
         }
@@ -166,7 +166,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         Color[] colors = new Color[colores.length];
         int index = 0;
         for (int i = 0; i < colores.length; i++) {
-            if (colores[i] != null ) {
+            if (colores[i] != null) {
                 colors[index++] = colores[i];
             }
         }
@@ -174,12 +174,12 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getIdColor).reversed());
         return colorsNoNulos;
     }
-    
+
     public Color[] ordenarPorNombreAscendente() {
         Color[] colors = new Color[colores.length];
         int index = 0;
         for (int i = 0; i < colores.length; i++) {
-            if (colores[i] != null ) {
+            if (colores[i] != null) {
                 colors[index++] = colores[i];
             }
         }
@@ -187,12 +187,12 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
         Arrays.sort(colorsNoNulos, Comparator.comparing(Color::getNombre));
         return colorsNoNulos;
     }
-    
+
     public Color[] ordenarPorNombreDescendente() {
         Color[] colors = new Color[colores.length];
         int index = 0;
         for (int i = 0; i < colores.length; i++) {
-            if (colores[i] != null ) {
+            if (colores[i] != null) {
                 colors[index++] = colores[i];
             }
         }
@@ -223,16 +223,13 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
                 String linea;
                 while ((linea = reader.readLine()) != null) {
                     String[] datos = linea.split(";");
-                    if (datos.length == 2) {
-                        try {
-                            int id = Integer.parseInt(datos[0].strip());
-                            String nombre = datos[1].strip();
-                            agregar(new Color(id, nombre));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Error al parsear el ID del color: " + datos[0], "ERROR", JOptionPane.ERROR_MESSAGE);
+                    int id = Integer.parseInt(datos[0].strip());
+                    String nombre = datos[1].strip();
+                    for (int i = 0; i < colores.length; i++) {
+                        if (colores[i] == null) {
+                            colores[i] = new Color(id, nombre);
+                            break;
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Formato de línea incorrecto: " + linea, "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             } catch (IOException e) {
