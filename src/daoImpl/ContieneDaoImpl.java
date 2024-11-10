@@ -236,7 +236,14 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
 
     @Override
     public int total() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int total = 0;
+        Nodo temp = inicio;
+        while (temp != null) {
+            temp.getMarca();
+            temp = temp.getSiguiente();
+            total++;
+        }
+        return total;
     }
     
 }
