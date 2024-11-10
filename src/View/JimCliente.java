@@ -1,6 +1,7 @@
 package View;
 
 import daoImpl.ClienteDaoImpl;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
@@ -25,6 +26,8 @@ public class JimCliente extends javax.swing.JInternalFrame {
         habilitarCampo(false);
         registroBotones(false);
         crudBotones(false);
+        lblTotal.setText("" + crudCliente.total());
+
     }
 
     private void limpiarTabla() {
@@ -49,11 +52,12 @@ public class JimCliente extends javax.swing.JInternalFrame {
         } else {
             buscarCampo(false);
         }
+        lblTotal.setText("" + crudCliente.total());
+
     }
 
     private void registroBotones(boolean f) {
         btnAgregar1.setEnabled(f);
-        btnCancelar.setEnabled(f);
     }
 
     private void crudBotones(boolean f) {
@@ -102,7 +106,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
         txtCorreo = new javax.swing.JTextField();
         btnEliminarTodo = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        btnCima = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         txtBuscar = new javax.swing.JTextField();
@@ -117,6 +121,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
         jLabel7 = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
         txtNombre2 = new javax.swing.JTextField();
+        btnPop = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -159,16 +164,16 @@ public class JimCliente extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 150, -1, 31));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 150, -1, 31));
 
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnCima.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCima.setText("Cima");
+        btnCima.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnCimaActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 200, 90, 31));
+        getContentPane().add(btnCima, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 200, 90, 31));
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnEditar.setText("Editar");
@@ -187,6 +192,17 @@ public class JimCliente extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 330, -1, 31));
+
+        txtBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtBuscarMouseReleased(evt);
+            }
+        });
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
         getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 330, 293, 31));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -233,7 +249,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
                 btnCancelar1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, 90, 31));
+        getContentPane().add(btnCancelar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 150, 90, 31));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel7.setText("Nombre");
@@ -241,10 +257,85 @@ public class JimCliente extends javax.swing.JInternalFrame {
         getContentPane().add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 245, 30));
         getContentPane().add(txtNombre2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, 245, 30));
 
+        btnPop.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPop.setText("POP");
+        btnPop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPopActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnPop, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 200, 90, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTodoActionPerformed
+        // TODO add your handling code here:
+        int confirmacion = JOptionPane.showConfirmDialog(
+                null,
+                "¿Está seguro de que desea eliminar todos los registros?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            crudCliente.clear();
+            limpiarTabla();
+            listarClientes();
+            lblMensaje.setText("Todos los registros se eliminaron correctamente.");
+        } else {
+            lblMensaje.setText("La eliminación de todos los registros fue cancelada.");
+        }
+        lblTotal.setText("" + crudCliente.total());
+
+    }//GEN-LAST:event_btnEliminarTodoActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        habilitarCampo(true);
+        limpiarCampos();
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarClientes();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+        guardar = false;
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnCimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCimaActionPerformed
+        // TODO add your handling code here:
+        if (crudCliente.total() > 0) {
+            // Obtener el último cliente
+            Cliente cliente = crudCliente.peek();
+
+            // Mostrar el nombre y apellido en el JLabel
+            lblMensaje.setText("El cliente en la cima es: " + "Nombre: " + cliente.getNombres() + " Apellido: " + cliente.getApellidos());
+        } else {
+            // Si no hay clientes, mostrar un mensaje en el JLabel
+            lblMensaje.setText("No hay clientes en la lista.");
+        }
+
+    }//GEN-LAST:event_btnCimaActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // TODO add your handling code here:
+        guardar = true;
+        habilitarCampo(true);
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarClientes();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblClientes.clearSelection();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         int fila = tblClientes.getSelectedRow();
         if (fila < 0) {
@@ -265,53 +356,9 @@ public class JimCliente extends javax.swing.JInternalFrame {
             crudBotones(false);
             txtNombre2.setText("");
             tblClientes.clearSelection();
+            lblTotal.setText("" + crudCliente.total());
         }
-    }//GEN-LAST:event_btnEliminarTodoActionPerformed
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
-        habilitarCampo(true);
-        limpiarCampos();
-        registroBotones(true);
-        crudBotones(false);
-        limpiarTabla();
-        listarClientes();
-        buscarCampo(false);
-        btnNuevo.setEnabled(false);
-        lblMensaje.setText("");
-        tblClientes.clearSelection();
-        guardar = false;
-    }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        limpiarCampos();
-        limpiarTabla();
-        listarClientes();
-        habilitarCampo(false);
-        crudBotones(false);
-        registroBotones(false);
-        lblMensaje.setText("");
-        tblClientes.clearSelection();
-        guardar = false;
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
-        guardar = true;
-        habilitarCampo(true);
-        registroBotones(true);
-        crudBotones(false);
-        limpiarTabla();
-        listarClientes();
-        buscarCampo(false);
-        btnNuevo.setEnabled(false);
-        lblMensaje.setText("");
-        tblClientes.clearSelection();
-    }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar1ActionPerformed
@@ -443,6 +490,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
         tblClientes.clearSelection();
         limpiarTabla();
         listarClientes();
+        lblTotal.setText("" + crudCliente.total());
     }//GEN-LAST:event_btnAgregar1ActionPerformed
 
     private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
@@ -477,20 +525,83 @@ public class JimCliente extends javax.swing.JInternalFrame {
             buscarCampo(false);
             registroBotones(false);
             crudBotones(true);
-            btnCancelar.setEnabled(true);
+            btnCima.setEnabled(true);
         }
-        
+
     }//GEN-LAST:event_tblClientesMouseReleased
+
+    private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
+        // TODO add your handling code here:
+        if (crudCliente.total() > 0) {
+            // Llamar al método pop para eliminar el último cliente
+            boolean eliminado = crudCliente.pop();
+
+            // Verificar si el cliente fue eliminado con éxito
+            if (eliminado) {
+                lblMensaje.setText("El cliente en la cima ha sido eliminado.");
+            } else {
+                lblMensaje.setText("No se pudo eliminar el cliente.");
+            }
+
+            // Actualizar la interfaz después de la eliminación
+            limpiarTabla();
+            listarClientes();
+            lblTotal.setText("" + crudCliente.total());
+        } else {
+            // Si no hay clientes, mostrar un mensaje
+            lblMensaje.setText("No hay clientes para eliminar.");
+        }
+
+    }//GEN-LAST:event_btnPopActionPerformed
+
+    private void txtBuscarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtBuscarMouseReleased
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        // TODO add your handling code here:
+        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
+        int n = 0;       // Contador de resultados
+        modelo = (DefaultTableModel) tblClientes.getModel();  // Obtiene el modelo de la tabla
+        String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
+        if (valorBuscar.equalsIgnoreCase("")) {
+            // Si el campo de búsqueda está vacío, muestra todos los productos
+            limpiarTabla();
+            listarClientes();  // Método para listar todos los productos
+            lblMensaje.setText("");
+        } else {
+            // Llama al método buscar() de ProductoDaoImpl
+            List<Cliente> productosEncontrados = crudCliente.listar(valorBuscar);
+
+            // Itera sobre los productos encontrados y los agrega a la tabla
+            for (Cliente c : productosEncontrados) {
+                filaDatos[0] = c.getIdPersona();
+                filaDatos[1] = c.getDni();
+                filaDatos[2] = c.getNombres();
+                filaDatos[3] = c.getApellidos();
+                filaDatos[4] = c.getCorreo();
+                filaDatos[5] = c.getDireccion();
+
+                modelo.addRow(filaDatos);  // Agrega los datos a la tabla
+                n++;  // Incrementa el contador de resultados
+            }
+
+            lblMensaje.setText(n + " registros encontrados.");  // Muestra el número de resultados encontrados
+        }
+        txtNombre2.setText("");  // Limpia el campo de nombre
+    }//GEN-LAST:event_txtBuscarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar1;
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelar1;
+    private javax.swing.JButton btnCima;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEliminarTodo;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnPop;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel4;
