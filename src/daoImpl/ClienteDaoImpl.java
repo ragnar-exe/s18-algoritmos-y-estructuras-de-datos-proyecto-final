@@ -14,7 +14,8 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
-public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
+public class ClienteDaoImpl implements IDaoExtendido<Cliente> {
+
     LinkedList<Cliente> clientes = new LinkedList<>();
     private static final String FILE_CLIENTES = "clientes.txt";
     private static final String FILE_IDSCLIENTES = "idsclientes.txt";
@@ -22,7 +23,7 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     public ClienteDaoImpl() {
         cargarDatos();
     }
-    
+
     @Override
     public int obtenerId(String texto) {
         int id = -1;
@@ -38,7 +39,7 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     public String obtenerNombre(int id) {
         String nombre = "";
         for (Cliente cliente : clientes) {
-            if (cliente.getIdPersona()== id) {
+            if (cliente.getIdPersona() == id) {
                 nombre = cliente.getNombres();
             }
         }
@@ -79,7 +80,7 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     //TRABAJA CON PILAS ES UN PUSH
     public boolean agregar(Cliente obj) {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCLIENTES, true))) {
-            codigos.write(obj.getIdPersona()+ "\n");
+            codigos.write(obj.getIdPersona() + "\n");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -90,13 +91,13 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     @Override
     public boolean actualizar(Cliente obj) {
         for (Cliente cliente : clientes) {
-            if (cliente.getNombres().equalsIgnoreCase(obj.getNombres()) && cliente.getIdPersona()!= obj.getIdPersona()) {
+            if (cliente.getNombres().equalsIgnoreCase(obj.getNombres()) && cliente.getIdPersona() != obj.getIdPersona()) {
                 return false;
             }
         }
 
         for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).getIdPersona()== obj.getIdPersona()) {
+            if (clientes.get(i).getIdPersona() == obj.getIdPersona()) {
                 clientes.set(i, obj);
                 return true;
             }
@@ -106,14 +107,20 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
 
     @Override
     public boolean eliminar(Cliente obj) {
-        return clientes.remove(obj);
+        for (int i = 0; i < clientes.size(); i++) {
+            if (clientes.get(i).getIdPersona() == obj.getIdPersona()) {  // Compara por el ID
+                clientes.remove(i);  // Elimina el cliente de la lista
+                return true;  // Retorna true si se eliminó correctamente
+            }
+        }
+        return false;
     }
-    
+
     //ELIMINAR EN PILA POP_
-    public boolean pop(){
+    public boolean pop() {
         return clientes.remove(clientes.getLast());
     }
-    
+
     public List<Cliente> listar() {
         guardarEnArchivo();
         return clientes;
@@ -123,7 +130,7 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CLIENTES))) {
             for (Cliente cliente : clientes) {
-                writer.write(cliente.getIdPersona()+ ";" + cliente.getDni() + ";" + cliente.getNombres() + ";" + cliente.getApellidos()+ ";" + cliente.getDireccion()+ ";" + cliente.getCorreo());
+                writer.write(cliente.getIdPersona() + ";" + cliente.getDni() + ";" + cliente.getNombres() + ";" + cliente.getApellidos() + ";" + cliente.getDireccion() + ";" + cliente.getCorreo());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -145,7 +152,7 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
                     String apellido = datos[3];
                     String direccion = datos[4];
                     String correo = datos[5];
-                    clientes.add(new Cliente(dni,id, nombre, apellido, direccion, correo));
+                    clientes.add(new Cliente(dni, id, nombre, apellido, direccion, correo));
                 }
             } catch (IOException e) {
                 JOptionPane.showConfirmDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -157,17 +164,19 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
     public int total() {
         return clientes.size();
     }
-    
-    public Cliente peek(){
+
+    public Cliente peek() {
         return clientes.getLast();
     }
-    
-    public void clear(){
+
+    public void clear() {
         clientes.clear();
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return clientes.size() == 0;
     }
+
     public boolean existeCorreo(String correo) {
         for (Cliente cliente : clientes) {
             if (cliente.getCorreo().equalsIgnoreCase(correo)) {
@@ -175,5 +184,23 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente>{
             }
         }
         return false; // El correo no existe en la lista
+    }
+    public List<Cliente> listar(String texto) {
+        List<Cliente> resultado = new LinkedList<>();
+        String valorBuscar = texto.toLowerCase();  // Convierte el texto de búsqueda a minúsculas para comparación
+
+        for (Cliente cliente : clientes) {
+            // Verifica si el texto coincide con el ID o nombre del producto
+            boolean coincideConId = String.valueOf(cliente.getIdPersona()).contains(valorBuscar);
+            boolean coincideconDni = cliente.getDni().contains(valorBuscar);
+            boolean coincideConNombre = cliente.getNombres().toLowerCase().contains(valorBuscar);
+
+
+            // Si coincide con alguna de las condiciones, agregar a la lista de resultados
+            if (coincideConId || coincideConNombre || coincideconDni) {
+                resultado.add(cliente);
+            }
+        }
+        return resultado;
     }
 }

@@ -2,7 +2,6 @@ package View;
 
 import daoImpl.CategoriaDaoImpl;
 import daoImpl.ProductoDaoImpl;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -32,6 +31,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         habilitarCampo(false);
         registroBotones(false);
         crudBotones(false);
+       
     }
 
     private void cargarCategorias() {
@@ -76,6 +76,7 @@ public class JimProducto extends javax.swing.JInternalFrame {
         btnNuevo.setEnabled(!f);
         btnEditar.setEnabled(f);
         btnEliminar.setEnabled(f);
+        
     }
 
     private void habilitarCampo(boolean f) {
@@ -149,6 +150,11 @@ public class JimProducto extends javax.swing.JInternalFrame {
         jLabel8.setText("Buscar:");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, -1, -1));
 
+        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarActionPerformed(evt);
+            }
+        });
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyReleased(evt);
@@ -444,6 +450,10 @@ public class JimProducto extends javax.swing.JInternalFrame {
         }
 
     }//GEN-LAST:event_cboOrdenarActionPerformed
+
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
