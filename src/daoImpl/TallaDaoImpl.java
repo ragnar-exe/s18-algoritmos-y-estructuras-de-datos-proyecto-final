@@ -161,7 +161,7 @@ public class TallaDaoImpl implements IDaoExtendido<Talla> {
             for (int i = 0; i < tallas.length; i++) {
                 for (int j = 0; j < tallas[i].length; j++) {
                     if (tallas[i][j] != null) {
-                        writer.write(tallas[i][j].getIdTalla() + ";" + tallas[i][j].getNumero());
+                        writer.write(tallas[i][j].getIdTalla() + ";" + tallas[i][j].getNumero()+";"+tallas[i][j].getDescripcion());
                         writer.newLine();
                     }
                 }
@@ -181,13 +181,15 @@ public class TallaDaoImpl implements IDaoExtendido<Talla> {
                     String[] datos = linea.split(";");
                     int id = Integer.parseInt(datos[0]);
                     byte numero = Byte.parseByte(datos[1]);
-
-                    // Colocar la talla en la primera posición libre de la matriz
+                    String descripcion = "";
+                    if (datos.length == 3) {
+                        descripcion = datos[2].strip();
+                    }
                     outerLoop:
                     for (int i = 0; i < tallas.length; i++) {
                         for (int j = 0; j < tallas[i].length; j++) {
                             if (tallas[i][j] == null) {
-                                tallas[i][j] = new Talla(id, numero);
+                                tallas[i][j] = new Talla(id, numero,descripcion);
                                 break outerLoop;
                             }
                         }
