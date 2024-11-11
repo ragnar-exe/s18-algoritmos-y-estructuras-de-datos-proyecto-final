@@ -321,7 +321,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
         getContentPane().add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, 280, 30));
 
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 390, 30));
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 670, 30));
 
         btnGuardarInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnGuardarInicio.setText("Guardar Inicio");
@@ -558,18 +558,27 @@ public class JimContiene extends javax.swing.JInternalFrame {
             listarStockProductos();
             lblMensaje.setText("");
         } else {
-//            for (Contiene co : crudContiene.listar(valorBuscar)) {
-//                filaDatos[0] = co.getIdContiene();
-//                filaDatos[1] = IDaoProducto.obtenerNombre(co.getIdProducto());
-//                filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(co.getIdProducto()));
-//                filaDatos[3] = iDaoMarca.obtenerNombre(co.getIdMarca());
-//                filaDatos[4] = iDaoTalla.obtenerNombre(co.getIdTalla());
-//                filaDatos[5] = iDaoColor.obtenerNombre(co.getIdColor());
-//                filaDatos[6] = co.getPrecio();
-//                filaDatos[7] = co.getStock();
-//                modelo.addRow(filaDatos);
-//                n++;
-//            }
+            Nodo temp = crudContiene.inicio;
+            while (temp != null) {
+                if (String.valueOf(temp.getContiene().getIdContiene()).contains(valorBuscar) || 
+                        iDaoMarca.obtenerNombre(temp.getContiene().getIdMarca()).contains(valorBuscar) ||
+                        iDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto())).contains(valorBuscar) ||
+                        iDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto())).contains(valorBuscar) ||
+                        iDaoTalla.obtenerNombre(temp.getContiene().getIdTalla()).contains(valorBuscar) ||
+                        iDaoColor.obtenerNombre(temp.getContiene().getIdColor()).contains(valorBuscar)) {
+                    filaDatos[0] = temp.getContiene().getIdContiene();
+                    filaDatos[1] = IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto());
+                    filaDatos[2] = iDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto()));
+                    filaDatos[3] = iDaoMarca.obtenerNombre(temp.getContiene().getIdMarca());
+                    filaDatos[4] = iDaoTalla.obtenerNombre(temp.getContiene().getIdTalla());
+                    filaDatos[5] = iDaoColor.obtenerNombre(temp.getContiene().getIdColor());
+                    filaDatos[6] = temp.getContiene().getPrecio();
+                    filaDatos[7] = temp.getContiene().getStock();
+                    modelo.addRow(filaDatos);
+                    n++;
+                }
+                temp = temp.siguiente;
+            }
             lblMensaje.setText(n + " registros encontrados.");
         }
         limpiarCampos();
@@ -649,8 +658,9 @@ public class JimContiene extends javax.swing.JInternalFrame {
         int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
         int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
         int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
-        if (crudContiene.agregarInicio(new Contiene(crudContiene.obtenerUltimoId(), idProducto, idTalla, idColor, idMarca, precio, stock))) {
-            lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
+        int idInicio = crudContiene.obtenerUltimoId();
+        if (crudContiene.agregarInicio(new Contiene(idInicio, idProducto, idTalla, idColor, idMarca, precio, stock))) {
+            lblMensaje.setText("Se agrego correctamente el registro de stock con id " + idInicio + " al inicio.");
             limpiarCampos();
             habilitarCampo(false);
             registroBotones(false);
@@ -659,6 +669,9 @@ public class JimContiene extends javax.swing.JInternalFrame {
         } else {
             lblMensaje.setText("No se actualizo el registro de stock.");
         }
+        
+        limpiarTabla();
+        listarStockProductos();
     }//GEN-LAST:event_btnGuardarInicioActionPerformed
 
     private void btnGuardarPosiconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPosiconActionPerformed
@@ -735,24 +748,48 @@ public class JimContiene extends javax.swing.JInternalFrame {
         int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
         int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
         int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
-        if (crudContiene.agregarPosicion(new Contiene(crudContiene.obtenerUltimoId(), idProducto, idTalla, idColor, idMarca, precio, stock))) {
-            lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
+        String valor;
+        int posicion = -1;
+        while (posicion <= 0) {
+            valor = JOptionPane.showInputDialog(null, "Ingrese una posición (mayor a 0):", "Agrega una posición", JOptionPane.QUESTION_MESSAGE);
+            if (valor == null) {
+                break;
+            }
+            try {
+                posicion = Integer.parseInt(valor.strip());
+                if (posicion <= 0) {
+                    JOptionPane.showMessageDialog(null, "Por favor, ingrese un número positivo mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        int idPosicion = crudContiene.obtenerUltimoId();
+        if (crudContiene.agregarPosicion(new Contiene(idPosicion, idProducto, idTalla, idColor, idMarca, precio, stock), posicion)) {
+            lblMensaje.setText("Se agrego correctamente el registro de stock con id " + idPosicion + " en la posicion " + posicion);
             limpiarCampos();
             habilitarCampo(false);
             registroBotones(false);
             crudBotones(false);
             guardar = false;
         } else {
-            lblMensaje.setText("No se actualizo el registro de stock.");
+            lblMensaje.setText("No se agrego el registro.");
         }
+        
+        limpiarTabla();
+        listarStockProductos();
     }//GEN-LAST:event_btnGuardarPosiconActionPerformed
 
     private void btnEliminarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInicioActionPerformed
-        // TODO add your handling code here:
+        crudContiene.eliminarInicio();
+        limpiarTabla();
+        listarStockProductos();
     }//GEN-LAST:event_btnEliminarInicioActionPerformed
 
     private void btnEliminarFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFinalActionPerformed
-        // TODO add your handling code here:
+        crudContiene.eliminarFinal();
+        limpiarTabla();
+        listarStockProductos();
     }//GEN-LAST:event_btnEliminarFinalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

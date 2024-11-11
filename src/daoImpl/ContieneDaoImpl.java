@@ -14,12 +14,13 @@ import javax.swing.JOptionPane;
 import model.Contiene;
 import model.Nodo;
 
-public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
+public class ContieneDaoImpl implements IDaoGenerico<Contiene> {
+
     private static final String FILE_CONTIENES = "contienes.txt";
     private static final String FILE_IDSCONTIENE = "idscontienes.txt";
     public Nodo inicio;
     public Nodo fin;
-    
+
     public ContieneDaoImpl() {
         this.inicio = null;
         this.fin = null;
@@ -59,29 +60,28 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
     @Override
     public boolean agregar(Contiene obj) {
         // agregar al final
+        // Verificar si el producto ya existe
         Nodo check = inicio;
         while (check != null) {
-                    if ( check.getContiene().getIdProducto() == obj.getIdProducto() &
-                    check.getContiene().getIdTalla() == obj.getIdTalla() &
-                    check.getContiene().getIdColor() == obj.getIdColor() &
-                    check.getContiene().getIdMarca() == obj.getIdMarca() &
-                    check.getContiene().getPrecio() == obj.getPrecio()) {
-                        JOptionPane.showMessageDialog(null, 
-            "El producto con estas caracteristica ya existe. \nSe procedio a aumentar el stock de ese producto \nCon id "+check.getContiene().getIdContiene()+" y stock "+check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
-                        byte stockActualizado = (byte) (check.getContiene().getPrecio() + obj.getStock());
-                        //check.setContiene(obj);
-//                        obj.setStock(stockActualizado);
-//                        check.setContiene(obj);
-                        System.out.println(stockActualizado);
-                        return false;
-                    }
+            if (check.getContiene().getIdProducto() == obj.getIdProducto()
+                    && check.getContiene().getIdTalla() == obj.getIdTalla()
+                    && check.getContiene().getIdColor() == obj.getIdColor()
+                    && check.getContiene().getIdMarca() == obj.getIdMarca()
+                    && check.getContiene().getPrecio() == obj.getPrecio()) {
+                JOptionPane.showMessageDialog(null,
+                        "El producto con estas características ya existe. \nSe procedió a aumentar el stock de ese producto \nCon id " + check.getContiene().getIdContiene() + " y stock " + check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                byte stockActualizado = (byte) (check.getContiene().getStock() + obj.getStock());
+                check.getContiene().setStock(stockActualizado);
+                System.out.println(stockActualizado);
+                return true;
+            }
             check = check.getSiguiente();
         }
         if (inicio == null) {
             inicio = new Nodo(null, null, obj);
             fin = inicio;
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
+                codigos.write(obj.getIdContiene() + "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -92,7 +92,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
             fin.setSiguiente(nuevo);
             fin = nuevo;
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
+                codigos.write(obj.getIdContiene() + "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -102,29 +102,28 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
     }
 
     public boolean agregarInicio(Contiene obj) {
+        // Verificar si el producto ya existe
         Nodo check = inicio;
         while (check != null) {
-                    if ( check.getContiene().getIdProducto() == obj.getIdProducto() &&
-                    check.getContiene().getIdTalla() == obj.getIdTalla() &&
-                    check.getContiene().getIdColor() == obj.getIdColor() &&
-                    check.getContiene().getIdMarca() == obj.getIdMarca() &&
-                    check.getContiene().getPrecio() == obj.getPrecio()) {
-                        JOptionPane.showMessageDialog(null, 
-            "El producto con estas caracteristica ya existe. \nSe procedio a aumentar el stock de ese producto \nCon id "+check.getContiene().getIdContiene()+" y stock "+check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
-                        byte stockActualizado = (byte) (check.getContiene().getPrecio() + obj.getStock());
-                        //check.setContiene(obj);
-//                        obj.setStock(stockActualizado);
-//                        check.setContiene(obj);
-                        System.out.println(stockActualizado);
-                        return false;
-                    }
+            if (check.getContiene().getIdProducto() == obj.getIdProducto()
+                    && check.getContiene().getIdTalla() == obj.getIdTalla()
+                    && check.getContiene().getIdColor() == obj.getIdColor()
+                    && check.getContiene().getIdMarca() == obj.getIdMarca()
+                    && check.getContiene().getPrecio() == obj.getPrecio()) {
+                JOptionPane.showMessageDialog(null,
+                        "El producto con estas características ya existe. \nSe procedió a aumentar el stock de ese producto \nCon id " + check.getContiene().getIdContiene() + " y stock " + check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                byte stockActualizado = (byte) (check.getContiene().getStock() + obj.getStock());
+                check.getContiene().setStock(stockActualizado);
+                System.out.println(stockActualizado);
+                return true;
+            }
             check = check.getSiguiente();
         }
         if (inicio == null) {
             inicio = new Nodo(null, null, obj);
             fin = inicio;
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
+                codigos.write(obj.getIdContiene() + "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -135,7 +134,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
             inicio.setAnterior(nuevo);
             inicio = nuevo;
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
+                codigos.write(obj.getIdContiene() + "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -146,57 +145,67 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
 
     public boolean agregarPosicion(Contiene obj, int posicion) {
         if (posicion < 0) {
-            JOptionPane.showMessageDialog(null, "Posicion invalida", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Posición inválida", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+        // Verificar si el producto ya existe
         Nodo check = inicio;
         while (check != null) {
-                    if ( check.getContiene().getIdProducto() == obj.getIdProducto() &&
-                    check.getContiene().getIdTalla() == obj.getIdTalla() &&
-                    check.getContiene().getIdColor() == obj.getIdColor() &&
-                    check.getContiene().getIdMarca() == obj.getIdMarca() &&
-                    check.getContiene().getPrecio() == obj.getPrecio()) {
-                        JOptionPane.showMessageDialog(null, 
-            "El producto con estas caracteristica ya existe. \nSe procedio a aumentar el stock de ese producto \nCon id "+check.getContiene().getIdContiene()+" y stock "+check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
-                        byte stockActualizado = (byte) (check.getContiene().getPrecio() + obj.getStock());
-                        //check.setContiene(obj);
-                        System.out.println(stockActualizado);
-                        return false;
-                    }
+            if (check.getContiene().getIdProducto() == obj.getIdProducto()
+                    && check.getContiene().getIdTalla() == obj.getIdTalla()
+                    && check.getContiene().getIdColor() == obj.getIdColor()
+                    && check.getContiene().getIdMarca() == obj.getIdMarca()
+                    && check.getContiene().getPrecio() == obj.getPrecio()) {
+                JOptionPane.showMessageDialog(null,
+                        "El producto con estas características ya existe. \nSe procedió a aumentar el stock de ese producto \nCon id " + check.getContiene().getIdContiene() + " y stock " + check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                byte stockActualizado = (byte) (check.getContiene().getStock() + obj.getStock());
+                check.getContiene().setStock(stockActualizado);
+                System.out.println(stockActualizado);
+                return true;
+            }
             check = check.getSiguiente();
         }
+
+        // Insertar en la posición especificada
         if (posicion == 0) {
             Nodo nuevo = new Nodo(inicio, null, obj);
-            inicio.setAnterior(nuevo);
+            if (inicio != null) {
+                inicio.setAnterior(nuevo);
+            }
             inicio = nuevo;
             if (fin == null) {
                 fin = inicio;
             }
-            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            return true;
         } else {
             Nodo temp = inicio;
             int cont = 0;
-            while (cont < posicion - 1) {
+            while (temp != null && cont < posicion - 1) {
                 temp = temp.getSiguiente();
                 cont++;
             }
-            Nodo nuevo = new Nodo(temp, temp.getSiguiente(), obj);
-            temp.getSiguiente().setAnterior(nuevo);
-            temp.setSiguiente(nuevo);
-            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
-                codigos.write(obj.getIdContiene()+ "\n");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
+            if (temp == null || temp.getSiguiente() == null && cont < posicion - 1) {
+                JOptionPane.showMessageDialog(null, "Posición fuera de rango", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            return true;
+            Nodo nuevo = new Nodo(temp, temp.getSiguiente(), obj);
+            if (temp.getSiguiente() != null) {
+                temp.getSiguiente().setAnterior(nuevo);
+            }
+            temp.setSiguiente(nuevo);
+            if (nuevo.getSiguiente() == null) {
+                fin = nuevo;
+            }
         }
+
+        // Guardar el ID en el archivo
+        try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
+            codigos.write(obj.getIdContiene() + "\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error al agregar el código de contiene", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -206,11 +215,11 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
             if (temp.getContiene().getIdContiene() == obj.getIdContiene()) {
                 Nodo check = inicio;
                 while (check != null) {
-                    if (check != temp && (check.getContiene().getIdProducto() == obj.getIdProducto() &&
-                    check.getContiene().getIdTalla() == obj.getIdTalla() &&
-                    check.getContiene().getIdColor() == obj.getIdColor() &&
-                    check.getContiene().getIdMarca() == obj.getIdMarca() &&
-                    check.getContiene().getPrecio() == obj.getPrecio())) {
+                    if (check != temp && (check.getContiene().getIdProducto() == obj.getIdProducto()
+                            && check.getContiene().getIdTalla() == obj.getIdTalla()
+                            && check.getContiene().getIdColor() == obj.getIdColor()
+                            && check.getContiene().getIdMarca() == obj.getIdMarca()
+                            && check.getContiene().getPrecio() == obj.getPrecio())) {
                         JOptionPane.showMessageDialog(null, "El producto con estas caracteristica ya existe", "Error", JOptionPane.ERROR_MESSAGE);
                         return false;
                     }
@@ -276,7 +285,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CONTIENES))) {
             Nodo temp = inicio;
             while (temp != null) {
-                writer.write(temp.getContiene().getIdContiene()+";"+temp.getContiene().getIdProducto()+";"+temp.getContiene().getIdTalla()+";"+temp.getContiene().getIdColor()+";"+temp.getContiene().getIdMarca() + ";" + temp.getContiene().getPrecio()+";"+temp.getContiene().getStock());
+                writer.write(temp.getContiene().getIdContiene() + ";" + temp.getContiene().getIdProducto() + ";" + temp.getContiene().getIdTalla() + ";" + temp.getContiene().getIdColor() + ";" + temp.getContiene().getIdMarca() + ";" + temp.getContiene().getPrecio() + ";" + temp.getContiene().getStock());
                 writer.newLine();
                 temp = temp.getSiguiente();
             }
@@ -300,7 +309,7 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
                     int idMarca = Integer.parseInt(datos[4].strip());
                     float precio = Float.parseFloat(datos[5].strip());
                     byte stock = Byte.parseByte(datos[6].strip());
-                    Nodo nuevo = new Nodo(null, null, new Contiene(idContiene,idProducto,idTalla,idColor,idMarca,precio,stock));
+                    Nodo nuevo = new Nodo(null, null, new Contiene(idContiene, idProducto, idTalla, idColor, idMarca, precio, stock));
                     if (inicio == null) {
                         fin = nuevo;
                         inicio = fin;
@@ -327,5 +336,5 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
         }
         return total;
     }
-    
+
 }
