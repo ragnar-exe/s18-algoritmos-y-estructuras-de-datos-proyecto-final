@@ -1,6 +1,7 @@
 package daoImpl;
 
 import dao.IDaoGenerico;
+import dao.IDaoObtenerLista;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,9 +10,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import model.Cliente;
 import model.DetalleVenta;
+import model.Producto;
 
 public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
@@ -96,13 +100,14 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     @Override
     public boolean actualizar(DetalleVenta obj) {
         for (DetalleVenta dv : dVentas) {
-            if (dv.getIdDVenta() != obj.getIdDVenta()) {
+            if (dv != null &&dv.getIdDVenta() != obj.getIdDVenta()) {
+                JOptionPane.showMessageDialog(null, "Etoy aqui");
                 return false;
             }
         }
 
         for (int i = 0; i < dVentas.length; i++) {
-            if (dVentas[i].getIdDVenta() == obj.getIdDVenta()) {
+            if (dVentas[i] != null && dVentas[i].getIdDVenta() == obj.getIdDVenta()) {
                 dVentas[i] = obj;
                 return true;
             }
@@ -124,12 +129,14 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     @Override
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DVENTA))) {
-            for (DetalleVenta dv : dVentas) {
-                writer.write(dv.getIdDVenta()+ ";" + dv.getIdProducto()+ ";" + dv.getPrecio()+ ";" + dv.getCantidad() + ";" + dv.getTotal());
-                writer.newLine();
+            for (int i = 0; i < dVentas.length; i++) {
+                if (dVentas[i] != null) {
+                    writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";" + dVentas[i].getIdCliente() + ";" + dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio() + ";" + dVentas[i].getTotal());
+                    writer.newLine();
+                }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al guardar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al guardar los colores", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -143,14 +150,14 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                     String[] datos = linea.split(";");
                     int idDVenta = Integer.parseInt(datos[0]);
                     int id = Integer.parseInt(datos[1]);
-                    Float precio = Float.parseFloat(datos[2]);
+                    int idCliente = Integer.parseInt(datos[2]);
                     int cantidad = Integer.parseInt(datos[3]);
-                    Float total = Float.parseFloat(datos[4]);
-                    DetalleVentaDaoImpl venta = new DetalleVentaDaoImpl(); 
-                    venta.enqueue(new DetalleVenta(idDVenta, id, cantidad, precio, total ));
+                    Float precio = Float.parseFloat(datos[4]);
+                    Float total = Float.parseFloat(datos[5]);
+                    this.enqueue(new DetalleVenta(idDVenta, id, idCliente, cantidad, precio, total));
                 }
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DVENTA, "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -193,7 +200,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     @Override
     public boolean agregar(DetalleVenta obj) {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDVENTA, true))) {
-            codigos.write(obj.getIdProducto() + "\n");
+            codigos.write(obj.getIdDVenta() + "\n");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -209,4 +216,31 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         }
     }
 
+    public DetalleVenta[] listarDetalle() {
+        guardarEnArchivo();
+        return dVentas;
+    }
+
+    public List<DetalleVenta> listar(String texto) {
+        List<DetalleVenta> resultado = new LinkedList<>();
+        String valorBuscar = texto.toLowerCase();
+        IDaoObtenerLista<Cliente> idaoCliente =  (IDaoObtenerLista<Cliente>) new ClienteDaoImpl();
+        IDaoObtenerLista<Producto> idaoProducto = new ProductoDaoImpl();
+
+        for (DetalleVenta dv : dVentas) {
+            if (dv != null) {  // Verificación para evitar el NullPointerException
+                boolean coincideConId = String.valueOf(dv.getIdProducto()).contains(valorBuscar);
+                String cliente = idaoCliente.obtenerNombre(dv.getIdCliente());
+                String producto = idaoProducto.obtenerNombre(dv.getIdProducto());
+                boolean coincideConCliente = cliente != null && cliente.contains(valorBuscar);
+                boolean coincideConProducto = producto != null && producto.contains(valorBuscar);
+
+                if (coincideConId || coincideConCliente || coincideConProducto) {
+                    resultado.add(dv);
+                }
+            }
+        }
+        return resultado;
+
+    }
 }

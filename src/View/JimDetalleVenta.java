@@ -4,17 +4,126 @@
  */
 package View;
 
+import daoImpl.ClienteDaoImpl;
+import daoImpl.DetalleVentaDaoImpl;
+import daoImpl.ProductoDaoImpl;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+import model.DetalleVenta;
+import model.Producto;
+
 /**
  *
  * @author Victor
  */
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
-    
+
+    private final DetalleVentaDaoImpl crudDetalleVenta;
+    private DefaultTableModel modelo;
+    private final ProductoDaoImpl IDaoProducto;
+    private final ClienteDaoImpl IDaoCliente;
+    private final Object[] filaDatos;
+    private int idDVenta;
+    private boolean guardar = false;
+
     public JimDetalleVenta() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.setSize(ancho, alto-106);
+        this.setSize(ancho, alto - 106);
+        filaDatos = new Object[6];
+        crudDetalleVenta = new DetalleVentaDaoImpl();
+        IDaoProducto = new ProductoDaoImpl();
+        IDaoCliente = new ClienteDaoImpl();
+        modelo = new DefaultTableModel();
+        cargarClientes();
+        cargarProductos();
+        listarDVentas();
+        habilitarCampo(false);
+        registroBotones(false);
+        crudBotones(false);
+
+    }
+
+    private void cargarProductos() {
+        cboProducto.removeAllItems();
+        cboProducto.addItem("Seleccionar");
+        for (Producto p : IDaoProducto.listar()) {
+            if (p != null) {
+                cboProducto.addItem(p.getNombre());
+            }
+        }
+
+    }
+
+    private void cargarClientes() {
+        cboCliente.removeAllItems();
+        cboCliente.addItem("Seleccionar");
+        for (Cliente c : IDaoCliente.listar()) {
+            if (c != null) {
+                cboCliente.addItem(c.getNombres());
+            }
+        }
+
+    }
+
+    private void limpiarTabla() {
+        modelo = (DefaultTableModel) tblDVenta.getModel();
+        modelo.getDataVector().removeAllElements();
+        tblDVenta.removeAll();
+    }
+
+    private void listarDVentas() {
+        modelo = (DefaultTableModel) tblDVenta.getModel();
+        for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
+            if (dv != null) {
+                filaDatos[0] = dv.getIdDVenta();
+                filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
+                filaDatos[2] = dv.getPrecio();
+                filaDatos[3] = dv.getCantidad();
+                filaDatos[4] = IDaoCliente.obtenerNombre(dv.getIdCliente());
+                filaDatos[5] = dv.getCantidad() * dv.getPrecio();
+                modelo.addRow(filaDatos);
+            }
+        }
+        if (crudDetalleVenta.total() > 1) {
+            buscarCampo(true);
+        } else {
+            buscarCampo(false);
+        }
+    }
+
+    private void registroBotones(boolean f) {
+        btnAgregar.setEnabled(f);
+        btnCancelar.setEnabled(f);
+    }
+
+    private void crudBotones(boolean f) {
+        btnNuevo.setEnabled(!f);
+        btnEditar.setEnabled(f);
+        btnEliminar.setEnabled(f);
+
+    }
+
+    private void habilitarCampo(boolean f) {
+        cboCliente.setEnabled(f);
+        cboProducto.setEnabled(f);
+        txtCantidad.setEnabled(f);
+        txtPrecio.setEnabled(f);
+    }
+
+    private void limpiarCampos() {
+        cboCliente.setSelectedIndex(0);
+        cboProducto.setSelectedIndex(0);
+        txtCantidad.setText("");
+        txtPrecio.setText("");
+    }
+
+    private void buscarCampo(boolean f) {
+        txtBuscar.setText("");
+        txtBuscar.setEnabled(f);
     }
 
     /**
@@ -36,15 +145,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtPrecio = new javax.swing.JTextField();
         txtCantidad = new javax.swing.JTextField();
         cboCliente = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton5 = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        tblDVenta = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtBuscar = new javax.swing.JTextField();
+        lblMensaje = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -82,67 +192,326 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         cboCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jPanel1.add(cboCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 120, 180, -1));
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("Nuevo");
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 190, 90, 30));
+        btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 190, 90, 30));
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setText("Agregar");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 190, 90, 30));
+        btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 190, 90, 30));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Cancelar");
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 190, 90, 30));
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 190, 90, 30));
 
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setText("Editar");
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 90, 30));
+        btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 320, 90, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Categoria", "Marca", "Producto", "Talla", "Color", "Precio", "Cantidad", "Total"
+                "ID", "Producto", "Precio", "Cantidad", "Cliente", "Total"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblDVenta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblDVentaMouseReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblDVenta);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 1170, 250));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 1170, 250));
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setText("Eliminar");
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 270, 110, -1));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 320, 110, -1));
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setText("Total:");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 570, -1, -1));
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 570, 110, -1));
+        jLabel2.setText("Buscar:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 340, -1, -1));
+
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+        jPanel1.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, 310, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 0, 1190, 650));
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, 400, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        habilitarCampo(true);
+        limpiarCampos();
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarDVentas();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblDVenta.clearSelection();
+        cboCliente.requestFocus();
+        cboProducto.requestFocus();
+        guardar = false;
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        String cantidadStr = txtCantidad.getText().strip();
+        String precioStr = txtPrecio.getText().strip();
+
+        // Validar que se haya seleccionado un producto
+        if (cboProducto.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, debe seleccionar un producto.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            cboProducto.requestFocus();
+            return;
+        }
+
+        // Validar que se haya seleccionado un cliente
+        if (cboCliente.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, debe seleccionar un cliente.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            cboCliente.requestFocus();
+            return;
+        }
+
+        // Validar que la cantidad sea un número flotante positivo
+        float cantidad;
+        try {
+            cantidad = Float.parseFloat(cantidadStr);
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, la cantidad debe ser mayor a cero.",
+                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+                txtCantidad.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, la cantidad debe ser un número válido.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            txtCantidad.requestFocus();
+            return;
+        }
+
+        // Validar que el precio sea un número flotante positivo
+        float precio;
+        try {
+            precio = Float.parseFloat(precioStr);
+            if (precio <= 0) {
+                JOptionPane.showMessageDialog(null,
+                        "Advertencia, el precio debe ser mayor a cero.",
+                        "Advertencia", JOptionPane.WARNING_MESSAGE);
+                txtPrecio.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, el precio debe ser un número válido.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            txtPrecio.requestFocus();
+            return;
+        }
+
+        // Obtener los IDs de producto y cliente a través de sus DAO
+        int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
+        int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
+
+        // Si 'guardar' es verdadero, actualizar el producto; si no, agregar uno nuevo
+        if (guardar) {
+            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idProducto, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+                lblMensaje.setText("Se actualizó correctamente el producto con id " + idProducto + ".");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+                guardar = false;
+            } else {
+                lblMensaje.setText("No se actualizó el producto.");
+            }
+        } else {
+            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idProducto, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+                lblMensaje.setText("Se agregó correctamente el producto.");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+            } else {
+                lblMensaje.setText("No se agregó el producto.");
+            }
+        }
+
+        tblDVenta.clearSelection();
+        limpiarTabla();
+        listarDVentas();
+       
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        limpiarCampos();
+        limpiarTabla();
+        listarDVentas();
+        habilitarCampo(false);
+        crudBotones(false);
+        registroBotones(false);
+        lblMensaje.setText("");
+        tblDVenta.clearSelection();
+        guardar = false;
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // TODO add your handling code here:
+        guardar = true;
+        habilitarCampo(true);
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarDVentas();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblDVenta.clearSelection();
+        cboCliente.requestFocus();
+        cboProducto.requestFocus();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        int fila = tblDVenta.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
+                if (crudDetalleVenta.eliminar(new DetalleVenta(idDVenta))) {
+                    lblMensaje.setText("El registro se eliminó correctamente");
+                } else {
+                    lblMensaje.setText("El registro NO se pudo eliminar");
+                }
+            }
+            buscarCampo(true);
+            limpiarTabla();
+            listarDVentas();
+            limpiarCampos();
+            registroBotones(false);
+            crudBotones(false);
+            txtCantidad.setText("");
+            txtPrecio.setText("");
+            tblDVenta.clearSelection();
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void tblDVentaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDVentaMouseReleased
+        // TODO add your handling code here:
+        int fila = tblDVenta.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Debe seleccionar una fila.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            habilitarCampo(false);
+            idDVenta = Integer.parseInt(tblDVenta.getValueAt(fila, 0).toString());
+            cboProducto.setSelectedItem(tblDVenta.getValueAt(fila, 1));
+            txtPrecio.setText(tblDVenta.getValueAt(fila, 2).toString());
+            txtCantidad.setText(tblDVenta.getValueAt(fila, 3).toString());
+            cboCliente.setSelectedItem(tblDVenta.getValueAt(fila, 4));
+            lblMensaje.setText("");
+            buscarCampo(false);
+            registroBotones(false);
+            crudBotones(true);
+            btnCancelar.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblDVentaMouseReleased
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        // TODO add your handling code here:
+        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
+        int n = 0;       // Contador de resultados
+        String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
+        if (valorBuscar.equalsIgnoreCase("")) {
+            // Si el campo de búsqueda está vacío, muestra todos los productos
+            limpiarTabla();
+            listarDVentas();  // Método para listar todos los productos
+            lblMensaje.setText("");
+        } else {
+            // Llama al método buscar() de ProductoDaoImpl
+            List<DetalleVenta> detallesEncontrados = crudDetalleVenta.listar(valorBuscar);
+
+            // Itera sobre los productos encontrados y los agrega a la tabla
+            for (DetalleVenta dv : detallesEncontrados) {
+                filaDatos[0] = dv.getIdDVenta();
+                filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
+                filaDatos[2] = dv.getPrecio();
+                filaDatos[3] = dv.getCantidad();
+                filaDatos[4] = IDaoCliente.obtenerNombre(dv.getIdCliente());
+                filaDatos[5] = dv.getCantidad() * dv.getPrecio();
+
+                modelo.addRow(filaDatos);  // Agrega los datos a la tabla
+                n++;  // Incrementa el contador de resultados
+            }
+
+            lblMensaje.setText(n + " registros encontrados.");  // Muestra el número de resultados encontrados
+        }
+        txtCantidad.setText("");  // Limpia el campo de nombre
+        txtPrecio.setText("");
+    }//GEN-LAST:event_txtBuscarKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboCliente;
     private javax.swing.JComboBox<String> cboProducto;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblMensaje;
+    private javax.swing.JTable tblDVenta;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables

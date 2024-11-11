@@ -1,23 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package View;
 
-/**
- *
- * @author Victor
- */
-public class JimUsuario extends javax.swing.JInternalFrame {
+import java.util.Stack;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-    /**
-     * Creates new form JimUsuario
-     */
+public class JimUsuario extends javax.swing.JInternalFrame {
+  private Stack<String> userStack = new Stack<>();
+    private DefaultTableModel tableModel;
+
     public JimUsuario() {
         initComponents();
+<<<<<<< HEAD
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
+=======
+        tableModel = (DefaultTableModel) tblUsuarios.getModel();
+        int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+        int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+        this.setSize(ancho, alto - 106);
+        
+>>>>>>> 8cbeffc4122a3aee93f2d3281d2ad52aa7d206e6
     }
 
     /**
@@ -41,7 +44,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblUsuarios = new javax.swing.JTable();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -104,7 +107,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel3.setText("Buscar:");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -112,8 +115,8 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                 "ID", "Usuario"
             }
         ));
-        jTable1.setToolTipText("");
-        jScrollPane1.setViewportView(jTable1);
+        tblUsuarios.setToolTipText("");
+        jScrollPane1.setViewportView(tblUsuarios);
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnEditar.setText("Editar");
@@ -239,43 +242,72 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPushActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPushActionPerformed
-        // TODO add your handling code here:
+         String user = txtNombreUsuario.getText();
+        if (!user.isEmpty()) {
+            userStack.push(user);
+            txtNombreUsuario.setText("");
+            JOptionPane.showMessageDialog(this, "Usuario agregado a la pila.");
+        }
     }//GEN-LAST:event_btnPushActionPerformed
 
     private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
-        // TODO add your handling code here:
+        if (!userStack.isEmpty()) {
+            String removedUser = userStack.pop();
+            JOptionPane.showMessageDialog(this, "Usuario removido: " + removedUser);
+        } else {
+            JOptionPane.showMessageDialog(this, "La pila está vacía.");
+        }
     }//GEN-LAST:event_btnPopActionPerformed
 
     private void btnPeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPeekActionPerformed
-        // TODO add your handling code here:
+        if (!userStack.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Último usuario en la pila: " + userStack.peek());
+        } else {
+            JOptionPane.showMessageDialog(this, "La pila está vacía.");
+        }
     }//GEN-LAST:event_btnPeekActionPerformed
 
     private void btnSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeActionPerformed
-        // TODO add your handling code here:
+         JOptionPane.showMessageDialog(this, "Tamaño de la pila: " + userStack.size());
     }//GEN-LAST:event_btnSizeActionPerformed
 
     private void btnEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmptyActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, userStack.isEmpty() ? "La pila está vacía." : "La pila no está vacía.");
     }//GEN-LAST:event_btnEmptyActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        // TODO add your handling code here:
+        userStack.clear();
+        JOptionPane.showMessageDialog(this, "Pila limpiada.");
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblUsuarios.getSelectedRow();
+        if (selectedRow != -1) {
+            String newUser = txtNombreUsuario.getText();
+            tableModel.setValueAt(newUser, selectedRow, 1);
+            JOptionPane.showMessageDialog(this, "Usuario editado.");
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblUsuarios.getSelectedRow();
+        if (selectedRow != -1) {
+            tableModel.removeRow(selectedRow);
+            JOptionPane.showMessageDialog(this, "Usuario eliminado.");
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+        String user = txtNombreUsuario.getText();
+        if (!user.isEmpty()) {
+            int id = tableModel.getRowCount() + 1;
+            tableModel.addRow(new Object[]{id, user});
+            txtNombreUsuario.setText("");
+        }
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
 
@@ -294,7 +326,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
