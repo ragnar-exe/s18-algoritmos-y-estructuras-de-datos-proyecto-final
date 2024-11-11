@@ -59,50 +59,89 @@ public class ContieneDaoImpl implements IDaoGenerico<Contiene>{
     @Override
     public boolean agregar(Contiene obj) {
         // agregar al final
-        boolean guardar = false;
+        Nodo check = inicio;
+        while (check != null) {
+                    if ( check.getContiene().getIdProducto() == obj.getIdProducto() &
+                    check.getContiene().getIdTalla() == obj.getIdTalla() &
+                    check.getContiene().getIdColor() == obj.getIdColor() &
+                    check.getContiene().getIdMarca() == obj.getIdMarca() &
+                    check.getContiene().getPrecio() == obj.getPrecio()) {
+                        JOptionPane.showMessageDialog(null, 
+            "El producto con estas caracteristica ya existe. \nSe procedio a aumentar el stock de ese producto \nCon id "+check.getContiene().getIdContiene()+" y stock "+check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                        byte stockActualizado = (byte) (check.getContiene().getPrecio() + obj.getStock());
+                        //check.setContiene(obj);
+//                        obj.setStock(stockActualizado);
+//                        check.setContiene(obj);
+                        System.out.println(stockActualizado);
+                        return false;
+                    }
+            check = check.getSiguiente();
+        }
         if (inicio == null) {
             inicio = new Nodo(null, null, obj);
             fin = inicio;
-            
-            guardar = true;
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
+                codigos.write(obj.getIdContiene()+ "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
         } else {
             Nodo nuevo = new Nodo(null, fin, obj);
             fin.setSiguiente(nuevo);
             fin = nuevo;
-            guardar = true;
-        }
-        if (guardar) {
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
                 codigos.write(obj.getIdContiene()+ "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            return true;
         }
-        return guardar;
     }
 
     public boolean agregarInicio(Contiene obj) {
-        boolean guardar = false;
+        Nodo check = inicio;
+        while (check != null) {
+                    if ( check.getContiene().getIdProducto() == obj.getIdProducto() &&
+                    check.getContiene().getIdTalla() == obj.getIdTalla() &&
+                    check.getContiene().getIdColor() == obj.getIdColor() &&
+                    check.getContiene().getIdMarca() == obj.getIdMarca() &&
+                    check.getContiene().getPrecio() == obj.getPrecio()) {
+                        JOptionPane.showMessageDialog(null, 
+            "El producto con estas caracteristica ya existe. \nSe procedio a aumentar el stock de ese producto \nCon id "+check.getContiene().getIdContiene()+" y stock "+check.getContiene().getStock(), "Error", JOptionPane.ERROR_MESSAGE);
+                        byte stockActualizado = (byte) (check.getContiene().getPrecio() + obj.getStock());
+                        //check.setContiene(obj);
+//                        obj.setStock(stockActualizado);
+//                        check.setContiene(obj);
+                        System.out.println(stockActualizado);
+                        return false;
+                    }
+            check = check.getSiguiente();
+        }
         if (inicio == null) {
             inicio = new Nodo(null, null, obj);
             fin = inicio;
-            guardar = true;
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
+                codigos.write(obj.getIdContiene()+ "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
         } else {
             Nodo nuevo = new Nodo(inicio, null, obj);
             inicio.setAnterior(nuevo);
             inicio = nuevo;
-            guardar = true;
-        }
-        if (guardar) {
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCONTIENE, true))) {
                 codigos.write(obj.getIdContiene()+ "\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al agregar el codigo de contiene", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
+            return true;
         }
-        return guardar;
     }
 
     public boolean agregarPosicion(Contiene obj, int posicion) {

@@ -80,7 +80,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
         cboTalla.addItem("Seleccionar");
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 5; j++) {
-                if(iDaoTalla.listar(i, j) != null) {
+                if (iDaoTalla.listar(i, j) != null) {
                     cboTalla.addItem(String.valueOf(iDaoTalla.listar(i, j).getNumero()));
                 }
             }
@@ -128,6 +128,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private void registroBotones(boolean f) {
         btnGuardar.setEnabled(f);
+        btnGuardarInicio.setEnabled(f);
+        btnGuardarPosicon.setEnabled(f);
         btnCancelar.setEnabled(f);
     }
 
@@ -135,6 +137,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
         btnNuevo.setEnabled(!f);
         btnEditar.setEnabled(f);
         btnEliminar.setEnabled(f);
+        btnEliminarInicio.setEnabled(f);
+        btnEliminarFinal.setEnabled(f);
     }
 
     private void limpiarCampos() {
@@ -189,6 +193,10 @@ public class JimContiene extends javax.swing.JInternalFrame {
         cboProducto = new javax.swing.JComboBox<>();
         txtStock = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
+        btnGuardarInicio = new javax.swing.JButton();
+        btnGuardarPosicon = new javax.swing.JButton();
+        btnEliminarInicio = new javax.swing.JButton();
+        btnEliminarFinal = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -315,6 +323,42 @@ public class JimContiene extends javax.swing.JInternalFrame {
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 390, 30));
 
+        btnGuardarInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGuardarInicio.setText("Guardar Inicio");
+        btnGuardarInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarInicioActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 220, 130, 30));
+
+        btnGuardarPosicon.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGuardarPosicon.setText("Guardar Posicion");
+        btnGuardarPosicon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarPosiconActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardarPosicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 220, -1, 30));
+
+        btnEliminarInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminarInicio.setText("Eliminar Inicio");
+        btnEliminarInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarInicioActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnEliminarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 220, 130, 30));
+
+        btnEliminarFinal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminarFinal.setText("Eliminar Final");
+        btnEliminarFinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarFinalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnEliminarFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 220, -1, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -327,7 +371,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
             cboProducto.requestFocus();
             return;
         }
-        
+
         if (cboMarca.getSelectedItem().equals("Seleccionar")) {
             JOptionPane.showMessageDialog(null,
                     "Advertencia, Debe seleccionar una marca.",
@@ -336,7 +380,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
             cboMarca.requestFocus();
             return;
         }
-        
+
         if (cboTalla.getSelectedItem().equals("Seleccionar")) {
             JOptionPane.showMessageDialog(null,
                     "Advertencia, Debe seleccionar una marca.",
@@ -345,7 +389,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
             cboTalla.requestFocus();
             return;
         }
-        
+
         if (cboColor.getSelectedItem().equals("Seleccionar")) {
             JOptionPane.showMessageDialog(null,
                     "Advertencia, Debe seleccionar una marca.",
@@ -354,7 +398,7 @@ public class JimContiene extends javax.swing.JInternalFrame {
             cboColor.requestFocus();
             return;
         }
-        
+
         if (txtPrecio.getText().strip().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Advertencia, Debe ingresar un precio.",
@@ -363,60 +407,60 @@ public class JimContiene extends javax.swing.JInternalFrame {
             cboMarca.requestFocus();
             return;
         }
-        
+
         float precio;
         try {
             precio = Float.parseFloat(txtPrecio.getText().strip());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                        "Advertencia, el precio debe ser numeros decimales.",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
             txtPrecio.requestFocus();
             return;
         }
-        
+
         byte stock;
         try {
             stock = Byte.parseByte(txtStock.getText().strip());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                        "Advertencia, el precio debe ser numeros decimales.",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
             txtStock.requestFocus();
             return;
         }
-        
+
         int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
         int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
         int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
         int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
         if (guardar) {
-                if (crudContiene.actualizar(new Contiene(idContiene, idProducto, idTalla, idColor, idMarca, precio, stock))) {
-                    lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
-                    limpiarCampos();
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
-                    guardar = false;
-                } else {
-                    lblMensaje.setText("No se actualizo el registro de stock.");
-                }
+            if (crudContiene.actualizar(new Contiene(idContiene, idProducto, idTalla, idColor, idMarca, precio, stock))) {
+                lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+                guardar = false;
             } else {
-                if (crudContiene.agregar(new Contiene(crudContiene.obtenerUltimoId(),idProducto, idTalla, idColor, idMarca, precio, stock))) {
-                    lblMensaje.setText("Se agrego correctamente el registro de stock.");
-                    limpiarCampos();
-                    habilitarCampo(false);
-                    registroBotones(false);
-                    crudBotones(false);
-                } else {
-                    lblMensaje.setText("No se agrego el registro de stock.");
-                }
+                lblMensaje.setText("No se actualizo el registro de stock.");
             }
-            tblStockProducto.clearSelection();
-            limpiarTabla();
-            listarStockProductos();
+        } else {
+            if (crudContiene.agregar(new Contiene(crudContiene.obtenerUltimoId(), idProducto, idTalla, idColor, idMarca, precio, stock))) {
+                lblMensaje.setText("Se agrego correctamente el registro de stock.");
+                limpiarCampos();
+                habilitarCampo(false);
+                registroBotones(false);
+                crudBotones(false);
+            } else {
+                lblMensaje.setText("No se agrego el registro de stock.");
+            }
+        }
+        tblStockProducto.clearSelection();
+        limpiarTabla();
+        listarStockProductos();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -531,11 +575,195 @@ public class JimContiene extends javax.swing.JInternalFrame {
         limpiarCampos();
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void btnGuardarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarInicioActionPerformed
+        if (cboProducto.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una producto.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboProducto.requestFocus();
+            return;
+        }
+
+        if (cboMarca.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboMarca.requestFocus();
+            return;
+        }
+
+        if (cboTalla.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboTalla.requestFocus();
+            return;
+        }
+
+        if (cboColor.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboColor.requestFocus();
+            return;
+        }
+
+        if (txtPrecio.getText().strip().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe ingresar un precio.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboMarca.requestFocus();
+            return;
+        }
+
+        float precio;
+        try {
+            precio = Float.parseFloat(txtPrecio.getText().strip());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtPrecio.requestFocus();
+            return;
+        }
+
+        byte stock;
+        try {
+            stock = Byte.parseByte(txtStock.getText().strip());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtStock.requestFocus();
+            return;
+        }
+
+        int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
+        int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
+        int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
+        int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
+        if (crudContiene.agregarInicio(new Contiene(crudContiene.obtenerUltimoId(), idProducto, idTalla, idColor, idMarca, precio, stock))) {
+            lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
+            limpiarCampos();
+            habilitarCampo(false);
+            registroBotones(false);
+            crudBotones(false);
+            guardar = false;
+        } else {
+            lblMensaje.setText("No se actualizo el registro de stock.");
+        }
+    }//GEN-LAST:event_btnGuardarInicioActionPerformed
+
+    private void btnGuardarPosiconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPosiconActionPerformed
+        if (cboProducto.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una producto.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboProducto.requestFocus();
+            return;
+        }
+
+        if (cboMarca.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboMarca.requestFocus();
+            return;
+        }
+
+        if (cboTalla.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboTalla.requestFocus();
+            return;
+        }
+
+        if (cboColor.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe seleccionar una marca.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboColor.requestFocus();
+            return;
+        }
+
+        if (txtPrecio.getText().strip().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, Debe ingresar un precio.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            cboMarca.requestFocus();
+            return;
+        }
+
+        float precio;
+        try {
+            precio = Float.parseFloat(txtPrecio.getText().strip());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtPrecio.requestFocus();
+            return;
+        }
+
+        byte stock;
+        try {
+            stock = Byte.parseByte(txtStock.getText().strip());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, el precio debe ser numeros decimales.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            txtStock.requestFocus();
+            return;
+        }
+
+        int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
+        int idTalla = iDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
+        int idColor = iDaoColor.obtenerId(cboColor.getSelectedItem().toString());
+        int idMarca = iDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
+        if (crudContiene.agregarPosicion(new Contiene(crudContiene.obtenerUltimoId(), idProducto, idTalla, idColor, idMarca, precio, stock))) {
+            lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idContiene + ".");
+            limpiarCampos();
+            habilitarCampo(false);
+            registroBotones(false);
+            crudBotones(false);
+            guardar = false;
+        } else {
+            lblMensaje.setText("No se actualizo el registro de stock.");
+        }
+    }//GEN-LAST:event_btnGuardarPosiconActionPerformed
+
+    private void btnEliminarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInicioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarInicioActionPerformed
+
+    private void btnEliminarFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFinalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarFinalActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEliminarFinal;
+    private javax.swing.JButton btnEliminarInicio;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnGuardarInicio;
+    private javax.swing.JButton btnGuardarPosicon;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboColor;
     private javax.swing.JComboBox<String> cboMarca;
