@@ -1,11 +1,9 @@
 package daoImpl;
 
-import dao.IDaoExtendido;
-import java.util.List;
+import dao.IDaoGenerico;
 import model.Venta;
 
-public class VentaDaoImpl {
-
-    
+public class VentaDaoImpl{
+   
     
 }
