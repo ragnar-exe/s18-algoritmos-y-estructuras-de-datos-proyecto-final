@@ -15,6 +15,9 @@ public class JimUsuario extends javax.swing.JInternalFrame {
      */
     public JimUsuario() {
         initComponents();
+        int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+        int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+        this.setSize(ancho, alto - 106);
     }
 
     /**

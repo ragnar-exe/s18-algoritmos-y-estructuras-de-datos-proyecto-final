@@ -70,7 +70,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
     public String obtenerNombre(int id) {
         String nombre = "";
         for (int i = 0; i < colores.length; i++) {
-            if (colores[i].getIdColor() == id) {
+            if (colores[i] != null && colores[i].getIdColor() == id) {
                 nombre = colores[i].getNombre();
             }
         }

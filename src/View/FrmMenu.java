@@ -52,6 +52,7 @@ public class FrmMenu extends javax.swing.JFrame {
         JmColores = new javax.swing.JMenu();
         JmProveedores = new javax.swing.JMenu();
         JimMarca = new javax.swing.JMenu();
+        JimUsuario = new javax.swing.JMenu();
         FrmLogin = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -231,6 +232,15 @@ public class FrmMenu extends javax.swing.JFrame {
         });
         jMenuBar1.add(JimMarca);
 
+        JimUsuario.setText("USUARIOS");
+        JimUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        JimUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JimUsuarioMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(JimUsuario);
+
         FrmLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-s.png"))); // NOI18N
         FrmLogin.setText("CERRAR SESION");
         FrmLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -342,6 +352,12 @@ public class FrmMenu extends javax.swing.JFrame {
         vistaProductos.setVisible(true);
     }//GEN-LAST:event_JmRegistroProductoActionPerformed
 
+    private void JimUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JimUsuarioMouseClicked
+        JimUsuario vistaUsuarios = new JimUsuario();
+        jDesktopPane_menu.add(vistaUsuarios);
+        vistaUsuarios.setVisible(true);
+    }//GEN-LAST:event_JimUsuarioMouseClicked
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -354,6 +370,7 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenu FrmLogin;
     private javax.swing.JMenu JimMarca;
     private javax.swing.JMenu JimProductos;
+    private javax.swing.JMenu JimUsuario;
     private javax.swing.JMenu JmCategorias;
     private javax.swing.JMenu JmCliente;
     private javax.swing.JMenu JmColores;

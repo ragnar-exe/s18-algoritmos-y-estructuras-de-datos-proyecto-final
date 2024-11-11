@@ -48,6 +48,16 @@ public class ProductoDaoImpl implements IDaoObtenerLista<Producto> {
         }
         return nombre;
     }
+    
+    public int obtenerCategoria(int id) {
+        int idCategoria = -1;
+        for (Producto producto : productos) {
+            if (producto.getIdProducto() == id) {
+                idCategoria = producto.getIdCategoria();
+            }
+        }
+        return idCategoria;
+    }
 
     @Override
     public int obtenerUltimoId() {

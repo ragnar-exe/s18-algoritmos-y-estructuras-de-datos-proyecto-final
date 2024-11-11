@@ -21,7 +21,7 @@ import model.Nodo;
 
 public class JimContiene extends javax.swing.JInternalFrame {
 
-    private IDaoGenerico<Contiene> crudContiene;
+    private ContieneDaoImpl crudContiene;
     private ProductoDaoImpl IDaoProducto;
     private CategoriaDaoImpl iDaoCategoria;
     private ColorDaoImpl iDaoColor;
@@ -99,22 +99,25 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private void listarStockProductos() {
         modelo = (DefaultTableModel) tblStockProducto.getModel();
-//        for (Contiene c : crudContiene.listar()) {
-//            filaDatos[0] = c.getIdContiene();
-//            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
-//            filaDatos[2] = iDaoCategoria.obtenerNombre(iDaoProducto.obtenerIdForeignKey(c.getIdProducto()));
-//            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
-//            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
-//            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
-//            filaDatos[6] = c.getPrecio();
-//            filaDatos[7] = c.getStock();
-//            modelo.addRow(filaDatos);
-//        }
-//        if (crudContiene.total() > 1) {
-//            txtBuscar.setEnabled(true);
-//        } else {
-//            txtBuscar.setEnabled(false);
-//        }
+        crudContiene.guardarEnArchivo();
+        Nodo temp = crudContiene.inicio;
+        while (temp != null) {
+            filaDatos[0] = temp.getContiene().getIdContiene();
+            filaDatos[1] = IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto());
+            filaDatos[2] = iDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto()));
+            filaDatos[3] = iDaoMarca.obtenerNombre(temp.getContiene().getIdMarca());
+            filaDatos[4] = iDaoTalla.obtenerNombre(temp.getContiene().getIdTalla());
+            filaDatos[5] = iDaoColor.obtenerNombre(temp.getContiene().getIdColor());
+            filaDatos[6] = temp.getContiene().getPrecio();
+            filaDatos[7] = temp.getContiene().getStock();
+            modelo.addRow(filaDatos);
+            temp = temp.siguiente;
+        }
+        if (crudContiene.total() > 1) {
+            txtBuscar.setEnabled(true);
+        } else {
+            txtBuscar.setEnabled(false);
+        }
     }
 
     private void limpiarTabla() {
