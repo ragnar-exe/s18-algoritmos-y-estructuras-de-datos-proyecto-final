@@ -8,11 +8,14 @@ import javax.swing.table.DefaultTableModel;
 import model.Persona;
 import model.Proveedor;
 import dao.IDaoObtenerLista;
+import java.util.List;
 
 public class JimProveedor extends javax.swing.JInternalFrame {
-
+    
+    private ProveedorDaoImpl pv = new ProveedorDaoImpl();
     private DefaultTableModel modelo;
-    private IDaoObtenerLista<Proveedor> crudProveedor;
+//  private IDaoObtenerLista<Proveedor> crudProveedor;
+    
     private IDaoExtendido<Persona> crudPersona;
     private Object[] filaDatos;
     private int idProveedor;
@@ -37,19 +40,19 @@ public class JimProveedor extends javax.swing.JInternalFrame {
 
     private void listarProveedores() {
         modelo = (DefaultTableModel) tblProveedor.getModel();
-//        for (Proveedor p : crudProveedor.listar()) {
-//            filaDatos[0] = p.getIdProveedor();
-//            filaDatos[1] = p.getNombres();
-//            filaDatos[2] = p.getApellidos();
-//            filaDatos[3] = p.getCorreo();
-//            filaDatos[4] = p.getTelefono();
-//            modelo.addRow(filaDatos);
-//        }
-//        if (crudProveedor.total() > 1) {
-//            buscarCampo(true);
-//        } else {
-//            buscarCampo(false);
-//        }
+        for (Proveedor p : pv.listar()) {
+            filaDatos[0] = p.getIdProveedor();
+            filaDatos[1] = p.getNombres();
+            filaDatos[2] = p.getApellidos();
+            filaDatos[3] = p.getCorreo();
+            filaDatos[4] = p.getTelefono();
+            modelo.addRow(filaDatos);
+        }
+        if (pv.total() > 1) {
+            buscarCampo(true);
+        } else {
+            buscarCampo(false);
+        }
     }
 
     private void limpiarTabla() {
@@ -111,6 +114,11 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         txtCorreo = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
+        btnClear = new javax.swing.JButton();
+        btnE_Atender = new javax.swing.JButton();
+        btnZize = new javax.swing.JButton();
+        btnEmpty = new javax.swing.JButton();
+        btnDequeee = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -163,7 +171,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 300, 80, 31));
+        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 300, 80, 31));
 
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         btnEliminar.setText("Eliminar");
@@ -172,7 +180,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnEliminarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 300, 90, 31));
+        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 300, 90, 31));
 
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -181,7 +189,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 250, 90, 31));
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 250, 90, 31));
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -190,7 +198,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 250, 80, 31));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 250, 80, 31));
 
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         btnGuardar.setText("Guardar");
@@ -199,7 +207,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 250, 90, 31));
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 250, 90, 31));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setText("Telefono:");
@@ -212,17 +220,90 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         getContentPane().add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 200, 240, 31));
 
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 250, 270, 30));
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 470, 30));
+
+        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        btnClear.setText("Eliminar Todo");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 250, -1, -1));
+
+        btnE_Atender.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        btnE_Atender.setText("Elemento Atendender");
+        btnE_Atender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE_AtenderActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnE_Atender, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 300, -1, -1));
+
+        btnZize.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnZize.setText("Zize");
+        btnZize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnZizeActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnZize, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 300, -1, -1));
+
+        btnEmpty.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEmpty.setText("IsEmpty");
+        btnEmpty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmptyActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnEmpty, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 300, -1, -1));
+
+        btnDequeee.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDequeee.setText("Eliminar Ultimo");
+        btnDequeee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDequeeeActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnDequeee, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 250, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-
+        guardar = true;
+        habilitarCampo(true);
+        registroBotones(true);
+        crudBotones(false);
+        limpiarTabla();
+        listarProveedores();
+        buscarCampo(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblProveedor.clearSelection();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        int fila = tblProveedor.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
+                if (pv.eliminar(new Proveedor(idProveedor))) {
+                    lblMensaje.setText("El registro se eliminó correctamente");
+                } else {
+                    lblMensaje.setText("El registro NO se pudo eliminar");
+                }
+            }
+            buscarCampo(true);
+            limpiarTabla();
+            listarProveedores();
+            limpiarCampos();
+            registroBotones(false);
+            crudBotones(false);
+            txtNombres.setText("");
+            tblProveedor.clearSelection();
+        }                   
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -331,7 +412,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         String datos = nombres+' '+apellidos;
         if (guardar) {
 //            idPersona = crudProveedor.obtenerIdForeignKey(idProveedor);
-            if ( crudPersona.actualizar(new Persona(idPersona, nombres, apellidos, correo)) && crudProveedor.actualizar(new Proveedor(idProveedor, telefono))) {
+            if ( pv.actualizar(new Proveedor(idProveedor, nombres, apellidos, correo,telefono))) {
                 lblMensaje.setText("Se actualizo correctamente el proveedor con id " + idProveedor + ".");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -342,7 +423,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 lblMensaje.setText("No se actualizo el proveedor.");
             }
         } else {
-            if ( crudPersona.agregar(new Persona(nombres, apellidos, correo))  && crudProveedor.agregar(new Proveedor(telefono, crudPersona.obtenerId(datos)))) {
+            if ( pv.agregar(new Proveedor(pv.obtenerUltimoId(), nombres, apellidos, correo, telefono))) {
                 lblMensaje.setText("Se agrego correctamente el producto.");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -362,16 +443,98 @@ public class JimProveedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tblProveedorMouseReleased
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+       // TODO add your handling code here:
+        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
+        int n = 0;       // Contador de resultados
+        modelo = (DefaultTableModel) tblProveedor.getModel();  // Obtiene el modelo de la tabla
+        String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
+        if (valorBuscar.equalsIgnoreCase("")) {
+            // Si el campo de búsqueda está vacío, muestra todos los productos
+            limpiarTabla();
+            listarProveedores();  // Método para listar todos los productos
+            lblMensaje.setText("");
+        } else {
+            // Llama al método buscar() de ProductoDaoImpl
+            List<Proveedor> proveedorEncontrados = pv.listar(valorBuscar);
 
+            // Itera sobre los productos encontrados y los agrega a la tabla
+            for (Proveedor p : proveedorEncontrados) {
+                filaDatos[0] = p.getIdProveedor();
+                filaDatos[1] = p.getNombres();
+                filaDatos[2] = p.getApellidos();
+                filaDatos[3] = p.getCorreo();
+                filaDatos[4] = p.getTelefono();
+                modelo.addRow(filaDatos);
+                n++;  // Incrementa el contador de resultados
+            }
+
+            lblMensaje.setText(n + " registros encontrados.");  // Muestra el número de resultados encontrados
+        }
+        txtNombres.setText("");  // Limpia el campo de nombre
+                                
     }//GEN-LAST:event_txtBuscarKeyReleased
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        int confirmacion = JOptionPane.showConfirmDialog(
+                null,
+                "¿Está seguro de que desea eliminar todos los registros?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            pv.clear();
+            limpiarTabla();
+            listarProveedores();
+            lblMensaje.setText("Todos los registros se eliminaron correctamente.");
+        } else {
+            lblMensaje.setText("La eliminación de todos los registros fue cancelada.");
+        }
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnE_AtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE_AtenderActionPerformed
+         if (pv.isEmpty()==true) {
+            lblMensaje.setText("Aun no hay elemenros en la cola");
+        }else {
+            Proveedor p = pv.peek();
+            lblMensaje.setText("El elemento a atender es: " + p.getNombres() + " " + p.getApellidos());
+        }
+    }//GEN-LAST:event_btnE_AtenderActionPerformed
+
+    private void btnZizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZizeActionPerformed
+       lblMensaje.setText("El tamaño de la cola es: " + pv.size());
+    }//GEN-LAST:event_btnZizeActionPerformed
+
+    private void btnEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmptyActionPerformed
+         boolean d = pv.isEmpty();
+        if ( d ==  true) {
+            lblMensaje.setText("Cola esta vacia");
+        }else{
+            lblMensaje.setText("Cola con datos");
+        }
+    }//GEN-LAST:event_btnEmptyActionPerformed
+
+    private void btnDequeeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDequeeeActionPerformed
+
+        Proveedor p = pv.dequeue();
+        limpiarTabla();
+        listarProveedores();
+        lblMensaje.setText("El provedor eliminado es: " + p.getNombres() + " " + p.getApellidos());
+    }//GEN-LAST:event_btnDequeeeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDequeee;
+    private javax.swing.JButton btnE_Atender;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEmpty;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnZize;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
