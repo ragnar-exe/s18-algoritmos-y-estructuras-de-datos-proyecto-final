@@ -439,7 +439,25 @@ public class JimProveedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void tblProveedorMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProveedorMouseReleased
-
+        int fila = tblProveedor.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Debe seleccionar una fila.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            habilitarCampo(false);
+            idProveedor = Integer.parseInt(tblProveedor.getValueAt(fila, 0).toString());
+            txtNombres.setText(tblProveedor.getValueAt(fila, 1).toString());
+            txtApellidos.setText(tblProveedor.getValueAt(fila, 2).toString());
+            txtCorreo.setText(tblProveedor.getValueAt(fila, 3).toString());
+            txtTelefono.setText(tblProveedor.getValueAt(fila, 4).toString());
+            lblMensaje.setText("");
+            buscarCampo(false);
+            registroBotones(false);
+            crudBotones(true);
+            //btnCima.setEnabled(true);
+        }
     }//GEN-LAST:event_tblProveedorMouseReleased
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
