@@ -32,6 +32,12 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
         } else {
             top++;
             usuarios[top] = u;
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSUSUARIOS, true))) {
+                    codigos.write(u.getIdUsuario()+ "\n");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al agregar el codigo del Usuario", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             return true;
         }
     }
@@ -156,7 +162,14 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
 
     @Override
     public int total() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int totalRegistros = 0;
+        for (int i = 0; i < usuarios.length; i++) {
+            if (usuarios[i] != null) {
+                totalRegistros++;
+            }
+        }
+        return totalRegistros;
+    
     }
 
     @Override
