@@ -3,6 +3,7 @@ package daoImpl;
 import dao.IDaoGenerico;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -116,12 +117,41 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
 
     @Override
     public void guardarEnArchivo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_USUARIOS))) {
+            for (int i = 0; i < usuarios.length; i++) {
+                if (usuarios[i] != null) {
+                    writer.write(usuarios[i].getIdUsuario()+ ";" + usuarios[i].getUsuario()+";"+usuarios[i].getContrasena());
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al guardar los Usuarios", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void cargarDatos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        File fileUsuarios = new File(FILE_USUARIOS);
+        if (fileUsuarios.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileUsuarios))) {
+                String linea;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split(";");
+                    int id = Integer.parseInt(datos[0].strip());
+                    String nombre = datos[1].strip();
+                    String contra = datos[2].strip();
+                    for (int i = 0; i < usuarios.length; i++) {
+                        if (usuarios[i] == null) {
+                            usuarios[i] = new Usuario(id, nombre, contra);
+                            break;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al cargar los Usuarios", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
     }
 
     @Override
