@@ -1,13 +1,12 @@
 package View;
 
-
 import daoImpl.UsuarioDoalmpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Usuario;
 
 public class JimUsuario extends javax.swing.JInternalFrame {
-    
+
     private UsuarioDoalmpl crudUsuario = new UsuarioDoalmpl();
     private DefaultTableModel modelo;
     private Object[] filaDatos;
@@ -25,10 +24,10 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
-        
 
     }
-     private void listarUsuario() {
+
+    private void listarUsuario() {
         modelo = (DefaultTableModel) tblUsuarios.getModel();
         for (Usuario c : crudUsuario.listar()) {
             if (c != null) {
@@ -42,20 +41,23 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         } else {
             txtBuscar.setEnabled(false);
         }
-        
+
     }
-     private void habilitarCampo(boolean f) {
+
+    private void habilitarCampo(boolean f) {
         txtBuscar.setText("");
         txtNombreUsuario.setEnabled(f);
         txtContrasena.requestFocus();
     }
-     private void crudBotones(boolean f) {
+
+    private void crudBotones(boolean f) {
         btnEditar.setEnabled(f);
         btnEliminar.setEnabled(f);
         btnNuevo.setEnabled(!f);
 
     }
-      private void registroBotones(boolean f) {
+
+    private void registroBotones(boolean f) {
         btnClear.setEnabled(f);
         btnEmpty.setEnabled(f);
         btnCancelar.setEnabled(f);
@@ -63,12 +65,14 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         btnPop.setEnabled(f);
         btnPush.setEnabled(f);
         btnSize.setEnabled(f);
-        
+
     }
-      private void limpiarCajas(){
-      txtNombreUsuario.setText("");
-      txtContrasena.setText("");
-      }
+
+    private void limpiarCajas() {
+        txtNombreUsuario.setText("");
+        txtContrasena.setText("");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -300,38 +304,38 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPushActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPushActionPerformed
-         crudUsuario.push(new Usuario(crudUsuario.obtenerUltimoId(), txtNombreUsuario.getText().strip(), txtContrasena.getText().strip()));
-         limpiarCajas();
-         listarUsuario();
-         
+        crudUsuario.push(new Usuario(crudUsuario.obtenerUltimoId(), txtNombreUsuario.getText().strip(), txtContrasena.getText().strip()));
+        limpiarCajas();
+        listarUsuario();
+
     }//GEN-LAST:event_btnPushActionPerformed
 
     private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
-        
+
     }//GEN-LAST:event_btnPopActionPerformed
 
     private void btnPeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPeekActionPerformed
-        
+
     }//GEN-LAST:event_btnPeekActionPerformed
 
     private void btnSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeActionPerformed
-       
+
     }//GEN-LAST:event_btnSizeActionPerformed
 
     private void btnEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmptyActionPerformed
-       
+
     }//GEN-LAST:event_btnEmptyActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        
+
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        
+
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-       
+
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
@@ -341,7 +345,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        
+
     }//GEN-LAST:event_btnCancelarActionPerformed
 
 
@@ -367,5 +371,4 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 
-   
 }
