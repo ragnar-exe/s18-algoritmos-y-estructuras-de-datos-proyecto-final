@@ -1,6 +1,7 @@
 package daoImpl;
 
 import dao.IDaoExtendido;
+import dao.IDaoObtenerLista;
 import java.util.List;
 import model.Cliente;
 import java.io.BufferedReader;
@@ -14,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
-public class ClienteDaoImpl implements IDaoExtendido<Cliente> {
+public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
 
     LinkedList<Cliente> clientes = new LinkedList<>();
     private static final String FILE_CLIENTES = "clientes.txt";
@@ -202,5 +203,15 @@ public class ClienteDaoImpl implements IDaoExtendido<Cliente> {
             }
         }
         return resultado;
+    }
+
+    @Override
+    public List<Cliente> listarOrdenarAscendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Cliente> listarOrdenarDescendete() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

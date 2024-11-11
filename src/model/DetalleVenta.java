@@ -3,16 +3,18 @@ package model;
 public class DetalleVenta {
     private int idDVenta;
     private int idProducto;
+    private int idCliente;
     private int cantidad;
     private float precio;
     private float total;
 
-    public DetalleVenta(int idDVenta, int idProducto, int cantidad, float precio,float total) {
+    public DetalleVenta(int idDVenta, int idProducto,int idCliente, int cantidad, float precio,float total) {
         this.idDVenta = idDVenta;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
         this.precio = precio;
         this.total = total;
+        this.idCliente = idCliente;
     }
 
     public DetalleVenta(int idDVenta) {
@@ -52,6 +54,14 @@ public class DetalleVenta {
 
     public void setPrecio(float precio) {
         this.precio = precio;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
    

@@ -1,14 +1,15 @@
 package View;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 public class FrmMenu extends javax.swing.JFrame {
-    
+
     public static JDesktopPane jDesktopPane_menu;
-    
-    public void mostrarVistaStock(){
+
+    public void mostrarVistaStock() {
         JimStock tablaStock = new JimStock();
         jDesktopPane_menu.add(tablaStock);
         tablaStock.setVisible(true);
@@ -20,16 +21,20 @@ public class FrmMenu extends javax.swing.JFrame {
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
         this.setTitle("Novedades Isidora");
-        
+
         this.setLayout(null);
         jDesktopPane_menu = new JDesktopPane();
-        
+        this.getContentPane().add(jDesktopPane_menu, BorderLayout.CENTER); // Agregar al contenedor principal
+
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        
+
         this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto - 106));
         this.add(jDesktopPane_menu);
         mostrarVistaStock();
+    }
+    public JDesktopPane getDesktopPane() {
+        return jDesktopPane_menu;
     }
 
     @SuppressWarnings("unchecked")
@@ -257,7 +262,7 @@ public class FrmMenu extends javax.swing.JFrame {
 
     private void JmStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JmStockMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_JmStockMouseClicked
 
     private void JmiStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JmiStockActionPerformed

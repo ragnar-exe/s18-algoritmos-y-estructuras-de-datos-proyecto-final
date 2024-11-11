@@ -1,14 +1,17 @@
 package View;
 
 import javax.swing.JDesktopPane;
+import javax.swing.SwingUtilities;
 
 public class JimVenta extends javax.swing.JInternalFrame {
+
     public static JDesktopPane jDesktopPane_menu;
+
     public JimVenta() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.setSize(ancho, alto-106);
+        this.setSize(ancho, alto - 106);
     }
 
     /**
@@ -30,8 +33,11 @@ public class JimVenta extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        btnGenerarDetalle = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
 
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -85,14 +91,14 @@ public class JimVenta extends javax.swing.JInternalFrame {
         jButton4.setText("Ver detalle");
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 120, 120, 30));
 
-        btnGenerarDetalle.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        btnGenerarDetalle.setText("Nuevo");
-        btnGenerarDetalle.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerarDetalleActionPerformed(evt);
+                btnNuevoActionPerformed(evt);
             }
         });
-        jPanel1.add(btnGenerarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 120, -1, 30));
+        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 120, -1, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1190, 530));
 
@@ -107,21 +113,36 @@ public class JimVenta extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarVentaActionPerformed
 
-    private void btnGenerarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarDetalleActionPerformed
-        // TODO add your handling code here:
-        int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
-        int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto - 106));
-        this.add(jDesktopPane_menu);
-        JimDetalleVenta vistaDetalleVenta = new JimDetalleVenta();
-        jDesktopPane_menu.add(vistaDetalleVenta);
-        vistaDetalleVenta.setVisible(true);
-    }//GEN-LAST:event_btnGenerarDetalleActionPerformed
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de venta
+        JimDetalleVenta vistaDVentas = new JimDetalleVenta();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaDVentas) al JDesktopPane
+            jDesktopPane_menu.add(vistaDVentas);
+
+            // Hacer visible el JInternalFrame
+            vistaDVentas.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaDVentas.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarDetalle;
-    private javax.swing.JButton btnGenerarDetalle;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
