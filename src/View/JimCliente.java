@@ -426,25 +426,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
             return;
         }
 
-// Validación para el campo "Correo" (solo verificar si ya existe)
-        if (!correo.isEmpty()) {
-            if (crudCliente.existeCorreo(correo)) {
-                JOptionPane.showMessageDialog(null,
-                        "Advertencia, El correo ya está en uso.",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
-                txtCorreo.requestFocus();
-                return;
-            }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Advertencia, Ingresar el correo del cliente",
-                    "Advertencia",
-                    JOptionPane.WARNING_MESSAGE);
-            txtCorreo.requestFocus();
-            return;
-        }
-
+       
 // Validación para el campo "Dirección"
         if (!direccion.isEmpty()) {
             if (direccion.length() > 100) {
@@ -517,6 +499,7 @@ public class JimCliente extends javax.swing.JInternalFrame {
         } else {
             habilitarCampo(false);
             idCliente = Integer.parseInt(tblClientes.getValueAt(fila, 0).toString());
+            txtNombre2.setText(tblClientes.getValueAt(fila, 2).toString());
             txtApellido.setText(tblClientes.getValueAt(fila, 3).toString());
             txtCorreo.setText(tblClientes.getValueAt(fila, 4).toString());
             txtDni.setText(tblClientes.getValueAt(fila, 1).toString());
