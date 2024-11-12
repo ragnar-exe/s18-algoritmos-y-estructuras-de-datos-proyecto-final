@@ -1,5 +1,8 @@
 package View;
 
+import javax.swing.JDesktopPane;
+import javax.swing.SwingUtilities;
+
 
 public class JimCompra extends javax.swing.JInternalFrame {
     public JimCompra() {
@@ -121,11 +124,29 @@ public class JimCompra extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
-        //this.jDesktopPane_menu.setBounds(0, 0, ancho, (alto - 106));
-        //this.add(jDesktopPane_menu);
-        // JimDetalleVenta vistaDetalleVenta = new JimDetalleVenta();
-        // jDesktopPane_menu.add(vistaDetalleVenta);
-        // vistaDetalleVenta.setVisible(true);
+           FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de compra
+        JimDetalleCompra vistaDCompras = new JimDetalleCompra();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaDCompras) al JDesktopPane
+            jDesktopPane_menu.add(vistaDCompras);
+
+            // Hacer visible el JInternalFrame
+            vistaDCompras.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaDCompras.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
     }//GEN-LAST:event_btnGenerarDetalleCompraActionPerformed
 
 
