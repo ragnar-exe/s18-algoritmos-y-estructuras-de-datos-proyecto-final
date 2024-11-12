@@ -23,21 +23,22 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
 
     public UsuarioDoalmpl() {
         this.top = -1;
+        cargarDatos();
     }
 
     public boolean push(Usuario u) {
         if (top == usuarios.length - 1) {
-            System.out.println("La pila esta llena");
+            JOptionPane.showConfirmDialog(null, "La pila esta llena", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return false;
         } else {
             top++;
             usuarios[top] = u;
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSUSUARIOS, true))) {
-                    codigos.write(u.getIdUsuario()+ "\n");
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error al agregar el codigo del Usuario", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
+                codigos.write(u.getIdUsuario() + "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo del Usuario", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             return true;
         }
     }
@@ -57,7 +58,6 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
         } else {
             return usuarios[top];
         }
-
     }
 
     public int size() {
@@ -126,7 +126,7 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_USUARIOS))) {
             for (int i = 0; i < usuarios.length; i++) {
                 if (usuarios[i] != null) {
-                    writer.write(usuarios[i].getIdUsuario()+ ";" + usuarios[i].getUsuario()+";"+usuarios[i].getContrasena());
+                    writer.write(usuarios[i].getIdUsuario() + ";" + usuarios[i].getUsuario() + ";" + usuarios[i].getContrasena());
                     writer.newLine();
                 }
             }
@@ -162,14 +162,7 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
 
     @Override
     public int total() {
-        int totalRegistros = 0;
-        for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i] != null) {
-                totalRegistros++;
-            }
-        }
-        return totalRegistros;
-    
+        return 0;
     }
 
     @Override
@@ -191,16 +184,17 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
     @Override
     public boolean eliminar(Usuario obj) {
         for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i] != null && usuarios[i].getIdUsuario()== obj.getIdUsuario()) {
+            if (usuarios[i] != null && usuarios[i].getIdUsuario() == obj.getIdUsuario()) {
                 usuarios[i] = null;
                 return true;
             }
         }
         return false;
     }
+
     public Usuario[] listar() {
         guardarEnArchivo();
         return usuarios;
     }
 
-    }
+}

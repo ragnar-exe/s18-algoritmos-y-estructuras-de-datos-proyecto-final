@@ -24,7 +24,6 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
-
     }
 
     private void listarUsuario() {
@@ -36,10 +35,18 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                 modelo.addRow(filaDatos);
             }
         }
-        if (crudUsuario.total() > 1) {
+        if (crudUsuario.size() > 1) {
             txtBuscar.setEnabled(true);
         } else {
             txtBuscar.setEnabled(false);
+        }
+
+        if (crudUsuario.size() > 0) {
+            btnClear.setEnabled(true);
+            btnPeek.setEnabled(true);
+        } else {
+            btnCancelar.setEnabled(false);
+            btnPeek.setEnabled(false);
         }
 
     }
@@ -47,7 +54,8 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     private void habilitarCampo(boolean f) {
         txtBuscar.setText("");
         txtNombreUsuario.setEnabled(f);
-        txtContrasena.requestFocus();
+        txtContrasena.setEnabled(f);
+        txtNombreUsuario.requestFocus();
     }
 
     private void crudBotones(boolean f) {
@@ -101,6 +109,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JTextField();
+        lblMensaje = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel1.setText("Usuarios");
@@ -168,6 +177,11 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             }
         ));
         tblUsuarios.setToolTipText("");
+        tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblUsuariosMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblUsuarios);
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -205,6 +219,8 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("Contraseña:");
 
+        lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -220,42 +236,44 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnNuevo)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEditar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEliminar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancelar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel2))
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                                    .addComponent(txtContrasena))))
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnPush)
-                            .addComponent(btnNuevo))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnPop)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnPeek)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSize))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnEmpty)
-                                    .addComponent(btnEditar))
+                                    .addComponent(txtContrasena))
+                                .addGap(49, 49, 49)
+                                .addComponent(btnPush)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnEliminar)
+                                        .addComponent(btnPop)
                                         .addGap(18, 18, 18)
-                                        .addComponent(btnCancelar))
-                                    .addComponent(btnClear)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                                        .addComponent(btnPeek)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnSize))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnEmpty)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnClear))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(62, 62, 62)
+                                .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,14 +300,15 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                         .addComponent(jLabel4)
                         .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnClear))
+                .addGap(18, 18, 18)
+                .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnEliminar)
                             .addComponent(btnEditar)
@@ -297,17 +316,27 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                             .addComponent(btnCancelar))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPushActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPushActionPerformed
-        crudUsuario.push(new Usuario(crudUsuario.obtenerUltimoId(), txtNombreUsuario.getText().strip(), txtContrasena.getText().strip()));
+        String usuario = txtNombreUsuario.getText().strip();
+        if (usuario.isEmpty()) {
+            JOptionPane.showConfirmDialog(null, "Debe ingresar un usuario.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            txtNombreUsuario.requestFocus();
+            return;
+        }
+        String contrasenia = txtContrasena.getText().strip();
+        if (contrasenia.isEmpty()) {
+            JOptionPane.showConfirmDialog(null, "Debe ingresar una contraseña.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            txtContrasena.requestFocus();
+            return;
+        }
         limpiarCajas();
         listarUsuario();
-
     }//GEN-LAST:event_btnPushActionPerformed
 
     private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
@@ -331,7 +360,14 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-
+        guardar = true;
+        txtNombreUsuario.setEnabled(true);
+        txtContrasena.requestFocus();
+        registroBotones(true);
+        crudBotones(false);
+        btnNuevo.setEnabled(false);
+        lblMensaje.setText("");
+        tblUsuarios.clearSelection();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -340,13 +376,39 @@ public class JimUsuario extends javax.swing.JInternalFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         habilitarCampo(true);
+        lblMensaje.setText("");
+        limpiarCajas();
         btnPush.setEnabled(true);
         btnCancelar.setEnabled(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-
+        limpiarCajas();
+        crudBotones(false);
+        btnPush.setEnabled(false);
+        lblMensaje.setText("");
+        tblUsuarios.clearSelection();
+        habilitarCampo(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void tblUsuariosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseReleased
+        int fila = tblUsuarios.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Debe seleccionar una fila.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            habilitarCampo(false);
+            idUsuario = Integer.parseInt(tblUsuarios.getValueAt(fila, 0).toString());
+            txtNombreUsuario.setText(tblUsuarios.getValueAt(fila, 1).toString());
+            lblMensaje.setText("");
+            registroBotones(false);
+            crudBotones(true);
+            txtBuscar.setEnabled(false);
+            btnCancelar.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblUsuariosMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -365,6 +427,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblMensaje;
     private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtContrasena;
