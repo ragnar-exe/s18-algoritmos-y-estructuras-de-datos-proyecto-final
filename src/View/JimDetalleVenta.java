@@ -103,12 +103,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         } else {
             buscarCampo(false);
         }
-        
-        if (crudDetalleVenta.total() > 0 ) {
-            cboCliente.setEnabled(false);
-        } else {
-            cboCliente.setEnabled(true);
-        }
     }
 
     private void registroBotones(boolean f) {

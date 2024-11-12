@@ -17,13 +17,14 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         initComponents();
         filaDatos = new Object[2];
         modelo = new DefaultTableModel();
-        listarUsuario();
         habilitarCampo(false);
         crudBotones(false);
         registroBotones(false);
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
+                listarUsuario();
+
     }
 
     private void listarUsuario() {
@@ -48,6 +49,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         if (crudUsuario.size() > 0) {
             btnClear.setEnabled(true);
             btnPeek.setEnabled(true);
+            btnPop.setEnabled(true);
         } else {
             btnCancelar.setEnabled(false);
             btnPeek.setEnabled(false);
@@ -117,6 +119,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
+        btnAgregar = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel1.setText("Usuarios");
@@ -228,6 +231,14 @@ public class JimUsuario extends javax.swing.JInternalFrame {
 
         lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
+        btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -264,7 +275,9 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                                     .addComponent(txtNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                                     .addComponent(txtContrasena))
                                 .addGap(49, 49, 49)
-                                .addComponent(btnPush)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnPush)
+                                    .addComponent(btnEmpty))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -274,8 +287,8 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(btnSize))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnEmpty)
-                                        .addGap(18, 18, 18)
+                                        .addComponent(btnAgregar)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnClear))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(62, 62, 62)
@@ -302,12 +315,17 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                             .addComponent(btnSize))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnEmpty)
-                        .addComponent(jLabel4)
-                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnClear))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnEmpty)
+                            .addComponent(btnAgregar)
+                            .addComponent(btnClear))
+                        .addGap(9, 9, 9)))
                 .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,7 +375,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
         if (crudUsuario.size() > 0) {
             Usuario usuarioEliminado = crudUsuario.pop();
-            lblMensaje.setText("Usuario eliminado: " + usuarioEliminado.getUsuario());
+            lblMensaje.setText("Usuario a eliminar en la cima: " + usuarioEliminado.getUsuario());
             modelo.setRowCount(0);
             listarUsuario();
         } else {
@@ -425,6 +443,8 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             txtNombreUsuario.setText("");
             tblUsuarios.clearSelection();
         }
+        limpiarTabla();
+        listarUsuario();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
@@ -468,8 +488,51 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tblUsuariosMouseReleased
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        String title = txtNombreUsuario.getText().strip();
+        if (title.length() > 0 && title.length() <= 50) {
+            if (guardar) {
+                if (crudUsuario.actualizar(new Usuario(idUsuario, title))) {
+                    
+                    lblMensaje.setText("Se actualizo correctamente el color.");
+                    habilitarCampo(false);
+                    registroBotones(false);
+                    crudBotones(false);
+                    guardar = false;
+                } else {
+                    lblMensaje.setText("No se actualizo el color.");
+                }
+            } else {
+                if (crudUsuario.obtenerId(title) == -1) {
+                    if (crudUsuario.agregar(new Usuario(crudUsuario.obtenerUltimoId(), title))) {
+                        lblMensaje.setText("Se agrego correctamente el color.");
+                        habilitarCampo(false);
+                        registroBotones(false);
+                        crudBotones(false);
+                    } else {
+                        lblMensaje.setText("No se agrego el color.");
+                    }
+                } else {
+                    lblMensaje.setText("No se agrego el color porque color ya existe.");
+                    txtNombreUsuario.requestFocus();
+                }
+            }
+            tblUsuarios.clearSelection();
+            limpiarTabla();
+            listarUsuario();
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia, El nombre del color debe estar entre 1 y 50 letras.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnEditar;

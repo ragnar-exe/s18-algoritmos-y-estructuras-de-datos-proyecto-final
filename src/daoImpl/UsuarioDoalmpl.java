@@ -25,6 +25,16 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
         this.top = -1;
         cargarDatos();
     }
+    
+    public int obtenerId(String texto) {
+        int id = -1;
+        for (int i = 0; i < usuarios.length; i++) {
+            if (usuarios[i] != null && usuarios[i].getUsuario().equalsIgnoreCase(texto)) {
+                id = usuarios[i].getIdUsuario();
+            }
+        }
+        return id;
+    }
 
     public boolean push(Usuario u) {
         if (top == usuarios.length - 1) {
@@ -168,13 +178,14 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
 
     @Override
     public boolean actualizar(Usuario obj) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getUsuario().equalsIgnoreCase(obj.getUsuario()) && usuario.getIdUsuario() != obj.getIdUsuario()) {
+        for (int i = 0; i < usuarios.length; i++) {
+            if (usuarios[i] != null && usuarios[i].getUsuario().equalsIgnoreCase(obj.getUsuario()) && usuarios[i].getIdUsuario()!= obj.getIdUsuario()) {
                 return false;
             }
         }
+
         for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i].getIdUsuario() == obj.getIdUsuario()) {
+            if (usuarios[i] != null && usuarios[i].getIdUsuario()== obj.getIdUsuario()) {
                 usuarios[i] = obj;
                 return true;
             }
