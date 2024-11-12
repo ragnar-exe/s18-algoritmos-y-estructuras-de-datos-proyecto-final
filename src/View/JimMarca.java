@@ -433,6 +433,7 @@ public class JimMarca extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarPosiconActionPerformed
 
     private void btnEliminarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInicioActionPerformed
+        
         crudMarca.eliminarInicio();
         limpiarTabla();
         listarMarcas();

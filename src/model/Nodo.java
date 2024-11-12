@@ -5,9 +5,26 @@ public class Nodo {
     public Nodo siguiente;
     public Nodo anterior;
     private Contiene contiene;
+    private Tipo tipo;
 
     public Nodo() {
     }
+
+    public Nodo(Nodo siguiente, Tipo tipo) {
+        this.siguiente = siguiente;
+        this.tipo = tipo;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+    
+    
+    
 
     public Nodo(Marca marca, Nodo siguiente) {
         this.marca = marca;
