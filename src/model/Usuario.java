@@ -13,6 +13,11 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
+    public Usuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    
+
     public Usuario(int idUsuario, String usuario) {
         this.idUsuario = idUsuario;
         this.usuario = usuario;
