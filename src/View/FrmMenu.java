@@ -46,6 +46,7 @@ public class FrmMenu extends javax.swing.JFrame {
         JmiStock = new javax.swing.JMenuItem();
         JmiGanancias = new javax.swing.JMenuItem();
         JmiVendidos = new javax.swing.JMenuItem();
+        JimTipoPago = new javax.swing.JMenuItem();
         JmVenta = new javax.swing.JMenu();
         JmCompra = new javax.swing.JMenu();
         JimProductos = new javax.swing.JMenu();
@@ -100,6 +101,14 @@ public class FrmMenu extends javax.swing.JFrame {
             }
         });
         JmStock.add(JmiVendidos);
+
+        JimTipoPago.setText("TIPO DE PAGO");
+        JimTipoPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JimTipoPagoActionPerformed(evt);
+            }
+        });
+        JmStock.add(JimTipoPago);
 
         jMenuBar1.add(JmStock);
 
@@ -363,6 +372,13 @@ public class FrmMenu extends javax.swing.JFrame {
         vistaUsuarios.setVisible(true);
     }//GEN-LAST:event_JimUsuarioMouseClicked
 
+    private void JimTipoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JimTipoPagoActionPerformed
+        // TODO add your handling code here:
+        JimTipo vistaTipoPago = new JimTipo();
+        jDesktopPane_menu.add(vistaTipoPago);
+        vistaTipoPago.setVisible(true);
+    }//GEN-LAST:event_JimTipoPagoActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -375,6 +391,7 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenu FrmLogin;
     private javax.swing.JMenu JimMarca;
     private javax.swing.JMenu JimProductos;
+    private javax.swing.JMenuItem JimTipoPago;
     private javax.swing.JMenu JimUsuario;
     private javax.swing.JMenu JmCategorias;
     private javax.swing.JMenu JmCliente;
