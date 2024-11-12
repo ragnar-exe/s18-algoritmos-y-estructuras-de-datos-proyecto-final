@@ -201,22 +201,22 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     @Override
     public boolean agregar(DetalleVenta obj) {
-        ContieneDaoImpl contieneDao = new ContieneDaoImpl();
-
-        Contiene productoInventario = contieneDao.obtenerProductoPorId(obj.getIdProducto());
-
-        // Verificar si hay stock suficiente
-        if (productoInventario.getStock() >= obj.getCantidad()) {
-            // Reducir el stock y actualizar el inventario
-            byte stockNuevo = (byte) (productoInventario.getStock() - obj.getCantidad());
-            System.out.println(stockNuevo);
-            System.out.println("" + productoInventario.getIdContiene());
-//            int idContiene, int idProducto, int idTalla, int idColor, int idMarca, float precio, byte stock
-            if (contieneDao.actualizar(new Contiene(productoInventario.getIdContiene(), productoInventario.getIdProducto(), productoInventario.getIdTalla(), productoInventario.getIdColor(), productoInventario.getIdMarca(), productoInventario.getPrecio(), stockNuevo))) {
-                System.out.println("se agrego correcto");
-            }else{
-                System.out.println("NO SE PUDO AGREGAR");
-            }
+//        ContieneDaoImpl contieneDao = new ContieneDaoImpl();
+//
+//        Contiene productoInventario = contieneDao.obtenerProductoPorId(obj.getIdProducto());
+//
+//        // Verificar si hay stock suficiente
+//        if (productoInventario.getStock() >= obj.getCantidad()) {
+//            // Reducir el stock y actualizar el inventario
+//            byte stockNuevo = (byte) (productoInventario.getStock() - obj.getCantidad());
+//            System.out.println(stockNuevo);
+//            System.out.println("" + productoInventario.getIdContiene());
+////            int idContiene, int idProducto, int idTalla, int idColor, int idMarca, float precio, byte stock
+//            if (contieneDao.actualizar(new Contiene(productoInventario.getIdContiene(), productoInventario.getIdProducto(), productoInventario.getIdTalla(), productoInventario.getIdColor(), productoInventario.getIdMarca(), productoInventario.getPrecio(), stockNuevo))) {
+//                System.out.println("se agrego correcto");
+//            }else{
+//                System.out.println("NO SE PUDO AGREGAR");
+//            }
 
             // Agregar el detalle de venta y guardar el código
             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDVENTA, true))) {
@@ -235,10 +235,10 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                 System.out.println("NO SE PUDO AGREGAR");
                 return false;
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Stock insuficiente para el producto " + obj.getIdProducto(), "Error de stock", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Stock insuficiente para el producto " + obj.getIdProducto(), "Error de stock", JOptionPane.WARNING_MESSAGE);
+//            return false;
+//        }
 
     }
 

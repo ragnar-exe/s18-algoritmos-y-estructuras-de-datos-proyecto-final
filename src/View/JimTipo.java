@@ -124,12 +124,13 @@ public class JimTipo extends javax.swing.JInternalFrame {
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         lblMensaje = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("TIPO DE PAGO");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 90, 30));
-        getContentPane().add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 230, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 90, 30));
+        getContentPane().add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, 230, 30));
 
         btnGuardar.setText("GUARDAR");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -137,7 +138,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, -1, -1));
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
 
         btnCancelar.setText("CANCELAR");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +146,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, -1, -1));
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 110, -1, -1));
 
         btnNuevo.setText("NUEVO");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -153,7 +154,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 90, -1, -1));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, -1, -1));
 
         btnGuardarInicio.setText("GUARDAR INICIO");
         btnGuardarInicio.addActionListener(new java.awt.event.ActionListener() {
@@ -161,7 +162,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnGuardarInicioActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 40, -1, -1));
+        getContentPane().add(btnGuardarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 60, -1, -1));
 
         btnEliminarInicio.setText("ELIMINAR INICIO");
         btnEliminarInicio.addActionListener(new java.awt.event.ActionListener() {
@@ -169,7 +170,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnEliminarInicioActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 40, -1, -1));
+        getContentPane().add(btnEliminarInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 60, -1, -1));
 
         btnGuardarPosicion.setText("GUARDAR POSICION");
         btnGuardarPosicion.addActionListener(new java.awt.event.ActionListener() {
@@ -177,7 +178,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnGuardarPosicionActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGuardarPosicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 90, -1, -1));
+        getContentPane().add(btnGuardarPosicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, -1, -1));
 
         btnEliminarFinal.setText("ELIMINAR FINAL");
         btnEliminarFinal.addActionListener(new java.awt.event.ActionListener() {
@@ -185,17 +186,17 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnEliminarFinalActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminarFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, -1, -1));
+        getContentPane().add(btnEliminarFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 110, -1, -1));
 
         jLabel2.setText("BUSCAR");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, -1, 30));
 
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyReleased(evt);
             }
         });
-        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 240, 20));
+        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 240, 30));
 
         tblTipo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -212,7 +213,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblTipo);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 620, 200));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 620, 200));
 
         btnEditar.setText("EDITAR");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -220,7 +221,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 160, -1, -1));
+        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 180, -1, -1));
 
         btnEliminar.setText("ELIMINAR");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -228,14 +229,17 @@ public class JimTipo extends javax.swing.JInternalFrame {
                 btnEliminarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 160, -1, -1));
-        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 210, 30));
+        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 180, -1, -1));
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 420, 210, 30));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 28)); // NOI18N
+        jLabel3.setText("TIPO DE PAGO");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
         System.out.println("Awui boton");
 
         String title = txtNombre.getText().strip();
@@ -287,7 +291,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
         crudBotones(false);
         registroBotones(false);
         txtNombre.setText("");
@@ -298,7 +301,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
         txtNombre.setText("");
         lblMensaje.setText("");
         txtNombre.setEnabled(true);
@@ -312,7 +314,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void tblTipoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTipoMouseReleased
-        // TODO add your handling code here:
         int fila = tblTipo.getSelectedRow();
         if (fila < 0) {
             JOptionPane.showMessageDialog(null,
@@ -331,7 +332,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tblTipoMouseReleased
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
         guardar = true;
         txtNombre.setEnabled(true);
         txtNombre.requestFocus();
@@ -343,7 +343,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
         int fila = tblTipo.getSelectedRow();
         if (fila < 0) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
@@ -365,7 +364,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        // TODO add your handling code here:
         limpiarTabla();
         int n = 0;
         modelo = (DefaultTableModel) tblTipo.getModel();
@@ -375,23 +373,24 @@ public class JimTipo extends javax.swing.JInternalFrame {
             listarTipo();
             lblMensaje.setText("");
         } else {
-            Nodo temp = crudTipo.inicio;
-            while (temp.getSiguiente() != crudTipo.inicio) {
-                if (String.valueOf(temp.getMarca().getIdMarca()).contains(valorBuscar) || temp.getMarca().getNombre().contains(valorBuscar)) {
-                    filaDatos[0] = temp.getMarca().getIdMarca();
-                    filaDatos[1] = temp.getMarca().getNombre();
-                    modelo.addRow(filaDatos);
-                    n++;
+            Nodo fil = crudTipo.inicio;
+            do {
+                if (fil.getTipo() != null) {
+                    if (String.valueOf(fil.getTipo().getIdTipo()).contains(valorBuscar) || fil.getTipo().getNombre().contains(valorBuscar)) {
+                        filaDatos[0] = fil.getTipo().getIdTipo();  // Obtener el ID del tipo
+                        filaDatos[1] = fil.getTipo().getNombre();  // Obtener el nombre del tipo
+                        modelo.addRow(filaDatos); 
+                        n++;
+                    }
                 }
-                temp = temp.siguiente;
-            }
+                fil = fil.getSiguiente();  // Avanzar al siguiente nodo
+            } while (fil != crudTipo.inicio);
             lblMensaje.setText(n + " registros encontrados.");
+            txtNombre.setText("");
         }
-        txtNombre.setText("");
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     private void btnGuardarPosicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPosicionActionPerformed
-        // TODO add your handling code here:
         String title = txtNombre.getText().strip();
         String valor;
         int posicion = -1;
@@ -436,7 +435,6 @@ public class JimTipo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarPosicionActionPerformed
 
     private void btnEliminarFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFinalActionPerformed
-        // TODO add your handling code here:
 //        if (modelo.getRowCount() == 1){
 //            modelo.setRowCount(0);
 //            registroBotones(false);
@@ -500,6 +498,7 @@ public class JimTipo extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMensaje;
     private javax.swing.JTable tblTipo;
