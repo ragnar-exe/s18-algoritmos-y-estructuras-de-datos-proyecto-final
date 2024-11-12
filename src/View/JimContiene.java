@@ -781,6 +781,11 @@ public class JimContiene extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarPosiconActionPerformed
 
     private void btnEliminarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInicioActionPerformed
+        if (modelo.getRowCount() == 1){
+            modelo.setRowCount(0);
+            registroBotones(false);
+            crudBotones(false);
+        }
         crudContiene.eliminarInicio();
         tblStockProducto.clearSelection();
         limpiarTabla();
@@ -788,10 +793,15 @@ public class JimContiene extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEliminarInicioActionPerformed
 
     private void btnEliminarFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFinalActionPerformed
+        if (modelo.getRowCount() == 1){
+            modelo.setRowCount(0);
+            registroBotones(false);
+            crudBotones(false);
+        }
         crudContiene.eliminarFinal();
         tblStockProducto.clearSelection();
         limpiarTabla();
-        listarStockProductos();
+        listarStockProductos(); 
     }//GEN-LAST:event_btnEliminarFinalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
