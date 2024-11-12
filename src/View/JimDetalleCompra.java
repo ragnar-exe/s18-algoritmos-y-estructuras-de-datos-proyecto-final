@@ -56,7 +56,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         cargarMarcas();
         cargarTallas();
         cargarProductos();
-        cargarCategorias();
         listarDCompras();
         habilitarCampo(false);
         registroBotones(false);
@@ -69,16 +68,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         for (Producto p : IDaoProducto.listar()) {
             if (p != null) {
                 cboProducto.addItem(p.getNombre());
-            }
-        }
-    }
-
-    private void cargarCategorias() {
-        cboCategoria.removeAllItems();
-        cboCategoria.addItem("Seleccionar");
-        for (Categoria c : IDaoCategoria.listar()) {
-            if (c != null) {
-                cboCategoria.addItem(c.getNombre());
             }
         }
     }
@@ -108,7 +97,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         cboProveedor.addItem("Seleccionar");
         for (Proveedor pr : IDaoProveedor.listar()) {
             if (pr != null) {
-                cboProveedor.addItem(pr.getNombres());
+                cboProveedor.addItem(pr.getCorreo());
             }
         }
     }
@@ -136,9 +125,9 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         for (DetalleCompra dv : crudDetalleCompra.listarDetalle()) {
             if (dv != null) {
                 filaDatos[0] = dv.getIdDCompra();
-                filaDatos[1] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(dv.getIdProducto()));
-                filaDatos[2] = IDaoMarca.obtenerNombre(dv.getIdMarca());
-                filaDatos[3] = IDaoProducto.obtenerNombre(dv.getIdProducto());
+                filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
+                filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(dv.getIdProducto()));
+                filaDatos[3] = IDaoMarca.obtenerNombre(dv.getIdMarca());
                 filaDatos[4] = IDaoTalla.obtenerNombre(dv.getIdTalla());
                 filaDatos[5] = IDaoColor.obtenerNombre(dv.getIdColor());
                 filaDatos[6] = dv.getPrecio();
@@ -146,6 +135,15 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 filaDatos[8] = dv.getCantidad() * dv.getPrecio();
                 modelo.addRow(filaDatos);
             }
+        }
+        txtTotal.setEditable(true);
+        txtTotal.setText(crudDetalleCompra.calcularTotal() + "");
+        txtTotal.setEditable(false);
+
+        if (crudDetalleCompra.total() > 0) {
+            cboProveedor.setEnabled(false);
+        } else {
+            cboProveedor.setEnabled(true);
         }
 //        if (crudDetalleCompra.total() > 1) {
 //            buscarCampo(true);
@@ -169,7 +167,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private void habilitarCampo(boolean f) {
         cboMarca.setEnabled(f);
         cboProveedor.setEnabled(f);
-        cboCategoria.setEnabled(f);
         cboColor.setEnabled(f);
         cboTalla.setEnabled(f);
         cboProducto.setEnabled(f);
@@ -180,7 +177,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private void limpiarCampos() {
         cboMarca.setSelectedIndex(0);
         cboProveedor.setSelectedIndex(0);
-        cboCategoria.setSelectedIndex(0);
         cboColor.setSelectedIndex(0);
         cboTalla.setSelectedIndex(0);
         cboProducto.setSelectedIndex(0);
@@ -194,7 +190,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         cboMarca.requestFocus(f);
         cboColor.requestFocus(f);
         cboProducto.requestFocus(f);
-        cboCategoria.requestFocus(f);
     }
 
     @SuppressWarnings("unchecked")
@@ -203,11 +198,9 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        cboCategoria = new javax.swing.JComboBox<>();
         cboMarca = new javax.swing.JComboBox<>();
         cboProducto = new javax.swing.JComboBox<>();
         cboTalla = new javax.swing.JComboBox<>();
@@ -231,6 +224,9 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         jLabel10 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taProveedor = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -238,67 +234,63 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         jLabel1.setText("Detalle de Compra");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Categoria");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 110, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Marca");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 157, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Producto");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 214, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, -1, -1));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Talla");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 267, -1, -1));
-
-        cboCategoria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 110, 190, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 190, 40, 30));
 
         cboMarca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboMarca.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 160, 190, -1));
+        jPanel1.add(cboMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 190, -1));
 
         cboProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 210, 190, -1));
+        jPanel1.add(cboProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 90, 190, -1));
 
         cboTalla.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboTalla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboTalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 260, 190, -1));
+        jPanel1.add(cboTalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 190, -1));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Color");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 110, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Precio");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 160, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 140, -1, -1));
 
-        lblMensaje.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblMensaje.setText("-----------");
-        jPanel1.add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 590, 380, -1));
+        lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jPanel1.add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 580, 560, 30));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Proveedor");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 260, -1, -1));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, -1, -1));
 
         cboColor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboColor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 110, 180, -1));
+        jPanel1.add(cboColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 90, 180, -1));
 
         txtPrecio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel1.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 160, 180, -1));
+        jPanel1.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, 180, -1));
 
         txtCantidad.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel1.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 210, 180, -1));
+        jPanel1.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 190, 180, -1));
 
         cboProveedor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cboProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 260, 180, -1));
+        cboProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboProveedorActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cboProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 180, -1));
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -307,7 +299,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 110, 90, 30));
+        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 90, 90, 30));
 
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAgregar.setText("Agregar");
@@ -316,7 +308,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 btnAgregarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 160, 90, 30));
+        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 140, 90, 30));
 
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -325,7 +317,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 210, 90, 30));
+        jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, 90, 30));
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnEditar.setText("Editar");
@@ -334,14 +326,14 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 btnEditarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 260, 90, 30));
+        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 240, 90, 30));
 
         tblDCompra.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Categoria", "Marca", "Producto", "Talla", "Color", "Precio", "Cantidad", "Total"
+                "ID", "Producto", "Categoria", "Marca", "Talla", "Color", "Precio", "Cantidad", "Total"
             }
         ));
         tblDCompra.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -380,9 +372,20 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 570, -1, -1));
         jPanel1.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 570, 110, -1));
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Cantidad");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 210, -1, -1));
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, -1, -1));
+
+        taProveedor.setColumns(20);
+        taProveedor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        taProveedor.setRows(5);
+        jScrollPane2.setViewportView(taProveedor);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 120, 330, 150));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Datos del proveedor:");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 90, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -391,7 +394,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -485,30 +488,29 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         }
         int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
         int idMarca = IDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
-        int idCategoria = IDaoCategoria.obtenerId(cboCategoria.getSelectedItem().toString());
         int idTalla = IDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());///
         int idColor = IDaoColor.obtenerId(cboColor.getSelectedItem().toString());
 
         if (guardar) {
-            if (crudDetalleCompra.actualizar(new DetalleCompra(idDCompra, idCategoria, idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio))) {
-                lblMensaje.setText("Se actualizo correctamente el registro de stock con id " + idProducto + ".");
+            if (crudDetalleCompra.actualizar(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio))) {
+                lblMensaje.setText("Se actualizo correctamente el detalle con id " + idDCompra + ".");
                 limpiarCampos();
                 habilitarCampo(false);
                 registroBotones(false);
                 crudBotones(false);
                 guardar = false;
             } else {
-                lblMensaje.setText("No se actualizo el registro de stock.");
+                lblMensaje.setText("No se actualizo el detalle.");
             }
         } else {
-            if (crudDetalleCompra.agregar(new DetalleCompra(idDCompra, idCategoria, idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio))) {
-                lblMensaje.setText("Se agrego correctamente el registro de stock.");
+            if (crudDetalleCompra.agregar(new DetalleCompra(crudDetalleCompra.obtenerUltimoId(), idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio))) {
+                lblMensaje.setText("Se agrego correctamente el detalle.");
                 limpiarCampos();
                 habilitarCampo(false);
                 registroBotones(false);
                 crudBotones(false);
             } else {
-                lblMensaje.setText("No se agrego el registro de stock.");
+                lblMensaje.setText("No se agrego el detalle.");
             }
         }
         tblDCompra.clearSelection();
@@ -541,7 +543,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
         guardar = true;
         habilitarCampo(true);
         registroBotones(true);
@@ -555,13 +556,20 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
         int fila = tblDCompra.getSelectedRow();
+        System.out.println("" + idDCompra);
         if (fila < 0) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
         } else {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
-                if (crudDetalleCompra.eliminar(new DetalleCompra(idDCompra))) {
+                int idPro = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
+                int idMa = IDaoMarca.obtenerId(cboMarca.getSelectedItem().toString());
+                int idTa = IDaoTalla.obtenerId(cboTalla.getSelectedItem().toString());
+                int idCo = IDaoColor.obtenerId(cboColor.getSelectedItem().toString());
+                float price = Float.parseFloat(txtPrecio.getText().strip());
+                int count = Integer.parseInt(txtCantidad.getText().strip());
+                float to = price * count;
+                if (crudDetalleCompra.eliminar(new DetalleCompra(idDCompra,idPro, idMa, idTa, idCo, price, count, to))) {
                     lblMensaje.setText("El registro se eliminó correctamente");
                 } else {
                     lblMensaje.setText("El registro NO se pudo eliminar");
@@ -588,9 +596,8 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         } else {
             habilitarCampo(false);
             idDCompra = Integer.parseInt(tblDCompra.getValueAt(fila, 0).toString());
-            cboCategoria.setSelectedItem(tblDCompra.getValueAt(fila, 1));
-            cboMarca.setSelectedItem(tblDCompra.getValueAt(fila, 2));
-            cboProducto.setSelectedItem(tblDCompra.getValueAt(fila, 3));
+            cboProducto.setSelectedItem(tblDCompra.getValueAt(fila, 1));
+            cboMarca.setSelectedItem(tblDCompra.getValueAt(fila, 3));
             cboTalla.setSelectedItem(tblDCompra.getValueAt(fila, 4));
             cboColor.setSelectedItem(tblDCompra.getValueAt(fila, 5));
             txtPrecio.setText(tblDCompra.getValueAt(fila, 6).toString());
@@ -602,6 +609,21 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tblDCompraMouseReleased
 
+    private void cboProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboProveedorActionPerformed
+        Object selectedItem = cboProveedor.getSelectedItem();
+        if (selectedItem != null) {
+            String valorProveedor = selectedItem.toString();
+            for (Proveedor proveedor : IDaoProveedor.listar()) {
+                if (proveedor != null && proveedor.getCorreo().equalsIgnoreCase(valorProveedor)) {
+                    taProveedor.setText("ID: " + proveedor.getIdProveedor() + "\nNombres: " + proveedor.getNombres() + "\nApellidos: " + proveedor.getApellidos() + "\nCorreo: " + proveedor.getCorreo() + "\nTelefono: " + proveedor.getTelefono());
+                }
+            }
+        } else {
+            System.out.println("No se seleccionó ningún proveedor.");
+        }
+
+    }//GEN-LAST:event_cboProveedorActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -611,7 +633,6 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardarCompra;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JComboBox<String> cboCategoria;
     private javax.swing.JComboBox<String> cboColor;
     private javax.swing.JComboBox<String> cboMarca;
     private javax.swing.JComboBox<String> cboProducto;
@@ -620,16 +641,18 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblMensaje;
+    private javax.swing.JTextArea taProveedor;
     private javax.swing.JTable tblDCompra;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtPrecio;

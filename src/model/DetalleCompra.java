@@ -2,7 +2,10 @@ package model;
 
 public class DetalleCompra {
     private int idDCompra;
-    private int idContiene;
+    private int idProducto;
+    private int idMarca;
+    private int idTalla;
+    private int idColor;
     private float precio;
     private int cantidad;
     private float total;
@@ -14,9 +17,12 @@ public class DetalleCompra {
         this.idDCompra = idDCompra;
     }
 
-    public DetalleCompra(int idDCompra, int idContiene, float precio, int cantidad, float total) {
+    public DetalleCompra(int idDCompra, int idProducto, int idMarca, int idTalla, int idColor, float precio, int cantidad, float total) {
         this.idDCompra = idDCompra;
-        this.idContiene = idContiene;
+        this.idProducto = idProducto;
+        this.idMarca = idMarca;
+        this.idTalla = idTalla;
+        this.idColor = idColor;
         this.precio = precio;
         this.cantidad = cantidad;
         this.total = total;
@@ -30,12 +36,36 @@ public class DetalleCompra {
         this.idDCompra = idDCompra;
     }
 
-    public int getIdContiene() {
-        return idContiene;
+    public int getIdProducto() {
+        return idProducto;
     }
 
-    public void setIdContiene(int idContiene) {
-        this.idContiene = idContiene;
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public int getIdMarca() {
+        return idMarca;
+    }
+
+    public void setIdMarca(int idMarca) {
+        this.idMarca = idMarca;
+    }
+
+    public int getIdTalla() {
+        return idTalla;
+    }
+
+    public void setIdTalla(int idTalla) {
+        this.idTalla = idTalla;
+    }
+
+    public int getIdColor() {
+        return idColor;
+    }
+
+    public void setIdColor(int idColor) {
+        this.idColor = idColor;
     }
 
     public float getPrecio() {
@@ -62,4 +92,49 @@ public class DetalleCompra {
         this.total = total;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 17 * hash + this.idDCompra;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DetalleCompra other = (DetalleCompra) obj;
+        if (this.idDCompra != other.idDCompra) {
+            return false;
+        }
+        if (this.idProducto != other.idProducto) {
+            return false;
+        }
+        if (this.idMarca != other.idMarca) {
+            return false;
+        }
+        if (this.idTalla != other.idTalla) {
+            return false;
+        }
+        if (this.idColor != other.idColor) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.precio) != Float.floatToIntBits(other.precio)) {
+            return false;
+        }
+        if (this.cantidad != other.cantidad) {
+            return false;
+        }
+        return Float.floatToIntBits(this.total) == Float.floatToIntBits(other.total);
+    }
+
+    
+    
 }

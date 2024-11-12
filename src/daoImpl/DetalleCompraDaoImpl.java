@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -19,20 +20,20 @@ import model.DetalleCompra;
 import model.Producto;
 
 public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
-    
+
     private static final String FILE_DCOMPRA = "dcompra.txt";
     private static final String FILE_IDSDCOMPRA = "idsdcompra.txt";
-    
+
     private Queue<DetalleCompra> dCompras = new PriorityQueue<>(
-    (a, b) -> {
-        int priorityComparison = Integer.compare(a.getIdDCompra(), b.getIdDCompra());
-        if (priorityComparison == 0) {
-            // Ajusta aquí si quieres otro criterio de prioridad secundario.
-            return Float.compare(a.getPrecio(), b.getPrecio());
-        }
-        return priorityComparison;
-    }
-);
+            (a, b) -> {
+                int priorityComparison = Integer.compare(a.getIdDCompra(), b.getIdDCompra());
+                if (priorityComparison == 0) {
+                    // Ajusta aquï¿½ si quieres otro criterio de prioridad secundario.
+                    return Float.compare(a.getPrecio(), b.getPrecio());
+                }
+                return priorityComparison;
+            }
+    );
 
     public DetalleCompraDaoImpl() {
         cargarDatos();
@@ -70,7 +71,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
             }
         }
 
-        // Leer el último código del archivo
+        // Leer el ï¿½ltimo cï¿½digo del archivo
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSDCOMPRA))) {
             List<String> lines = Files.readAllLines(Paths.get(FILE_IDSDCOMPRA));
             if (!lines.isEmpty()) {
@@ -88,13 +89,21 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     }
 
     @Override
-public boolean actualizar(DetalleCompra obj) {
-    if (eliminar(obj)) {
-        return dCompras.offer(obj); // Reinsertar para respetar el orden de prioridad.
+    public boolean actualizar(DetalleCompra obj) {
+        for (DetalleCompra dc : dCompras) {
+            if (dc.getIdDCompra() == obj.getIdDCompra()) {
+                dc.setIdProducto(obj.getIdProducto());
+                dc.setIdMarca(obj.getIdMarca());
+                dc.setIdTalla(obj.getIdTalla());
+                dc.setIdColor(obj.getIdColor());
+                dc.setPrecio(obj.getPrecio());
+                dc.setCantidad(obj.getCantidad());
+                dc.setTotal(obj.getTotal());
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-}
-
 
     @Override
     public boolean eliminar(DetalleCompra obj) {
@@ -105,7 +114,7 @@ public boolean actualizar(DetalleCompra obj) {
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DCOMPRA))) {
             for (DetalleCompra dc : dCompras) {
-                writer.write(dc.getIdDCompra()+ dc.getIdContiene()+ ";" + dc.getIdColor());
+                writer.write(dc.getIdDCompra()+";"+dc.getIdProducto()+ ";" +dc.getIdMarca()+";"+dc.getIdTalla()+";"+dc.getIdColor()+";"+ dc.getPrecio()+";"+dc.getCantidad()+";"+dc.getTotal());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -121,18 +130,15 @@ public boolean actualizar(DetalleCompra obj) {
                 String linea;
                 while ((linea = reader.readLine()) != null) {
                     String[] datos = linea.split(";");
-                    System.out.println(datos.length+"----");
                     int idDCompra = Integer.parseInt(datos[0]);
-                    int idCategoria = Integer.parseInt(datos[1]);
-                    int idProducto = Integer.parseInt(datos[2]);
-                    int idMarca = Integer.parseInt(datos[3]);
-                    int idTalla = Integer.parseInt(datos[4]);
-                    int idColor = Integer.parseInt(datos[5]);
-                    float precio = Float.parseFloat(datos[6]);
-                    int cantidad = Integer.parseInt(datos[7]);
-                    float total = Float.parseFloat(datos[8]);
-//                    int idDCompra, int idCategoria, int idProducto, int idMarca, int idTalla, int idColor, float precio, int cantidad, float total
-                    this.enqueue(new DetalleCompra(idDCompra, idCategoria, idProducto, idMarca, idTalla, idColor, precio, cantidad,total));
+                    int idProducto = Integer.parseInt(datos[1]);
+                    int idMarca = Integer.parseInt(datos[2]);
+                    int idTalla = Integer.parseInt(datos[3]);
+                    int idColor = Integer.parseInt(datos[4]);
+                    float precio = Float.parseFloat(datos[5]);
+                    int cantidad = Integer.parseInt(datos[6]);
+                    float total = Float.parseFloat(datos[7]);
+                    dCompras.offer(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, total));
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DCOMPRA, "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -158,7 +164,7 @@ public boolean actualizar(DetalleCompra obj) {
             }
         }
 
-        // Leer el último código del archivo
+        // Leer el ï¿½ltimo cï¿½digo del archivo
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSDCOMPRA))) {
             List<String> lines = Files.readAllLines(Paths.get(FILE_IDSDCOMPRA));
             if (!lines.isEmpty()) {
@@ -188,26 +194,37 @@ public boolean actualizar(DetalleCompra obj) {
 
     public Queue<DetalleCompra> listarDetalle() {
         guardarEnArchivo();
-        return dCompras ;
+        return dCompras;
     }
 
     public List<DetalleCompra> listar(String texto) {
         List<DetalleCompra> resultado = new LinkedList<>();
-        String valorBuscar = texto.toLowerCase();
-//      IDaoObtenerLista<Cliente> idaoCliente =  (IDaoObtenerLista<Cliente>) new ClienteDaoImpl();
-        IDaoObtenerLista<Producto> idaoProducto = new ProductoDaoImpl();
-
+//        String valorBuscar = texto.toLowerCase();
+////      IDaoObtenerLista<Cliente> idaoCliente =  (IDaoObtenerLista<Cliente>) new ClienteDaoImpl();
+//        IDaoObtenerLista<Producto> idaoProducto = new ProductoDaoImpl();
+//
+//        for (DetalleCompra dc : dCompras) {
+//            if (dc != null) {  // Verificaciï¿½n para evitar el NullPointerException
+//                boolean coincideConId = String.valueOf(dc.getIdContiene()).contains(valorBuscar);
+////                String producto = idaoProducto.obtenerNombre(dc.getId());
+////                boolean coincideConProducto = producto != null && producto.contains(valorBuscar);
+//
+//                if (coincideConId || coincideConProducto) {
+//                    resultado.add(dc);
+//                }
+//            }
+//        }
+        return resultado;
+    }
+    
+    public double calcularTotal() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        double total = 0.00;
         for (DetalleCompra dc : dCompras) {
-            if (dc != null) {  // Verificación para evitar el NullPointerException
-                boolean coincideConId = String.valueOf(dc.getIdProducto()).contains(valorBuscar);
-                String producto = idaoProducto.obtenerNombre(dc.getIdProducto());
-                boolean coincideConProducto = producto != null && producto.contains(valorBuscar);
-
-                if (coincideConId || coincideConProducto) {
-                    resultado.add(dc);
-                }
+            if (dc != null) {
+                total += (dc.getPrecio()*dc.getCantidad());
             }
         }
-        return resultado;
+        return Double.parseDouble(df.format(total));
     }
 }
