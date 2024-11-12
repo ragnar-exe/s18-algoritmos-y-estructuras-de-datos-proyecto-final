@@ -14,12 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import model.Cliente;
+import model.Contiene;
 import model.DetalleVenta;
 import model.Producto;
 
 public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     DetalleVenta[] dVentas = new DetalleVenta[500];
+
     private int size;
     private int star;
     private int end;
@@ -100,7 +102,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     @Override
     public boolean actualizar(DetalleVenta obj) {
         for (DetalleVenta dv : dVentas) {
-            if (dv != null &&dv.getIdDVenta() != obj.getIdDVenta()) {
+            if (dv != null && dv.getIdDVenta() != obj.getIdDVenta()) {
                 JOptionPane.showMessageDialog(null, "Etoy aqui");
                 return false;
             }
@@ -199,21 +201,45 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     @Override
     public boolean agregar(DetalleVenta obj) {
-        try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDVENTA, true))) {
-            codigos.write(obj.getIdDVenta() + "\n");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (size < dVentas.length) {
-            dVentas[end] = obj;
-            end = (end + 1) % dVentas.length;
-            size++;
-            return true;
+        ContieneDaoImpl contieneDao = new ContieneDaoImpl();
+
+        Contiene productoInventario = contieneDao.obtenerProductoPorId(obj.getIdProducto());
+
+        // Verificar si hay stock suficiente
+        if (productoInventario.getStock() >= obj.getCantidad()) {
+            // Reducir el stock y actualizar el inventario
+            byte stockNuevo = (byte) (productoInventario.getStock() - obj.getCantidad());
+            System.out.println(stockNuevo);
+            System.out.println("" + productoInventario.getIdContiene());
+//            int idContiene, int idProducto, int idTalla, int idColor, int idMarca, float precio, byte stock
+            if (contieneDao.actualizar(new Contiene(productoInventario.getIdContiene(), productoInventario.getIdProducto(), productoInventario.getIdTalla(), productoInventario.getIdColor(), productoInventario.getIdMarca(), productoInventario.getPrecio(), stockNuevo))) {
+                System.out.println("se agrego correcto");
+            }else{
+                System.out.println("NO SE PUDO AGREGAR");
+            }
+
+            // Agregar el detalle de venta y guardar el código
+            try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDVENTA, true))) {
+                codigos.write(obj.getIdDVenta() + "\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            if (size < dVentas.length) {
+                dVentas[end] = obj;
+                end = (end + 1) % dVentas.length;
+                size++;
+                return true;
+            } else {
+                System.out.println("NO SE PUDO AGREGAR");
+                return false;
+            }
         } else {
-            System.out.println("NO SE PUDO AGREGAR");
+            JOptionPane.showMessageDialog(null, "Stock insuficiente para el producto " + obj.getIdProducto(), "Error de stock", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+
     }
 
     public DetalleVenta[] listarDetalle() {
@@ -224,7 +250,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     public List<DetalleVenta> listar(String texto) {
         List<DetalleVenta> resultado = new LinkedList<>();
         String valorBuscar = texto.toLowerCase();
-        IDaoObtenerLista<Cliente> idaoCliente =  (IDaoObtenerLista<Cliente>) new ClienteDaoImpl();
+        IDaoObtenerLista<Cliente> idaoCliente = (IDaoObtenerLista<Cliente>) new ClienteDaoImpl();
         IDaoObtenerLista<Producto> idaoProducto = new ProductoDaoImpl();
 
         for (DetalleVenta dv : dVentas) {

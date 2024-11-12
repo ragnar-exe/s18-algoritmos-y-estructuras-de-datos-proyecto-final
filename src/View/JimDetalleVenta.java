@@ -4,14 +4,21 @@
  */
 package View;
 
+import daoImpl.CategoriaDaoImpl;
 import daoImpl.ClienteDaoImpl;
+import daoImpl.ColorDaoImpl;
+import daoImpl.ContieneDaoImpl;
 import daoImpl.DetalleVentaDaoImpl;
+import daoImpl.MarcaDaoImpl;
 import daoImpl.ProductoDaoImpl;
+import daoImpl.TallaDaoImpl;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
+import model.Contiene;
 import model.DetalleVenta;
+import model.Nodo;
 import model.Producto;
 
 /**
@@ -21,10 +28,17 @@ import model.Producto;
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
     private final DetalleVentaDaoImpl crudDetalleVenta;
+    private ContieneDaoImpl crudContiene;
+    private CategoriaDaoImpl iDaoCategoria;
+    private ColorDaoImpl iDaoColor;
+    private MarcaDaoImpl iDaoMarca;
+    private TallaDaoImpl iDaoTalla;
     private DefaultTableModel modelo;
     private final ProductoDaoImpl IDaoProducto;
     private final ClienteDaoImpl IDaoCliente;
     private final Object[] filaDatos;
+    private final Object[] filaDatosStock;
+
     private int idDVenta;
     private boolean guardar = false;
 
@@ -34,9 +48,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[6];
+        filaDatosStock = new Object[8];
+
         crudDetalleVenta = new DetalleVentaDaoImpl();
         IDaoProducto = new ProductoDaoImpl();
         IDaoCliente = new ClienteDaoImpl();
+        iDaoColor = new ColorDaoImpl();
+        iDaoTalla = new TallaDaoImpl();
+        iDaoMarca = new MarcaDaoImpl();
+        crudContiene = new ContieneDaoImpl();
+        iDaoCategoria = new CategoriaDaoImpl();
         modelo = new DefaultTableModel();
         cargarClientes();
         cargarProductos();
@@ -44,16 +65,18 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         habilitarCampo(false);
         registroBotones(false);
         crudBotones(false);
+        listarStockProductos();
 
     }
 
     private void cargarProductos() {
         cboProducto.removeAllItems();
         cboProducto.addItem("Seleccionar");
-        for (Producto p : IDaoProducto.listar()) {
-            if (p != null) {
-                cboProducto.addItem(p.getNombre());
-            }
+
+        Nodo temp = crudContiene.inicio;
+        while (temp != null) {
+            cboProducto.addItem(IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto()));
+            temp = temp.siguiente;
         }
 
     }
@@ -126,6 +149,29 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtBuscar.setEnabled(f);
     }
 
+    private void listarStockProductos() {
+        modelo = (DefaultTableModel) tblStockProducto.getModel();
+        crudContiene.guardarEnArchivo();
+        Nodo temp = crudContiene.inicio;
+        while (temp != null) {
+            filaDatosStock[0] = temp.getContiene().getIdContiene();
+            filaDatosStock[1] = IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto());
+            filaDatosStock[2] = iDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto()));
+            filaDatosStock[3] = iDaoMarca.obtenerNombre(temp.getContiene().getIdMarca());
+            filaDatosStock[4] = iDaoTalla.obtenerNombre(temp.getContiene().getIdTalla());
+            filaDatosStock[5] = iDaoColor.obtenerNombre(temp.getContiene().getIdColor());
+            filaDatosStock[6] = temp.getContiene().getPrecio();
+            filaDatosStock[7] = temp.getContiene().getStock();
+            modelo.addRow(filaDatosStock);
+            temp = temp.siguiente;
+        }
+        if (crudContiene.total() > 1) {
+            txtBuscar.setEnabled(true);
+        } else {
+            txtBuscar.setEnabled(false);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -155,6 +201,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tblStockProducto = new javax.swing.JTable();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -264,8 +312,20 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         });
         jPanel1.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, 310, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 0, 1190, 650));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 1190, 650));
         getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, 400, 30));
+
+        tblStockProducto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Categoria", "Marca", "Talla", "Color", "Precio", "Stock"
+            }
+        ));
+        jScrollPane4.setViewportView(tblStockProducto);
+
+        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 50, 450, 210));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -379,7 +439,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         tblDVenta.clearSelection();
         limpiarTabla();
         listarDVentas();
-       
+        listarStockProductos();
+
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -509,8 +570,10 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblMensaje;
     private javax.swing.JTable tblDVenta;
+    private javax.swing.JTable tblStockProducto;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtPrecio;
