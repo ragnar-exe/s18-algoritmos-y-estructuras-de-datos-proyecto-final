@@ -37,12 +37,12 @@ public class JimUsuario extends javax.swing.JInternalFrame {
                 filaDatos[1] = c.getUsuario();
                 modelo.addRow(filaDatos);
             }
-            
+
         }
         if (crudUsuario.size() > 1) {
             txtBuscar.setEnabled(true);
         } else {
-            txtBuscar.setEnabled(true   );
+            txtBuscar.setEnabled(true);
         }
 
         if (crudUsuario.size() > 0) {
@@ -52,17 +52,15 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             btnCancelar.setEnabled(false);
             btnPeek.setEnabled(false);
         }
-        
-        
+
     }
-    
+
     private void limpiarTabla() {
         modelo = (DefaultTableModel) tblUsuarios.getModel();
         modelo.getDataVector().removeAllElements();
         tblUsuarios.removeAll();
     }
 
-    
     private void habilitarCampo(boolean f) {
         txtBuscar.setText("");
         txtNombreUsuario.setEnabled(f);
@@ -332,7 +330,6 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPushActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPushActionPerformed
-        try {
         String usuario = txtNombreUsuario.getText().strip();
         if (usuario.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe ingresar un usuario.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -346,28 +343,22 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             txtContrasena.requestFocus();
             return;
         }
-
-        int id = crudUsuario.size() + 1; 
-        Usuario nuevoUsuario = new Usuario(id, usuario, contrasenia);
-
-        crudUsuario.push(nuevoUsuario);
-
-        lblMensaje.setText("Usuario agregado correctamente: " + usuario);
-
+        
+        if (crudUsuario.push(new Usuario(crudUsuario.obtenerUltimoId(), usuario, contrasenia))) {
+            lblMensaje.setText("Usuario agregado correctamente: " + usuario);
+        } else {
+            lblMensaje.setText("No se agrego el usuario.");
+        }
         limpiarCajas();
         limpiarTabla();
         listarUsuario();
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al agregar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnPushActionPerformed
 
     private void btnPopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopActionPerformed
         if (crudUsuario.size() > 0) {
             Usuario usuarioEliminado = crudUsuario.pop();
             lblMensaje.setText("Usuario eliminado: " + usuarioEliminado.getUsuario());
-            modelo.setRowCount(0); 
+            modelo.setRowCount(0);
             listarUsuario();
         } else {
             JOptionPane.showMessageDialog(this, "La pila está vacía.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -384,10 +375,9 @@ public class JimUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnPeekActionPerformed
 
     private void btnSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSizeActionPerformed
-        lblMensaje.setText("El tamaño de la pila es: "+crudUsuario.size());
-        
         limpiarTabla();
         listarUsuario();
+        lblMensaje.setText("El tamaño de la pila es: " + crudUsuario.size());
     }//GEN-LAST:event_btnSizeActionPerformed
 
     private void btnEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmptyActionPerformed
