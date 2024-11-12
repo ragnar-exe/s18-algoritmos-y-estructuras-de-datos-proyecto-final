@@ -14,7 +14,6 @@ public class JimProveedor extends javax.swing.JInternalFrame {
     
     private ProveedorDaoImpl pv = new ProveedorDaoImpl();
     private DefaultTableModel modelo;
-//  private IDaoObtenerLista<Proveedor> crudProveedor;
     
     private IDaoExtendido<Persona> crudPersona;
     private Object[] filaDatos;
@@ -28,8 +27,6 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
         filaDatos = new Object[5];
-//        crudProveedor = new ProveedorDaoImpl();
-//        crudPersona = new PersonaDaoImpl();
         modelo = new DefaultTableModel();
         limpiarTabla();
         listarProveedores();
@@ -409,9 +406,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
             txtTelefono.requestFocus();
             return;
         }
-        String datos = nombres+' '+apellidos;
         if (guardar) {
-//            idPersona = crudProveedor.obtenerIdForeignKey(idProveedor);
             if ( pv.actualizar(new Proveedor(idProveedor, nombres, apellidos, correo,telefono))) {
                 lblMensaje.setText("Se actualizo correctamente el proveedor con id " + idProveedor + ".");
                 limpiarCampos();
@@ -423,7 +418,17 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 lblMensaje.setText("No se actualizo el proveedor.");
             }
         } else {
-            if ( pv.agregar(new Proveedor(pv.obtenerUltimoId(), nombres, apellidos, correo, telefono))) {
+            if (pv.existeCorreo(correo)) {
+                JOptionPane.showMessageDialog(null, "Error, el correo ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtCorreo.requestFocus();
+                return;
+            }
+            if (pv.existeTelefono(telefono)) {
+                JOptionPane.showMessageDialog(null, "Error, el numero ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtTelefono.requestFocus();
+                return;
+            }
+            if (pv.agregar(new Proveedor(pv.obtenerUltimoId(), nombres, apellidos, correo, telefono))) {
                 lblMensaje.setText("Se agrego correctamente el producto.");
                 limpiarCampos();
                 habilitarCampo(false);
