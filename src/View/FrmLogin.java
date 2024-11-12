@@ -1,9 +1,34 @@
 package View;
 
-public class FrmLogin extends javax.swing.JFrame {
+import daoImpl.UsuarioDoalmpl;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import model.Usuario;
 
+public class FrmLogin extends javax.swing.JFrame {
+    UsuarioDoalmpl IDaoUsuario = new UsuarioDoalmpl();
+    ArrayList<Usuario> dataUsuarios = new ArrayList<>();
+    
     public FrmLogin() {
         initComponents();
+        cargarUsuarios();
+    }
+    
+    private void cargarUsuarios() {
+        for (Usuario usuario : IDaoUsuario.listar()) {
+            if (usuario != null) {
+                dataUsuarios.add(usuario);
+            }
+        }
+    }
+    
+    private boolean buscarUsuario(Usuario user) {
+        for (Usuario usu : dataUsuarios) {
+            if (usu != null && (usu.getUsuario().equalsIgnoreCase(user.getUsuario()) && usu.getContrasena().equalsIgnoreCase(user.getContrasena()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -85,9 +110,15 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        FrmMenu menu = new FrmMenu();
-        menu.setVisible(true);
-        this.dispose();
+        String nombreUser = txtUsuario.getText().strip();
+        String contra = passContrasena.getText().strip();
+        if (buscarUsuario(new Usuario(nombreUser, contra))) {
+            FrmMenu menu = new FrmMenu();
+            menu.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Credenciales invalidas.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     public static void main(String args[]) {
