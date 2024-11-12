@@ -782,12 +782,14 @@ public class JimContiene extends javax.swing.JInternalFrame {
 
     private void btnEliminarInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarInicioActionPerformed
         crudContiene.eliminarInicio();
+        tblStockProducto.clearSelection();
         limpiarTabla();
         listarStockProductos();
     }//GEN-LAST:event_btnEliminarInicioActionPerformed
 
     private void btnEliminarFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFinalActionPerformed
         crudContiene.eliminarFinal();
+        tblStockProducto.clearSelection();
         limpiarTabla();
         listarStockProductos();
     }//GEN-LAST:event_btnEliminarFinalActionPerformed

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Producto{
     private int idProducto;
     private String nombre;
@@ -61,6 +63,35 @@ public class Producto{
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Producto other = (Producto) obj;
+        if (this.idProducto != other.idProducto) {
+            return false;
+        }
+        if (this.idCategoria != other.idCategoria) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return Objects.equals(this.descripcion, other.descripcion);
+    }
     
 }

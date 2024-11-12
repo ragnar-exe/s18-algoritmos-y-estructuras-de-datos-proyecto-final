@@ -322,7 +322,8 @@ public class JimProducto extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
         } else {
             if (JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar", JOptionPane.YES_NO_OPTION, 3) == 0) {
-                if (crudProducto.eliminar(new Producto(idProducto))) {
+                int idCat = IDaoCategoria.obtenerId(cboCategoria.getSelectedItem().toString());
+                if (crudProducto.eliminar(new Producto(idProducto,txtNombre.getText().strip(), taDescripcion.getText().strip(), idCat))) {
                     lblMensaje.setText("El registro se eliminó correctamente");
                 } else {
                     lblMensaje.setText("El registro NO se pudo eliminar");
