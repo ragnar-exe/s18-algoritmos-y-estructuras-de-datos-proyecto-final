@@ -16,7 +16,11 @@ public class Usuario {
     public Usuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
-    
+
+    public Usuario(String usuario, String contrasena) {
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+    }
 
     public Usuario(int idUsuario, String usuario) {
         this.idUsuario = idUsuario;

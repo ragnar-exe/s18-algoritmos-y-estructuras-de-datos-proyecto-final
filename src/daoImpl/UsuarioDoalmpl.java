@@ -148,6 +148,7 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
                     String contra = datos[2].strip();
                     for (int i = 0; i < usuarios.length; i++) {
                         if (usuarios[i] == null) {
+                            top++;
                             usuarios[i] = new Usuario(id, nombre, contra);
                             break;
                         }
