@@ -22,7 +22,7 @@ public class ProveedorDaoImpl implements IDaoExtendido<Proveedor> {
     private static final String FILE_IDSPROVEEDORES = "idsproveedores.txt";
 
     public ProveedorDaoImpl() {
-        
+        cargarDatos();
     }
 
     public Proveedor peek() {
@@ -54,10 +54,19 @@ public class ProveedorDaoImpl implements IDaoExtendido<Proveedor> {
     public boolean existeCorreo(String correo) {
         for (Proveedor proveedor : proveedores) {
             if (proveedor.getCorreo().equalsIgnoreCase(correo)) {
-                return true; // El correo ya est? en uso
+                return true; // El correo ya esta en uso
             }
         }
         return false; // El correo no existe en la lista
+    }
+    
+    public boolean existeTelefono(String telefono) {
+        for (Proveedor proveedor : proveedores) {
+            if (proveedor.getTelefono().equalsIgnoreCase(telefono)) {
+                return true; 
+            }
+        }
+        return false;
     }
 
     public List<Proveedor> listar(String texto) {
@@ -133,7 +142,7 @@ public class ProveedorDaoImpl implements IDaoExtendido<Proveedor> {
         guardarEnArchivo();
         return proveedores;
     }
-
+    
     @Override
     public boolean agregar(Proveedor obj) {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSPROVEEDORES, true))) {
@@ -148,7 +157,12 @@ public class ProveedorDaoImpl implements IDaoExtendido<Proveedor> {
     @Override
     public boolean actualizar(Proveedor obj) {
         for (Proveedor proveedor : proveedores) {
-            if (proveedor.getNombres().equalsIgnoreCase(obj.getNombres()) && proveedor.getIdProveedor() != obj.getIdProveedor()) {
+            if (proveedor.getNombres().equalsIgnoreCase(obj.getNombres()) &&
+                    proveedor.getApellidos().equalsIgnoreCase(obj.getApellidos()) &&
+                    proveedor.getCorreo().equalsIgnoreCase(obj.getCorreo()) &&
+                    proveedor.getTelefono().equalsIgnoreCase(obj.getTelefono()) &&
+                    proveedor.getIdProveedor() != obj.getIdProveedor()) {
+                JOptionPane.showMessageDialog(null, "Error, el proveedor con estos datos ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
