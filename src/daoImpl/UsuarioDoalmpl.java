@@ -18,7 +18,6 @@ public class UsuarioDoalmpl implements IDaoGenerico<Usuario> {
     private static final String FILE_USUARIOS = "usuarios.txt";
     private static final String FILE_IDSUSUARIOS = "idsusuarios.txt";
     Usuario[] usuarios = new Usuario[100];
-    private Usuario[] stack;
     private int top;
 
     public UsuarioDoalmpl() {

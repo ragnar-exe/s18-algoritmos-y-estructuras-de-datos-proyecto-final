@@ -178,6 +178,12 @@ public class JimUsuario extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel3.setText("Buscar:");
 
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+
         tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -529,6 +535,31 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             return;
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        limpiarTabla();
+        int n = 0;
+        modelo = (DefaultTableModel) tblUsuarios.getModel();
+        String valorBuscar = txtBuscar.getText().strip();if (valorBuscar.equalsIgnoreCase("")) {
+            limpiarTabla();
+            listarUsuario();
+            lblMensaje.setText("");
+        } else {
+            for (Usuario c : crudUsuario.listar()) {
+                if (c != null) {
+                    if(String.valueOf(c.getUsuario()).contains(valorBuscar) || c.getUsuario().contains(valorBuscar)) {
+                        filaDatos[0] = c.getIdUsuario();
+                        filaDatos[1] = c.getUsuario();
+                        modelo.addRow(filaDatos);
+                        n++;
+                    }
+                }
+            }
+            lblMensaje.setText(n + " registros encontrados.");
+        }
+        txtNombreUsuario.setText("");
+        txtContrasena.setText("");
+    }//GEN-LAST:event_txtBuscarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
