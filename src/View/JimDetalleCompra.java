@@ -140,11 +140,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         txtTotal.setText(crudDetalleCompra.calcularTotal() + "");
         txtTotal.setEditable(false);
 
-        if (crudDetalleCompra.total() > 0) {
-            cboProveedor.setEnabled(false);
-        } else {
-            cboProveedor.setEnabled(true);
-        }
+
 //        if (crudDetalleCompra.total() > 1) {
 //            buscarCampo(true);
 //        } else {
