@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package View;
 
 import daoImpl.CategoriaDaoImpl;
@@ -21,19 +17,18 @@ import model.DetalleVenta;
 import model.Nodo;
 import model.Producto;
 
-/**
- *
- * @author Victor
- */
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
     private final DetalleVentaDaoImpl crudDetalleVenta;
-    private ContieneDaoImpl crudContiene;
+    private ContieneDaoImpl IDaoContiene;
     private DefaultTableModel modelo;
     private final ProductoDaoImpl IDaoProducto;
+    private final CategoriaDaoImpl IDaoCategoria = new CategoriaDaoImpl();
+    private final MarcaDaoImpl IDaoMarca = new MarcaDaoImpl();
+    private final TallaDaoImpl IDaoTalla = new TallaDaoImpl();
+    private final ColorDaoImpl IDaoColor = new ColorDaoImpl();
     private final ClienteDaoImpl IDaoCliente;
     private final Object[] filaDatos;
-
     private int idDVenta;
     private boolean guardar = false;
 
@@ -42,32 +37,32 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
-        filaDatos = new Object[6];
+        filaDatos = new Object[9];
         crudDetalleVenta = new DetalleVentaDaoImpl();
         IDaoProducto = new ProductoDaoImpl();
         IDaoCliente = new ClienteDaoImpl();
-        crudContiene = new ContieneDaoImpl();
+        IDaoContiene = new ContieneDaoImpl();
         modelo = new DefaultTableModel();
         cargarClientes();
-        cargarProductos();
+//        cargarProductos();
         habilitarCampo(false);
         registroBotones(false);
         crudBotones(false);
+        cargarIdsContiene();
+        limpiarFiltroIds();
+        habilitarFiltroIds(false);
         listarDVentas();
     }
 
-    private void cargarProductos() {
-        cboProducto.removeAllItems();
-        cboProducto.addItem("Seleccionar");
-
-        Nodo temp = crudContiene.inicio;
-        while (temp != null) {
-            cboProducto.addItem(IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto()));
-            temp = temp.siguiente;
-        }
-
-    }
-
+//    private void cargarProductos() {
+//        cboProducto.removeAllItems();
+//        cboProducto.addItem("Seleccionar");
+//        Nodo temp = IDaoContiene.inicio;
+//        while (temp != null) {
+//            cboProducto.addItem(IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto()));
+//            temp = temp.siguiente;
+//        }
+//    }
     private void cargarClientes() {
         cboCliente.removeAllItems();
         cboCliente.addItem("Seleccionar");
@@ -76,7 +71,18 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 cboCliente.addItem(c.getNombres());
             }
         }
+    }
 
+    private void cargarIdsContiene() {
+        cboIdsContiene.removeAllItems();
+        cboIdsContiene.addItem("Seleccionar");
+        Nodo temp = IDaoContiene.inicio;
+        while (temp != null) {
+            if (temp.getContiene().getStock() > 0) {
+                cboIdsContiene.addItem(String.valueOf(temp.getContiene().getIdContiene()));
+            }
+            temp = temp.siguiente;
+        }
     }
 
     private void limpiarTabla() {
@@ -90,11 +96,20 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
             if (dv != null) {
                 filaDatos[0] = dv.getIdDVenta();
-                filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
-                filaDatos[2] = dv.getPrecio();
-                filaDatos[3] = dv.getCantidad();
-                filaDatos[4] = IDaoCliente.obtenerNombre(dv.getIdCliente());
-                filaDatos[5] = dv.getCantidad() * dv.getPrecio();
+                Nodo aux = IDaoContiene.inicio;
+                while (aux != null) {
+                    if (aux.getContiene().getIdContiene() == dv.getIdProducto()) {
+                        filaDatos[1] = IDaoProducto.obtenerNombre(aux.getContiene().getIdProducto());
+                        filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(aux.getContiene().getIdProducto()));
+                        filaDatos[3] = IDaoMarca.obtenerNombre(aux.getContiene().getIdMarca());
+                        filaDatos[4] = IDaoTalla.obtenerNombre(aux.getContiene().getIdTalla());
+                        filaDatos[5] = IDaoColor.obtenerNombre(aux.getContiene().getIdColor());
+                    }
+                    aux = aux.siguiente;
+                }
+                filaDatos[6] = dv.getPrecio();
+                filaDatos[7] = dv.getCantidad();
+                filaDatos[8] = dv.getCantidad() * dv.getPrecio();
                 modelo.addRow(filaDatos);
             }
         }
@@ -104,7 +119,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             buscarCampo(false);
         }
         txtTotal.setEnabled(true);
-        txtTotal.setText(""+crudDetalleVenta.calcularTotal());
+        txtTotal.setText("" + crudDetalleVenta.calcularTotal());
         txtTotal.setEnabled(false);
     }
 
@@ -122,14 +137,33 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
     private void habilitarCampo(boolean f) {
         cboCliente.setEnabled(f);
-        cboProducto.setEnabled(f);
         txtCantidad.setEnabled(f);
         txtPrecio.setEnabled(f);
     }
 
+    private void habilitarFiltroIds(boolean f) {
+        txtProducto.setEnabled(f);
+        txtMarca.setEnabled(f);
+        txtTalla.setEnabled(f);
+        txtColor.setEnabled(f);
+    }
+
+    private void editarFiltroIds(boolean f) {
+        txtProducto.setEditable(f);
+        txtMarca.setEditable(f);
+        txtTalla.setEditable(f);
+        txtColor.setEditable(f);
+    }
+
+    private void limpiarFiltroIds() {
+        txtProducto.setText("");
+        txtMarca.setText("");
+        txtTalla.setText("");
+        txtColor.setText("");
+    }
+
     private void limpiarCampos() {
         cboCliente.setSelectedIndex(0);
-        cboProducto.setSelectedIndex(0);
         txtCantidad.setText("");
         txtPrecio.setText("");
     }
@@ -151,7 +185,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         lblMensaje = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        cboProducto = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -170,43 +203,50 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        cboIdsProductos = new javax.swing.JComboBox<>();
+        cboIdsContiene = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtMarca = new javax.swing.JTextField();
+        txtProducto = new javax.swing.JTextField();
+        txtTalla = new javax.swing.JTextField();
+        txtColor = new javax.swing.JTextField();
+        btnGuardarDetalleCom = new javax.swing.JButton();
+        btnCancelarDetalle = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 230, 400, 30));
+
+        lblMensaje.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        getContentPane().add(lblMensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 230, 580, 30));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel1.setText("Detalle de Venta");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 0, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Producto");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, -1, -1));
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("Producto:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, 70, 30));
 
-        cboProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(cboProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 60, 190, -1));
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Talla:");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, 50, 30));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("Precio");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, -1, -1));
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Cantidad:");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 100, -1, 30));
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel8.setText("Cantidad");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, -1, -1));
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText("Cliente");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 90, -1, -1));
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Cliente:");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 140, 50, 30));
 
         txtPrecio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 140, 190, -1));
+        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, 190, -1));
 
         txtCantidad.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 190, 190, -1));
+        getContentPane().add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 100, 190, -1));
 
         cboCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(cboCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 90, 180, -1));
+        getContentPane().add(cboCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 140, 190, -1));
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -215,7 +255,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 btnNuevoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 160, 90, 30));
+        getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 190, 90, 30));
 
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAgregar.setText("Agregar");
@@ -224,7 +264,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 btnAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 160, 90, 30));
+        getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 190, 90, 30));
 
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -233,7 +273,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 160, 90, 30));
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 190, 90, 30));
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnEditar.setText("Editar");
@@ -242,14 +282,14 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 btnEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 270, 90, 30));
+        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 260, 90, 30));
 
         tblDVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Producto", "Precio", "Cantidad", "Cliente", "Total"
+                "ID", "Producto", "Categoria", "Marca", "Talla", "Color", "Precio", "Cantidad", "Total"
             }
         ));
         tblDVenta.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -259,7 +299,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblDVenta);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 1170, 250));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 1170, 250));
 
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnEliminar.setText("Eliminar");
@@ -268,38 +308,63 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 btnEliminarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 270, 110, -1));
+        getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 260, 110, 30));
 
         jLabel2.setText("Buscar:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, 30));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, 30));
 
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyReleased(evt);
             }
         });
-        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 270, 310, 30));
+        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 310, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Total:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 570, 50, 30));
-        getContentPane().add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 570, 40, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 560, 50, 30));
+        getContentPane().add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 560, 40, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("ID:");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 20, 20));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 20, 30));
 
-        cboIdsProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(cboIdsProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, -1, -1));
+        cboIdsContiene.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar" }));
+        cboIdsContiene.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboIdsContieneActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cboIdsContiene, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 110, 30));
 
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Marca:");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 50, 20));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 50, 30));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Precio:");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 60, 50, 30));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setText("Color:");
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 180, 50, 30));
+        getContentPane().add(txtMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 190, 30));
+        getContentPane().add(txtProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 60, 190, 30));
+        getContentPane().add(txtTalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 140, 190, 30));
+        getContentPane().add(txtColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 190, 30));
+
+        btnGuardarDetalleCom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGuardarDetalleCom.setText("Guardar");
+        getContentPane().add(btnGuardarDetalleCom, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, 30));
+
+        btnCancelarDetalle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelarDetalle.setText("Cancelar");
+        getContentPane().add(btnCancelarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 560, -1, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
         habilitarCampo(true);
         limpiarCampos();
         registroBotones(true);
@@ -310,34 +375,25 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         lblMensaje.setText("");
         tblDVenta.clearSelection();
         cboCliente.requestFocus();
-        cboProducto.requestFocus();
+//        cboProducto.requestFocus();
         guardar = false;
         listarDVentas();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
         String cantidadStr = txtCantidad.getText().strip();
         String precioStr = txtPrecio.getText().strip();
 
         // Validar que se haya seleccionado un producto
-        if (cboProducto.getSelectedItem().equals("Seleccionar")) {
+        if (cboIdsContiene.getSelectedItem().equals("Seleccionar")) {
             JOptionPane.showMessageDialog(null,
                     "Advertencia, debe seleccionar un producto.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
-            cboProducto.requestFocus();
+            cboIdsContiene.requestFocus();
             return;
         }
 
         // Validar que se haya seleccionado un cliente
-        if (cboCliente.getSelectedItem().equals("Seleccionar")) {
-            JOptionPane.showMessageDialog(null,
-                    "Advertencia, debe seleccionar un cliente.",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
-            cboCliente.requestFocus();
-            return;
-        }
-
         // Validar que la cantidad sea un número flotante positivo
         float cantidad;
         try {
@@ -377,12 +433,22 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
 
         // Obtener los IDs de producto y cliente a través de sus DAO
-        int idProducto = IDaoProducto.obtenerId(cboProducto.getSelectedItem().toString());
-        int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
+        int idProducto = IDaoProducto.obtenerId(txtProducto.getText().strip());
+        
 
         // Si 'guardar' es verdadero, actualizar el producto; si no, agregar uno nuevo
         if (guardar) {
-            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idProducto, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+            if (crudDetalleVenta.total() == 1) {
+                if (cboCliente.getSelectedItem().equals("Seleccionar")) {
+                    JOptionPane.showMessageDialog(null,
+                            "Advertencia, debe seleccionar un cliente.",
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    cboCliente.requestFocus();
+                    return;
+                }
+            }
+            int idClient = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
+            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idProducto, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
                 lblMensaje.setText("Se actualizó correctamente el producto con id " + idProducto + ".");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -393,6 +459,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 lblMensaje.setText("No se actualizó el producto.");
             }
         } else {
+            if (crudDetalleVenta.total() == 0) {
+                if (cboCliente.getSelectedItem().equals("Seleccionar")) {
+                    JOptionPane.showMessageDialog(null,
+                            "Advertencia, debe seleccionar un cliente.",
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    cboCliente.requestFocus();
+                    return;
+                }
+            }
+            int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
             if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idProducto, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
                 lblMensaje.setText("Se agregó correctamente el producto.");
                 limpiarCampos();
@@ -410,7 +486,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
         limpiarCampos();
         limpiarTabla();
         habilitarCampo(false);
@@ -423,7 +498,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
         guardar = true;
         habilitarCampo(true);
         registroBotones(true);
@@ -435,7 +509,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         lblMensaje.setText("");
         tblDVenta.clearSelection();
         cboCliente.requestFocus();
-        cboProducto.requestFocus();
+//        cboProducto.requestFocus();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -474,10 +548,14 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         } else {
             habilitarCampo(false);
             idDVenta = Integer.parseInt(tblDVenta.getValueAt(fila, 0).toString());
-            cboProducto.setSelectedItem(tblDVenta.getValueAt(fila, 1));
-            txtPrecio.setText(tblDVenta.getValueAt(fila, 2).toString());
-            txtCantidad.setText(tblDVenta.getValueAt(fila, 3).toString());
-            cboCliente.setSelectedItem(tblDVenta.getValueAt(fila, 4));
+            cboIdsContiene.setSelectedItem(String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
+            txtPrecio.setText(tblDVenta.getValueAt(fila, 6).toString());
+            txtCantidad.setText(tblDVenta.getValueAt(fila, 7).toString());
+            System.out.println(crudDetalleVenta.total());
+            if (crudDetalleVenta.total() == 1) {
+                cboCliente.setSelectedItem(IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
+                System.out.println("if"+IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
+            }
             lblMensaje.setText("");
             buscarCampo(false);
             registroBotones(false);
@@ -519,17 +597,45 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtPrecio.setText("");
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void cboIdsContieneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboIdsContieneActionPerformed
+        Object idCon = cboIdsContiene.getSelectedItem();
+        if (idCon != null) {
+            String idFiltro = idCon.toString();
+            editarFiltroIds(true);
+            limpiarFiltroIds();
+            if (idFiltro.equalsIgnoreCase("Seleccionar")) {
+            } else {
+                int idCont = Integer.parseInt(idFiltro);
+                Nodo temp = IDaoContiene.inicio;
+                while (temp != null) {
+                    if (temp.getContiene().getIdContiene() == idCont) {
+                        txtProducto.setText(IDaoProducto.obtenerNombre(temp.getContiene().getIdProducto()));
+                        // IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(temp.getContiene().getIdProducto()))
+                        txtMarca.setText(IDaoMarca.obtenerNombre(temp.getContiene().getIdMarca()));
+                        txtTalla.setText(IDaoTalla.obtenerNombre(temp.getContiene().getIdTalla()));
+                        txtColor.setText(IDaoColor.obtenerNombre(temp.getContiene().getIdColor()));
+                    }
+                    temp = temp.siguiente;
+                }
+            }
+            editarFiltroIds(false);
+        }
+    }//GEN-LAST:event_cboIdsContieneActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancelarDetalle;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardarDetalleCom;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboCliente;
-    private javax.swing.JComboBox<String> cboIdsProductos;
-    private javax.swing.JComboBox<String> cboProducto;
+    private javax.swing.JComboBox<String> cboIdsContiene;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -543,7 +649,11 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblDVenta;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtColor;
+    private javax.swing.JTextField txtMarca;
     private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtProducto;
+    private javax.swing.JTextField txtTalla;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
