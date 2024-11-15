@@ -126,6 +126,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         for (int i = 0; i < dVentas.length; i++) {
             if (dVentas[i] != null && dVentas[i].getIdDVenta() == obj.getIdDVenta()) {
                 dVentas[i] = null;
+                size--;
                 return true;
             }
         }
@@ -285,5 +286,25 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
             }
         }
         return Double.parseDouble(df.format(total));
+    }
+
+    public int obtenerIdProducto(int idDetalle) {
+        int id = -1;
+        for (int i = 0; i < dVentas.length; i++) {
+            if (dVentas[i] != null && dVentas[i].getIdDVenta() == idDetalle) {
+                id = dVentas[i].getIdProducto();
+            }
+        }
+        return id;
+    }
+    
+    public int obtenerIdCliente(int idDetalle) {
+        int id = -1;
+        for (int i = 0; i < dVentas.length; i++) {
+            if (dVentas[i] != null && dVentas[i].getIdDVenta() == idDetalle) {
+                id = dVentas[i].getIdCliente();
+            }
+        }
+        return id;
     }
 }
