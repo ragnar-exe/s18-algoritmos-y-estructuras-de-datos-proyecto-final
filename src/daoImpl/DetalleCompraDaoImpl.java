@@ -15,12 +15,15 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.swing.JOptionPane;
+import model.Contiene;
 import model.DetalleCompra;
+import model.Nodo;
 
 public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
 
     private static final String FILE_DCOMPRA = "dcompra.txt";
     private static final String FILE_IDSDCOMPRA = "idsdcompra.txt";
+    ContieneDaoImpl IDaoContiene = new ContieneDaoImpl();
 
     private Queue<DetalleCompra> dCompras = new PriorityQueue<>(
             (a, b) -> {
@@ -133,7 +136,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
             }
         }
 
-        // Leer el �ltimo c�digo del archivo
+        // Leer el ultimo codigo del archivo
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSDCOMPRA))) {
             List<String> lines = Files.readAllLines(Paths.get(FILE_IDSDCOMPRA));
             if (!lines.isEmpty()) {
@@ -155,9 +158,39 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDCOMPRA, true))) {
             codigos.write(obj.getIdDCompra() + "\n");
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al agregar el codigo de producto", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        Nodo temp = IDaoContiene.inicio;
+        while (temp != null) {
+            if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
+                    temp.getContiene().getIdMarca() == obj.getIdMarca() &&
+                    temp.getContiene().getIdTalla() == obj.getIdTalla() &&
+                    temp.getContiene().getIdColor() == obj.getIdColor() && 
+                    temp.getContiene().getPrecio() == obj.getPrecio()) {
+                byte stockActualizado = (byte) (temp.getContiene().getStock() + obj.getCantidad());
+                IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
+                        temp.getContiene().getIdProducto(),
+                        temp.getContiene().getIdTalla(),
+                        temp.getContiene().getIdColor(),
+                        temp.getContiene().getIdMarca(),
+                        temp.getContiene().getPrecio(),
+                        stockActualizado));
+                IDaoContiene.guardarEnArchivo();
+                dCompras.offer(obj);
+                return true;
+            }
+            temp = temp.getSiguiente();
+        }
+        IDaoContiene.agregar(new Contiene(IDaoContiene.obtenerUltimoId(), 
+                        obj.getIdProducto(), 
+                        obj.getIdTalla(),
+                obj.getIdColor(),
+                obj.getIdMarca(),
+                obj.getPrecio(), 
+                (byte) obj.getCantidad()));
+        IDaoContiene.guardarEnArchivo();
         return dCompras.offer(obj);
     }
 
