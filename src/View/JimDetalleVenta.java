@@ -9,6 +9,7 @@ import daoImpl.MarcaDaoImpl;
 import daoImpl.ProductoDaoImpl;
 import daoImpl.TallaDaoImpl;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
@@ -44,14 +45,15 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         IDaoContiene = new ContieneDaoImpl();
         modelo = new DefaultTableModel();
         cargarClientes();
+        cargarIdsContiene();
 //        cargarProductos();
         habilitarCampo(false);
         registroBotones(false);
         crudBotones(false);
-        cargarIdsContiene();
         limpiarFiltroIds();
         habilitarFiltroIds(false);
         listarDVentas();
+        btnNuevo.requestFocus();
     }
 
 //    private void cargarProductos() {
@@ -63,6 +65,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 //            temp = temp.siguiente;
 //        }
 //    }
+    
     private void cargarClientes() {
         cboCliente.removeAllItems();
         cboCliente.addItem("Seleccionar");
@@ -118,6 +121,10 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         } else {
             buscarCampo(false);
         }
+        if (crudDetalleVenta.total() > 0) {
+            cboCliente.setEnabled(false);
+        }
+        
         txtTotal.setEnabled(true);
         txtTotal.setText("" + crudDetalleVenta.calcularTotal());
         txtTotal.setEnabled(false);
@@ -136,6 +143,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }
 
     private void habilitarCampo(boolean f) {
+        cboIdsContiene.setEnabled(f);
         cboCliente.setEnabled(f);
         txtCantidad.setEnabled(f);
         txtPrecio.setEnabled(f);
@@ -163,6 +171,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }
 
     private void limpiarCampos() {
+        cboIdsContiene.setSelectedIndex(0);
         cboCliente.setSelectedIndex(0);
         txtCantidad.setText("");
         txtPrecio.setText("");
@@ -171,6 +180,17 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private void buscarCampo(boolean f) {
         txtBuscar.setText("");
         txtBuscar.setEnabled(f);
+    }
+    
+    public boolean obtenerDatosComboBox(JComboBox<String> comboBox, String idCon) {
+        int itemCount = comboBox.getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            String item = comboBox.getItemAt(i);
+            if (item.equalsIgnoreCase(idCon)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -322,8 +342,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Total:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 560, 50, 30));
-        getContentPane().add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 560, 40, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 560, 50, 30));
+        getContentPane().add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 560, 60, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("ID:");
@@ -365,9 +385,12 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        cargarIdsContiene();
         habilitarCampo(true);
         limpiarCampos();
         registroBotones(true);
+        limpiarFiltroIds();
+        habilitarFiltroIds(true);
         crudBotones(false);
         limpiarTabla();
         buscarCampo(false);
@@ -375,8 +398,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         lblMensaje.setText("");
         tblDVenta.clearSelection();
         cboCliente.requestFocus();
-//        cboProducto.requestFocus();
         guardar = false;
+        cboIdsContiene.requestFocus();
         listarDVentas();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -433,7 +456,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
 
         // Obtener los IDs de producto y cliente a través de sus DAO
-        int idProducto = IDaoProducto.obtenerId(txtProducto.getText().strip());
+        int idContiene = Integer.parseInt(cboIdsContiene.getSelectedItem().toString());
         
 
         // Si 'guardar' es verdadero, actualizar el producto; si no, agregar uno nuevo
@@ -448,15 +471,17 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idClient = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idProducto, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
-                lblMensaje.setText("Se actualizó correctamente el producto con id " + idProducto + ".");
+            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idContiene, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+                lblMensaje.setText("Se actualizó correctamente el detalle con id " + idDVenta + ".");
                 limpiarCampos();
                 habilitarCampo(false);
+                limpiarFiltroIds();
+                habilitarFiltroIds(false);
                 registroBotones(false);
                 crudBotones(false);
                 guardar = false;
             } else {
-                lblMensaje.setText("No se actualizó el producto.");
+                lblMensaje.setText("No se actualizó el detalle con id "+idDVenta + ".");
             }
         } else {
             if (crudDetalleVenta.total() == 0) {
@@ -469,14 +494,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idProducto, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
-                lblMensaje.setText("Se agregó correctamente el producto.");
+            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idContiene, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+                lblMensaje.setText("Se agregó correctamente el detalle.");
                 limpiarCampos();
                 habilitarCampo(false);
+                limpiarFiltroIds();
+                habilitarFiltroIds(false);
                 registroBotones(false);
                 crudBotones(false);
             } else {
-                lblMensaje.setText("No se agregó el producto.");
+                lblMensaje.setText("No se agregó el detalle.");
             }
         }
 
@@ -490,16 +517,20 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         limpiarTabla();
         habilitarCampo(false);
         crudBotones(false);
+        limpiarFiltroIds();
+        habilitarFiltroIds(false);
         registroBotones(false);
         lblMensaje.setText("");
         tblDVenta.clearSelection();
         guardar = false;
+        btnNuevo.requestFocus();
         listarDVentas();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         guardar = true;
         habilitarCampo(true);
+        habilitarFiltroIds(true);
         registroBotones(true);
         crudBotones(false);
         limpiarTabla();
@@ -508,12 +539,11 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         btnNuevo.setEnabled(false);
         lblMensaje.setText("");
         tblDVenta.clearSelection();
-        cboCliente.requestFocus();
+        cboIdsContiene.requestFocus();
 //        cboProducto.requestFocus();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
         int fila = tblDVenta.getSelectedRow();
         if (fila < 0) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
@@ -538,7 +568,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void tblDVentaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDVentaMouseReleased
-        // TODO add your handling code here:
         int fila = tblDVenta.getSelectedRow();
         if (fila < 0) {
             JOptionPane.showMessageDialog(null,
@@ -547,11 +576,15 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                     JOptionPane.WARNING_MESSAGE);
         } else {
             habilitarCampo(false);
+            habilitarFiltroIds(false);
             idDVenta = Integer.parseInt(tblDVenta.getValueAt(fila, 0).toString());
+            boolean esta = obtenerDatosComboBox(cboIdsContiene,String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
+            if (!esta) {
+                cboIdsContiene.addItem(String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
+            }
             cboIdsContiene.setSelectedItem(String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
             txtPrecio.setText(tblDVenta.getValueAt(fila, 6).toString());
             txtCantidad.setText(tblDVenta.getValueAt(fila, 7).toString());
-            System.out.println(crudDetalleVenta.total());
             if (crudDetalleVenta.total() == 1) {
                 cboCliente.setSelectedItem(IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
                 System.out.println("if"+IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
@@ -565,7 +598,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tblDVentaMouseReleased
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        // TODO add your handling code here:
         limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
         int n = 0;       // Contador de resultados
         String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
@@ -586,7 +618,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 filaDatos[3] = dv.getCantidad();
                 filaDatos[4] = IDaoCliente.obtenerNombre(dv.getIdCliente());
                 filaDatos[5] = dv.getCantidad() * dv.getPrecio();
-
                 modelo.addRow(filaDatos);  // Agrega los datos a la tabla
                 n++;  // Incrementa el contador de resultados
             }
