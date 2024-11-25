@@ -519,6 +519,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
         cboProducto.requestFocus();
         crudBotones(false);
         registroBotones(true);
+        btnGuardarInicio.setEnabled(false);
+        btnGuardarPosicon.setEnabled(false);
         btnNuevo.setEnabled(false);
         lblMensaje.setText("");
         tblStockProducto.clearSelection();
