@@ -1,7 +1,6 @@
 package daoImpl;
 
 import dao.IDaoGenerico;
-import dao.IDaoObtenerLista;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +16,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.swing.JOptionPane;
 import model.DetalleCompra;
-import model.Producto;
 
 public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
 
@@ -57,35 +55,6 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
 
     public int size() {
         return dCompras.size();
-    }
-
-    public int obtenerId(String texto) {
-        int id = 1;
-
-        // Verificar si el archivo existe
-        if (!Files.exists(Paths.get(FILE_IDSDCOMPRA))) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSDCOMPRA))) {
-                writer.write("0\n");
-            } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsproductos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
-        // Leer el �ltimo c�digo del archivo
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_IDSDCOMPRA))) {
-            List<String> lines = Files.readAllLines(Paths.get(FILE_IDSDCOMPRA));
-            if (!lines.isEmpty()) {
-                try {
-                    int lastCode = Integer.parseInt(lines.get(lines.size() - 1).strip());
-                    id = lastCode + 1;
-                } catch (NumberFormatException e) {
-                    id = 1;
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de productos", "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-        return id;
     }
 
     @Override
