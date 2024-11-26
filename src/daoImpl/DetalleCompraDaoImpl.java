@@ -63,15 +63,75 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     @Override
     public boolean actualizar(DetalleCompra obj) {
         for (DetalleCompra dc : dCompras) {
-            if (dc.getIdDCompra() == obj.getIdDCompra()) {
-                dc.setIdProducto(obj.getIdProducto());
-                dc.setIdMarca(obj.getIdMarca());
-                dc.setIdTalla(obj.getIdTalla());
-                dc.setIdColor(obj.getIdColor());
-                dc.setPrecio(obj.getPrecio());
-                dc.setCantidad(obj.getCantidad());
-                dc.setTotal(obj.getTotal());
-                return true;
+            if ( dc != null && dc.getIdDCompra() == obj.getIdDCompra()) {
+                Nodo temp = IDaoContiene.inicio;
+                byte stockActualDCompras = (byte) dc.getCantidad();
+                byte stockActualizar = (byte) obj.getCantidad();
+                byte stockCalcular = (byte) (stockActualizar - stockActualDCompras);
+                if (stockCalcular > 0) {
+                    while (temp != null) {
+                        if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
+                            temp.getContiene().getIdMarca() == obj.getIdMarca() &&
+                            temp.getContiene().getIdTalla() == obj.getIdTalla() &&
+                            temp.getContiene().getIdColor() == obj.getIdColor() && 
+                            temp.getContiene().getPrecio() == obj.getPrecio()) {
+                            byte stockContiene = (byte) (temp.getContiene().getStock() + stockCalcular);
+                            IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
+                                    obj.getIdProducto(),
+                                    obj.getIdTalla(),
+                                    temp.getContiene().getIdColor(),
+                                    obj.getIdMarca(),
+                                    obj.getPrecio(),
+                                    stockContiene));
+                            IDaoContiene.guardarEnArchivo();
+                            dc.setIdProducto(obj.getIdProducto());
+                            dc.setIdMarca(obj.getIdMarca());
+                            dc.setIdTalla(obj.getIdTalla());
+                            dc.setIdColor(obj.getIdColor());
+                            dc.setPrecio(obj.getPrecio());
+                            dc.setCantidad(obj.getCantidad());
+                            dc.setTotal(obj.getTotal());
+                            return true;
+                        }
+                        temp = temp.getSiguiente();
+                    }
+                } else if (stockCalcular < 0) {
+                    while (temp != null) {
+                        if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
+                            temp.getContiene().getIdMarca() == obj.getIdMarca() &&
+                            temp.getContiene().getIdTalla() == obj.getIdTalla() &&
+                            temp.getContiene().getIdColor() == obj.getIdColor() && 
+                            temp.getContiene().getPrecio() == obj.getPrecio()) {
+                            byte stockContiene = (byte) (temp.getContiene().getStock() + stockCalcular);
+                            IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
+                                    temp.getContiene().getIdProducto(),
+                                    temp.getContiene().getIdTalla(),
+                                    temp.getContiene().getIdColor(),
+                                    temp.getContiene().getIdMarca(),
+                                    temp.getContiene().getPrecio(),
+                                    stockContiene));
+                            IDaoContiene.guardarEnArchivo();
+                            dc.setIdProducto(obj.getIdProducto());
+                            dc.setIdMarca(obj.getIdMarca());
+                            dc.setIdTalla(obj.getIdTalla());
+                            dc.setIdColor(obj.getIdColor());
+                            dc.setPrecio(obj.getPrecio());
+                            dc.setCantidad(obj.getCantidad());
+                            dc.setTotal(obj.getTotal());
+                            return true;
+                        }
+                        temp = temp.getSiguiente();
+                    }
+                } else {
+                    dc.setIdProducto(obj.getIdProducto());
+                    dc.setIdMarca(obj.getIdMarca());
+                    dc.setIdTalla(obj.getIdTalla());
+                    dc.setIdColor(obj.getIdColor());
+                    dc.setPrecio(obj.getPrecio());
+                    dc.setCantidad(obj.getCantidad());
+                    dc.setTotal(obj.getTotal());
+                    return true;
+                }
             }
         }
         return false;
