@@ -10,7 +10,9 @@ import daoImpl.ProductoDaoImpl;
 import daoImpl.TallaDaoImpl;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 import model.Contiene;
@@ -19,6 +21,9 @@ import model.Nodo;
 import model.Producto;
 
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
+    
+    public static JDesktopPane jDesktopPane_menu;
+
 
     private final DetalleVentaDaoImpl crudDetalleVenta;
     private ContieneDaoImpl IDaoContiene;
@@ -231,7 +236,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtProducto = new javax.swing.JTextField();
         txtTalla = new javax.swing.JTextField();
         txtColor = new javax.swing.JTextField();
-        btnGuardarDetalleCom = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         btnCancelarDetalle = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -373,9 +378,14 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         getContentPane().add(txtTalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 140, 190, 30));
         getContentPane().add(txtColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 190, 30));
 
-        btnGuardarDetalleCom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnGuardarDetalleCom.setText("Guardar");
-        getContentPane().add(btnGuardarDetalleCom, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, 30));
+        btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, 30));
 
         btnCancelarDetalle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelarDetalle.setText("Cancelar");
@@ -653,6 +663,34 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_cboIdsContieneActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de venta
+        JimVenta vistaVentas = new JimVenta();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaDVentas) al JDesktopPane
+            jDesktopPane_menu.add(vistaVentas);
+
+            // Hacer visible el JInternalFrame
+            vistaVentas.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaVentas.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
+        
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -660,7 +698,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCancelarDetalle;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnGuardarDetalleCom;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboCliente;
     private javax.swing.JComboBox<String> cboIdsContiene;
