@@ -92,12 +92,13 @@ public class CompraDaoImpl implements IDaoGenerico<Compra> {
     @Override
     public boolean eliminar(Compra obj) {
         for (Compra com : compras) {
-            if (com.getIdCompra() == obj.getIdCompra()) {
-                com.setEstado(false);
-                return true;
-            }
+        // Compara directamente los ID de la compra
+        if (com.getIdCompra() == obj.getIdCompra()) {
+            com.setEstado(false); // Cambia el estado
+            return true;  // Se eliminó correctamente
         }
-        return false;
+    }
+    return false; // No se encontró el objeto
     }
 
     @Override

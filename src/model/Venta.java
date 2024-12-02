@@ -8,7 +8,8 @@ public class Venta {
     private float total;
     private float subtotal;
     private float impuestoTotal;
-    private LocalDateTime fecha;
+    private String fecha;
+    private boolean estado;
 
     public Venta() {
     }
@@ -17,14 +18,23 @@ public class Venta {
         this.idVenta = idVenta;
     }
 
-    public Venta(int idVenta, int idCliente, float total, float subtotal, float impuestoTotal, LocalDateTime fecha) {
+    public Venta(int idVenta, int idCliente, float total, float subtotal, float impuestoTotal, String fecha, boolean estado) {
         this.idVenta = idVenta;
         this.idCliente = idCliente;
         this.total = total;
         this.subtotal = subtotal;
         this.impuestoTotal = impuestoTotal;
         this.fecha = fecha;
+        this.estado = estado;
     }    
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
     
 
     public int getIdVenta() {
@@ -67,11 +77,11 @@ public class Venta {
         this.impuestoTotal = impuestoTotal;
     }
 
-    public LocalDateTime getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
     

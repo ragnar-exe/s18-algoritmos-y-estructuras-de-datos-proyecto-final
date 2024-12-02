@@ -1,17 +1,58 @@
 package View;
 
+import daoImpl.ClienteDaoImpl;
+import daoImpl.VentaDaoImpl;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+import model.Venta;
 
 public class JimVenta extends javax.swing.JInternalFrame {
 
     public static JDesktopPane jDesktopPane_menu;
+    private VentaDaoImpl crudVenta;
+    private DefaultTableModel modelo;
+    private final Object[] filaDatos;
+    private ClienteDaoImpl IDaoCliente;
 
     public JimVenta() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
+        crudVenta = new VentaDaoImpl();
+        modelo = new DefaultTableModel();
+        filaDatos = new Object[6];
+        IDaoCliente = new ClienteDaoImpl();
+        listarVentas();
+    }
+    
+     private void limpiarTabla() {
+        modelo = (DefaultTableModel) tblVentas.getModel();
+        modelo.getDataVector().removeAllElements();
+        tblVentas.removeAll();
+    }
+
+    public void listarVentas() {
+        modelo = (DefaultTableModel) tblVentas.getModel();
+        for (Venta ven : crudVenta.listar()) {
+            if (ven != null && ven.isEstado() == true) {
+                filaDatos[0] = ven.getIdVenta();
+                filaDatos[1] = ven.getFecha();
+                for (Cliente cli : IDaoCliente.listar()) {
+                    if (cli != null && cli.getIdPersona()== ven.getIdCliente()) {
+                        filaDatos[2] = cli.getNombres() + " " + cli.getApellidos();
+                    }
+                }
+                filaDatos[3] = ven.getSubtotal();
+                filaDatos[4] = ven.getImpuestoTotal();
+                filaDatos[5] = ven.getTotal();
+                modelo.addRow(filaDatos);
+            }
+        }
+        
     }
 
     /**
@@ -29,10 +70,9 @@ public class JimVenta extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         txtBuscarVenta = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        tblVentas = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
+        btnVerDetalle = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
 
         setIconifiable(true);
@@ -49,7 +89,7 @@ public class JimVenta extends javax.swing.JInternalFrame {
                 btnEditarDetalleActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEditarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 120, -1, 31));
+        jPanel1.add(btnEditarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 120, -1, 31));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Buscar:");
@@ -67,7 +107,7 @@ public class JimVenta extends javax.swing.JInternalFrame {
         });
         jPanel1.add(txtBuscarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 332, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -75,21 +115,27 @@ public class JimVenta extends javax.swing.JInternalFrame {
                 "ID", "Fecha", "Cliente", "Subtotal", "Total impuestos", "Total"
             }
         ));
-        jScrollPane4.setViewportView(jTable1);
+        jScrollPane4.setViewportView(tblVentas);
 
         jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 1136, 340));
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton2.setText("Generar comprobante");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 120, -1, 30));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 120, -1, 30));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton3.setText("Eliminar");
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, -1, 30));
-
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton4.setText("Ver detalle");
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 120, 120, 30));
+        btnVerDetalle.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnVerDetalle.setText("Ver detalle");
+        btnVerDetalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerDetalleActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnVerDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 120, 120, 30));
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -107,6 +153,43 @@ public class JimVenta extends javax.swing.JInternalFrame {
 
     private void btnEditarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarDetalleActionPerformed
         // TODO add your handling code here:
+        int filaSeleccionada = tblVentas.getSelectedRow();
+
+        if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
+            // Obtén el ID de la compra desde la columna correspondiente
+            Object value = tblVentas.getValueAt(filaSeleccionada, 0);
+            if (value instanceof Integer) {
+                int idVenta = (Integer) value;
+
+                // Abre la ventana de detalle con los datos de la compra
+                FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtén la ventana principal
+                JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+                // Crear la vista de detalles de compra
+                JimDetalleVenta vistaDVentas = new JimDetalleVenta();
+
+                // Pasa el ID de la compra a la vista de detalles
+                vistaDVentas.cargarDatosCompraEditar(idVenta);  // Método que carga los datos
+
+                if (jDesktopPane_menu != null) {
+                    jDesktopPane_menu.add(vistaDVentas); // Agrega el JInternalFrame al JDesktopPane
+                    vistaDVentas.setVisible(true); // Haz visible el JInternalFrame
+
+                    try {
+                        vistaDVentas.setSelected(true); // Selecciona el JInternalFrame
+                    } catch (java.beans.PropertyVetoException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("El JDesktopPane no está inicializado.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de la columna ID no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
+        }
+        
     }//GEN-LAST:event_btnEditarDetalleActionPerformed
 
     private void txtBuscarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarVentaActionPerformed
@@ -139,18 +222,94 @@ public class JimVenta extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void btnVerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetalleActionPerformed
+        int filaSeleccionada = tblVentas.getSelectedRow();
+
+        if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
+            // Obtén el ID de la compra desde la columna correspondiente
+            Object value = tblVentas.getValueAt(filaSeleccionada, 0);
+            if (value instanceof Integer) {
+                int idVenta = (Integer) value;
+
+                // Abre la ventana de detalle con los datos de la compra
+                FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtén la ventana principal
+                JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+                // Crear la vista de detalles de compra
+                JimDetalleVenta vistaDVenta = new JimDetalleVenta();
+
+                // Pasa el ID de la compra a la vista de detalles
+                vistaDVenta.cargarDatosVenta(idVenta);  // Método que carga los datos
+
+                if (jDesktopPane_menu != null) {
+                    jDesktopPane_menu.add(vistaDVenta); // Agrega el JInternalFrame al JDesktopPane
+                    vistaDVenta.setVisible(true); // Haz visible el JInternalFrame
+
+                    try {
+                        vistaDVenta.setSelected(true); // Selecciona el JInternalFrame
+                    } catch (java.beans.PropertyVetoException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("El JDesktopPane no está inicializado.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de la columna ID no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
+        }
+    }//GEN-LAST:event_btnVerDetalleActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        int filaSeleccionada = tblVentas.getSelectedRow();
+
+        if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
+            // Obtén el ID de la compra desde la columna correspondiente
+            Object value = tblVentas.getValueAt(filaSeleccionada, 0);
+            if (value instanceof Integer) {
+                int idVenta = (Integer) value;
+
+                // Mostrar cuadro de confirmación
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar esta compra?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // Crear un objeto Compra solo con el idCompra
+                    Venta ventaAEliminar = new Venta();
+                    ventaAEliminar.setIdVenta(idVenta);
+
+                    // Llamar al método eliminar
+                    if (crudVenta.eliminar(ventaAEliminar)) {
+                        JOptionPane.showMessageDialog(this, "Compra eliminada con éxito.");
+                        limpiarTabla();
+                        listarVentas();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se pudo eliminar la compra.");
+                    }
+                } else {
+                    // Si el usuario selecciona 'No'
+                    JOptionPane.showMessageDialog(this, "Eliminación cancelada.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de la columna ID no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarDetalle;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnVerDetalle;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblVentas;
     private javax.swing.JTextField txtBuscarVenta;
     // End of variables declaration//GEN-END:variables
 }

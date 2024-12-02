@@ -37,7 +37,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
     public void listarCompras() {
         modelo = (DefaultTableModel) tblCompras.getModel();
         for (Compra com : crudCompra.listar()) {
-            if (com != null) {
+            if (com != null && com.isEstado() == true) {
                 filaDatos[0] = com.getIdCompra();
                 filaDatos[1] = com.getFecha();
                 for (Proveedor pro : IDaoProveedor.listar()) {
@@ -52,6 +52,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
             }
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,7 +70,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
         txtBuscarCompra = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblCompras = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         btnVerDetalle = new javax.swing.JButton();
         btnGenerarDetalleCompra = new javax.swing.JButton();
 
@@ -113,13 +114,23 @@ public class JimCompra extends javax.swing.JInternalFrame {
                 tblComprasMouseReleased(evt);
             }
         });
+        tblCompras.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tblComprasKeyReleased(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblCompras);
 
         jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 1136, 340));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton3.setText("Eliminar");
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, -1, 30));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, -1, 30));
 
         btnVerDetalle.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnVerDetalle.setText("Ver detalle");
@@ -165,6 +176,42 @@ public class JimCompra extends javax.swing.JInternalFrame {
 
     private void btnEditarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarDetalleActionPerformed
         // TODO add your handling code here:
+        int filaSeleccionada = tblCompras.getSelectedRow();
+
+        if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
+            // Obtén el ID de la compra desde la columna correspondiente
+            Object value = tblCompras.getValueAt(filaSeleccionada, 0);
+            if (value instanceof Integer) {
+                int idCompra = (Integer) value;
+
+                // Abre la ventana de detalle con los datos de la compra
+                FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtén la ventana principal
+                JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+                // Crear la vista de detalles de compra
+                JimDetalleCompra vistaDCompras = new JimDetalleCompra();
+
+                // Pasa el ID de la compra a la vista de detalles
+                vistaDCompras.cargarDatosCompraEditar(idCompra);  // Método que carga los datos
+
+                if (jDesktopPane_menu != null) {
+                    jDesktopPane_menu.add(vistaDCompras); // Agrega el JInternalFrame al JDesktopPane
+                    vistaDCompras.setVisible(true); // Haz visible el JInternalFrame
+
+                    try {
+                        vistaDCompras.setSelected(true); // Selecciona el JInternalFrame
+                    } catch (java.beans.PropertyVetoException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("El JDesktopPane no está inicializado.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de la columna ID no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
+        }
     }//GEN-LAST:event_btnEditarDetalleActionPerformed
 
     private void txtBuscarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCompraActionPerformed
@@ -237,20 +284,61 @@ public class JimCompra extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
         }
-        
-        
+
+
     }//GEN-LAST:event_btnVerDetalleActionPerformed
 
     private void tblComprasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblComprasMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_tblComprasMouseReleased
 
+    private void tblComprasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblComprasKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblComprasKeyReleased
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int filaSeleccionada = tblCompras.getSelectedRow();
+
+        if (filaSeleccionada != -1) { // Verifica si hay una fila seleccionada
+            // Obtén el ID de la compra desde la columna correspondiente
+            Object value = tblCompras.getValueAt(filaSeleccionada, 0);
+            if (value instanceof Integer) {
+                int idCompra = (Integer) value;
+
+                // Mostrar cuadro de confirmación
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar esta compra?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // Crear un objeto Compra solo con el idCompra
+                    Compra compraAEliminar = new Compra();
+                    compraAEliminar.setIdCompra(idCompra);
+
+                    // Llamar al método eliminar
+                    if (crudCompra.eliminar(compraAEliminar)) {
+                        JOptionPane.showMessageDialog(this, "Compra eliminada con éxito.");
+                        limpiarTabla();
+                        listarCompras();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se pudo eliminar la compra.");
+                    }
+                } else {
+                    // Si el usuario selecciona 'No'
+                    JOptionPane.showMessageDialog(this, "Eliminación cancelada.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de la columna ID no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una compra de la tabla.");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarDetalle;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGenerarDetalleCompra;
     private javax.swing.JButton btnVerDetalle;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
