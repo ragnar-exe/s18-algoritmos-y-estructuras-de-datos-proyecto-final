@@ -214,4 +214,5 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
     public List<Cliente> listarOrdenarDescendete() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 }

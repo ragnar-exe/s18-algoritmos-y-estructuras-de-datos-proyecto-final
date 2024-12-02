@@ -8,6 +8,8 @@ import daoImpl.DetalleVentaDaoImpl;
 import daoImpl.MarcaDaoImpl;
 import daoImpl.ProductoDaoImpl;
 import daoImpl.TallaDaoImpl;
+import daoImpl.VentaDaoImpl;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
@@ -19,15 +21,17 @@ import model.Contiene;
 import model.DetalleVenta;
 import model.Nodo;
 import model.Producto;
+import model.Venta;
 
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
-    
+
     public static JDesktopPane jDesktopPane_menu;
-
-
+    private VentaDaoImpl IDaoVenta;
     private final DetalleVentaDaoImpl crudDetalleVenta;
     private ContieneDaoImpl IDaoContiene;
     private DefaultTableModel modelo;
+    private int idClienteVenta = 0;
+    private int totalRegistro = 0;
     private final ProductoDaoImpl IDaoProducto;
     private final CategoriaDaoImpl IDaoCategoria = new CategoriaDaoImpl();
     private final MarcaDaoImpl IDaoMarca = new MarcaDaoImpl();
@@ -37,6 +41,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private final Object[] filaDatos;
     private int idDVenta;
     private boolean guardar = false;
+    private int idVentaDetalle = 0;
 
     public JimDetalleVenta() {
         initComponents();
@@ -49,6 +54,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         IDaoCliente = new ClienteDaoImpl();
         IDaoContiene = new ContieneDaoImpl();
         modelo = new DefaultTableModel();
+        IDaoVenta = new VentaDaoImpl();
+        idVentaDetalle = IDaoVenta.obtenerUltimoId();
+
         cargarClientes();
         cargarIdsContiene();
 //        cargarProductos();
@@ -70,7 +78,107 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 //            temp = temp.siguiente;
 //        }
 //    }
-    
+    public void cargarDatosVenta(int idVentaCliente) {
+        btnRegresar.setVisible(true);
+
+        VentaDaoImpl crudVenta = new VentaDaoImpl();
+        DetalleVentaDaoImpl crudDetalle = new DetalleVentaDaoImpl();
+
+        // Obtén la compra por ID
+        Venta compra = crudVenta.obtenerPorId(idVentaCliente);
+        if (compra != null) {
+            habilitarCampo(false);
+
+            // Luego cargas los datos de la compra
+            DefaultTableModel modeloDetalle = (DefaultTableModel) tblDVenta.getModel();
+            modeloDetalle.setRowCount(0); // Limpia la tabla
+            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaCliente)) {
+                if (dv != null) {
+                    filaDatos[0] = dv.getIdDVenta();
+                    Nodo aux = IDaoContiene.inicio;
+                    while (aux != null) {
+                        if (aux.getContiene().getIdContiene() == dv.getIdProducto()) {
+                            filaDatos[1] = IDaoProducto.obtenerNombre(aux.getContiene().getIdProducto());
+                            filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(aux.getContiene().getIdProducto()));
+                            filaDatos[3] = IDaoMarca.obtenerNombre(aux.getContiene().getIdMarca());
+                            filaDatos[4] = IDaoTalla.obtenerNombre(aux.getContiene().getIdTalla());
+                            filaDatos[5] = IDaoColor.obtenerNombre(aux.getContiene().getIdColor());
+                        }
+                        aux = aux.siguiente;
+                    }
+                    filaDatos[6] = dv.getPrecio();
+                    filaDatos[7] = dv.getCantidad();
+                    filaDatos[8] = dv.getCantidad() * dv.getPrecio();
+                    modelo.addRow(filaDatos);
+                }
+            }
+
+            for (Cliente c : IDaoCliente.listar()) {
+                if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaCliente)) {
+                    taCliente.setEditable(true);
+                    taCliente.setText("ID: " + c.getIdPersona() + "\nDNI: " + c.getDni() + "\nNombres: " + c.getNombres() + "\nApellidos: " + c.getApellidos() + "\nCorreo: " + c.getCorreo() + "\nDireccion: " + c.getDireccion());
+                    taCliente.setEditable(false);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
+        }
+    }
+
+    public void cargarDatosCompraEditar(int idVentaCliente) {
+        btnRegresar.setVisible(true);
+//        compraGuardar= editar;
+        idVentaCliente = idVentaCliente;
+        VentaDaoImpl crudVenta = new VentaDaoImpl();
+        DetalleVentaDaoImpl crudDetalle = new DetalleVentaDaoImpl();
+
+        // Obtén la compra por ID
+        Venta compra = crudVenta.obtenerPorId(idVentaCliente);
+        if (compra != null) {
+            habilitarCampo(false);
+
+            // Luego cargas los datos de la compra
+            DefaultTableModel modeloDetalle = (DefaultTableModel) tblDVenta.getModel();
+            modeloDetalle.setRowCount(0); // Limpia la tabla
+            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaCliente)) {
+                // Aquí es donde manejas la carga de los datos del detalle de la compra
+                if (dv != null) {
+                    filaDatos[0] = dv.getIdDVenta();
+                    Nodo aux = IDaoContiene.inicio;
+                    while (aux != null) {
+                        if (aux.getContiene().getIdContiene() == dv.getIdProducto()) {
+                            filaDatos[1] = IDaoProducto.obtenerNombre(aux.getContiene().getIdProducto());
+                            filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(aux.getContiene().getIdProducto()));
+                            filaDatos[3] = IDaoMarca.obtenerNombre(aux.getContiene().getIdMarca());
+                            filaDatos[4] = IDaoTalla.obtenerNombre(aux.getContiene().getIdTalla());
+                            filaDatos[5] = IDaoColor.obtenerNombre(aux.getContiene().getIdColor());
+                        }
+                        aux = aux.siguiente;
+                    }
+                    filaDatos[6] = dv.getPrecio();
+                    filaDatos[7] = dv.getCantidad();
+                    filaDatos[8] = dv.getCantidad() * dv.getPrecio();
+                    modelo.addRow(filaDatos);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
+        }
+
+        for (Cliente c : IDaoCliente.listar()) {
+            if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaCliente)) {
+                taCliente.setEditable(true);
+                taCliente.setText("ID: " + c.getIdPersona() + "\nDNI: " + c.getDni() + "\nNombres: " + c.getNombres() + "\nApellidos: " + c.getApellidos() + "\nCorreo: " + c.getCorreo() + "\nDireccion: " + c.getDireccion());
+                taCliente.setEditable(false);
+            }
+        }
+
+        txtTotal.setEditable(true);
+        txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaCliente) + "");
+        btnGuardar.setVisible(false);
+        btnCancelarDetalle.setVisible(false);
+    }
+
     private void cargarClientes() {
         cboCliente.removeAllItems();
         cboCliente.addItem("Seleccionar");
@@ -79,9 +187,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 cboCliente.addItem(c.getDni());
             }
         }
-        
+
     }
-    
 
     private void cargarIdsContiene() {
         cboIdsContiene.removeAllItems();
@@ -104,7 +211,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private void listarDVentas() {
         modelo = (DefaultTableModel) tblDVenta.getModel();
         for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
-            if (dv != null) {
+            if (dv != null && dv.getIdVenta() == idVentaDetalle) {
                 filaDatos[0] = dv.getIdDVenta();
                 Nodo aux = IDaoContiene.inicio;
                 while (aux != null) {
@@ -131,7 +238,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         if (crudDetalleVenta.total() > 0) {
             cboCliente.setEnabled(false);
         }
-        
+
         txtTotal.setEnabled(true);
         txtTotal.setText("" + crudDetalleVenta.calcularTotal());
         txtTotal.setEnabled(false);
@@ -188,7 +295,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtBuscar.setText("");
         txtBuscar.setEnabled(f);
     }
-    
+
     public boolean obtenerDatosComboBox(JComboBox<String> comboBox, String idCon) {
         int itemCount = comboBox.getItemCount();
         for (int i = 0; i < itemCount; i++) {
@@ -243,6 +350,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         jLabel12 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taCliente = new javax.swing.JTextArea();
+        btnRegresar = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -399,6 +507,11 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
         btnCancelarDetalle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelarDetalle.setText("Cancelar");
+        btnCancelarDetalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarDetalleActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnCancelarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 560, -1, 30));
 
         jLabel12.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -410,6 +523,15 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         jScrollPane2.setViewportView(taCliente);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 90, 280, 120));
+
+        btnRegresar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnRegresar.setText("REGRESAR");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 10, 110, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -487,7 +609,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
         // Obtener los IDs de producto y cliente a través de sus DAO
         int idContiene = Integer.parseInt(cboIdsContiene.getSelectedItem().toString());
-        
 
         // Si 'guardar' es verdadero, actualizar el producto; si no, agregar uno nuevo
         if (guardar) {
@@ -501,7 +622,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idClient = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idContiene, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idContiene, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
                 lblMensaje.setText("Se actualizó correctamente el detalle con id " + idDVenta + ".");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -511,7 +632,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 crudBotones(false);
                 guardar = false;
             } else {
-                lblMensaje.setText("No se actualizó el detalle con id "+idDVenta + ".");
+                lblMensaje.setText("No se actualizó el detalle con id " + idDVenta + ".");
             }
         } else {
             if (crudDetalleVenta.total() == 0) {
@@ -524,7 +645,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idContiene, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio))) {
+            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idContiene, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
                 lblMensaje.setText("Se agregó correctamente el detalle.");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -608,7 +729,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             habilitarCampo(false);
             habilitarFiltroIds(false);
             idDVenta = Integer.parseInt(tblDVenta.getValueAt(fila, 0).toString());
-            boolean esta = obtenerDatosComboBox(cboIdsContiene,String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
+            boolean esta = obtenerDatosComboBox(cboIdsContiene, String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
             if (!esta) {
                 cboIdsContiene.addItem(String.valueOf(crudDetalleVenta.obtenerIdProducto(idDVenta)));
             }
@@ -617,7 +738,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             txtCantidad.setText(tblDVenta.getValueAt(fila, 7).toString());
             if (crudDetalleVenta.total() == 1) {
                 cboCliente.setSelectedItem(IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
-                System.out.println("if"+IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
+                System.out.println("if" + IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
             }
             lblMensaje.setText("");
             buscarCampo(false);
@@ -683,7 +804,24 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_cboIdsContieneActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void cboClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboClienteActionPerformed
+        // TODO add your handling code here:
+        Object selectedItem = cboCliente.getSelectedItem();
+        if (selectedItem != null) {
+            String valorProveedor = selectedItem.toString();
+            for (Cliente cliente : IDaoCliente.listar()) {
+                if (cliente != null && cliente.getDni().equalsIgnoreCase(valorProveedor)) {
+                    idClienteVenta = cliente.getIdPersona();
+
+                    taCliente.setText("ID: " + cliente.getIdPersona() + "\nDNI: " + cliente.getDni() + "\nNombres: " + cliente.getNombres() + "\nApellidos: " + cliente.getApellidos() + "\nCorreo: " + cliente.getCorreo() + "\nDireccion: " + cliente.getDireccion());
+                }
+            }
+        } else {
+            System.out.println("No se seleccionó ningún proveedor.");
+        }
+    }//GEN-LAST:event_cboClienteActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
         JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
@@ -702,29 +840,89 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             // Establecer el JInternalFrame en el centro
             try {
                 vistaVentas.setSelected(true);  // Asegura que esté al frente
+//                JimCompra cargarCompras = new JimCompra();
+//                cargarCompras.listarCompras();
             } catch (java.beans.PropertyVetoException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("El JDesktopPane no está inicializado.");
         }
-        
-    }//GEN-LAST:event_btnGuardarActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void cboClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboClienteActionPerformed
+    private void btnCancelarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarDetalleActionPerformed
         // TODO add your handling code here:
-        Object selectedItem = cboCliente.getSelectedItem();
-        if (selectedItem != null) {
-            String valorProveedor = selectedItem.toString();
-            for (Cliente cliente : IDaoCliente.listar()) {
-                if (cliente != null && cliente.getDni().equalsIgnoreCase(valorProveedor)) {
-                    taCliente.setText("ID: " + cliente.getIdPersona() + "\nDNI: " + cliente.getDni()+ "\nNombres: " + cliente.getNombres()+ "\nApellidos: " + cliente.getApellidos()+ "\nCorreo: " + cliente.getCorreo()+ "\nDireccion: " + cliente.getDireccion());
+        if (totalRegistro > 0) {
+            for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
+                if (dv != null && dv.getIdVenta()== IDaoVenta.obtenerUltimoId()) {
+                    crudDetalleVenta.eliminar(new DetalleVenta(dv.getIdVenta(), dv.getIdProducto(), dv.getIdCliente(), dv.getCantidad(), dv.getPrecio(), dv.getTotal(), dv.getIdVenta()));
+                    crudDetalleVenta.guardarEnArchivo();
+
                 }
             }
-        } else {
-            System.out.println("No se seleccionó ningún proveedor.");
+
+            crudDetalleVenta.clearIdVenta(new Venta(IDaoVenta.obtenerUltimoId()));
+            System.out.println("conficonal if");
         }
-    }//GEN-LAST:event_cboClienteActionPerformed
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de venta
+        JimVenta vistaVenta = new JimVenta();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaDVentas) al JDesktopPane
+            jDesktopPane_menu.add(vistaVenta);
+
+            // Hacer visible el JInternalFrame
+            vistaVenta.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaVenta.setSelected(true);  // Asegura que esté al frente
+//                JimCompra cargarCompras = new JimCompra();
+//                cargarCompras.listarCompras();
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btnCancelarDetalleActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        LocalDateTime hoy = LocalDateTime.now();
+        String fechaYhora = hoy.getDayOfMonth() + "-" + hoy.getMonthValue() + "-" + hoy.getYear() + " " + hoy.getHour() + ":" + hoy.getMinute() + ":" + hoy.getSecond();
+        float totalImpu = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) / 1.18f;
+        float totalCompra = totalImpu + crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId());
+        IDaoVenta.agregar(new Venta(IDaoVenta.obtenerUltimoId(), idClienteVenta, crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()), totalCompra, totalImpu, fechaYhora, true));
+        IDaoVenta.guardarEnArchivo();
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de venta
+        JimVenta vistaVentas = new JimVenta();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaDVentas) al JDesktopPane
+            jDesktopPane_menu.add(vistaVentas);
+
+            // Hacer visible el JInternalFrame
+            vistaVentas.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaVentas.setSelected(true);  // Asegura que esté al frente
+//                JimCompra cargarCompras = new JimCompra();
+//                cargarCompras.listarCompras();
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -735,6 +933,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<String> cboCliente;
     private javax.swing.JComboBox<String> cboIdsContiene;
     private javax.swing.JLabel jLabel1;

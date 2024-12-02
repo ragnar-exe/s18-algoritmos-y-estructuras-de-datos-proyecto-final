@@ -19,6 +19,7 @@ import model.Contiene;
 import model.DetalleVenta;
 import model.Nodo;
 import model.Producto;
+import model.Venta;
 
 public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
@@ -54,6 +55,17 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         } else {
             System.out.println("");
         }
+    }
+
+    public float calcularTotal(int idVenta) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        double total = 0.00;
+        for (DetalleVenta dv : dVentas) {
+            if (dv != null && dv.getIdVenta() == idVenta) {
+                total += (dv.getPrecio() * dv.getCantidad());
+            }
+        }
+        return Float.parseFloat(df.format(total));
     }
 
     public void clear() {
@@ -159,7 +171,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                 if (dVentas[i] != null) {
                     writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";"
                             + dVentas[i].getIdCliente() + ";" + dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio()
-                            + ";" + dVentas[i].getTotal());
+                            + ";" + dVentas[i].getTotal() + ";" + dVentas[i].getIdVenta());
                     writer.newLine();
                 }
             }
@@ -182,7 +194,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                     int cantidad = Integer.parseInt(datos[3]);
                     Float precio = Float.parseFloat(datos[4]);
                     Float total = Float.parseFloat(datos[5]);
-                    this.enqueue(new DetalleVenta(idDVenta, id, idCliente, cantidad, precio, total));
+                    int idVenta = Integer.parseInt(datos[6]);
+                    this.enqueue(new DetalleVenta(idDVenta, id, idCliente, cantidad, precio, total, idVenta));
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DVENTA, "ERROR",
@@ -320,6 +333,15 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         return id;
     }
 
+    public void clearIdVenta(Venta Obj) {
+        for (int i = 0; i < dVentas.length; i++) {
+            if (dVentas[i] != null && dVentas[i].getIdVenta() == Obj.getIdVenta()) {
+                System.out.println("Elemento eliminado en índice: " + i);
+                dVentas[i] = null; // Elimina el elemento asignando `null`
+            }
+        }
+    }
+
     public int obtenerIdCliente(int idDetalle) {
         int id = -1;
         for (int i = 0; i < dVentas.length; i++) {
@@ -328,5 +350,17 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
             }
         }
         return id;
+    }
+
+    public List<DetalleVenta> listarPorIdVenta(int idVenta) {
+        List<DetalleVenta> detallesVenta = new LinkedList<>();
+
+        for (DetalleVenta dv : dVentas) {
+            if (dv != null && dv.getIdVenta() == idVenta) {
+                detallesVenta.add(dv);
+            }
+        }
+
+        return detallesVenta;
     }
 }

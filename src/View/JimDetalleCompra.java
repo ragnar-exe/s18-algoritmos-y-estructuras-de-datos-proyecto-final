@@ -38,6 +38,8 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private final Object[] filaDatos;
     private int idDCompra;
     private boolean guardar = false;
+    private boolean compraGuardar = false;
+    private int idCompraDetalle = 0;
 
     public JimDetalleCompra() {
         initComponents();
@@ -53,6 +55,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         IDaoColor = new ColorDaoImpl();
         IDaoTalla = new TallaDaoImpl();
         IDaoCompra = new CompraDaoImpl();
+        idCompraDetalle = IDaoCompra.obtenerUltimoId();
         IDaoProveedor = new ProveedorDaoImpl();
         modelo = new DefaultTableModel();
         cargarColores();
@@ -183,11 +186,60 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         tblDCompra.setEnabled(false);
     }
 
+    public void cargarDatosCompraEditar(int idCompraCliente) {
+        btnRegresart.setVisible(true);
+//        compraGuardar= editar;
+        idCompraDetalle = idCompraCliente;
+        CompraDaoImpl crudCompra = new CompraDaoImpl();
+        DetalleCompraDaoImpl crudDetalle = new DetalleCompraDaoImpl();
+
+        // Obtén la compra por ID
+        Compra compra = crudCompra.obtenerPorId(idCompraCliente);
+        if (compra != null) {
+            habilitarCampo(false);
+
+            // Luego cargas los datos de la compra
+            DefaultTableModel modeloDetalle = (DefaultTableModel) tblDCompra.getModel();
+            modeloDetalle.setRowCount(0); // Limpia la tabla
+            for (DetalleCompra dv : crudDetalle.listarPorIdCompra(idCompraCliente)) {
+                // Aquí es donde manejas la carga de los datos del detalle de la compra
+                if (dv != null) {
+                    // Configura los valores en la tabla del detalle
+                    filaDatos[0] = dv.getIdDCompra();
+                    filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
+                    filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(dv.getIdProducto()));
+                    filaDatos[3] = IDaoMarca.obtenerNombre(dv.getIdMarca());
+                    filaDatos[4] = IDaoTalla.obtenerNombre(dv.getIdTalla());
+                    filaDatos[5] = IDaoColor.obtenerNombre(dv.getIdColor());
+                    filaDatos[6] = dv.getPrecio();
+                    filaDatos[7] = dv.getCantidad();
+                    filaDatos[8] = dv.getCantidad() * dv.getPrecio();
+                    modeloDetalle.addRow(filaDatos);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
+        }
+
+        for (Proveedor pro : IDaoProveedor.listar()) {
+            if (pro != null && pro.getIdProveedor() == IDaoCompra.obtenerIdProveedor(idCompraCliente)) {
+                taProveedor.setEditable(true);
+                taProveedor.setText("ID: " + pro.getIdProveedor() + "\nNombres: " + pro.getNombres() + "\nApellidos: " + pro.getApellidos() + "\nCorreo: " + pro.getCorreo() + "\nTelefono: " + pro.getTelefono());
+                taProveedor.setEditable(false);
+            }
+        }
+        
+        txtTotal.setEditable(true);
+        txtTotal.setText(crudDetalleCompra.calcularTotal(idCompraCliente) + "");
+        btnGuardarCompra.setVisible(false);
+        btnCancelarCompra.setVisible(false);
+    }
+
     private void listarDCompras() {
         totalRegistro = 0;
         modelo = (DefaultTableModel) tblDCompra.getModel();
         for (DetalleCompra dv : crudDetalleCompra.listarDetalle()) {
-            if (dv != null && dv.getIdCompra() == IDaoCompra.obtenerUltimoId()) {
+            if (dv != null && dv.getIdCompra() == idCompraDetalle) {
                 filaDatos[0] = dv.getIdDCompra();
                 filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
                 filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(dv.getIdProducto()));
@@ -617,7 +669,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                     return;
                 }
             }
-            if (crudDetalleCompra.actualizar(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio, IDaoCompra.obtenerUltimoId()))) {
+            if (crudDetalleCompra.actualizar(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio, idCompraDetalle))) {
                 lblMensaje.setText("Se actualizo correctamente el detalle con id " + idDCompra + ".");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -637,7 +689,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                     return;
                 }
             }
-            if (crudDetalleCompra.agregar(new DetalleCompra(crudDetalleCompra.obtenerUltimoId(), idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio, IDaoCompra.obtenerUltimoId()))) {
+            if (crudDetalleCompra.agregar(new DetalleCompra(crudDetalleCompra.obtenerUltimoId(), idProducto, idMarca, idTalla, idColor, precio, cantidad, cantidad * precio, idCompraDetalle))) {
                 lblMensaje.setText("Se agrego correctamente el detalle.");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -770,6 +822,10 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cboProveedorActionPerformed
 
     private void btnGuardarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCompraActionPerformed
+//        if (compraGuardar) {
+//            IDaoCompra.actualizar(new Compra());
+//        }
+            
         LocalDateTime hoy = LocalDateTime.now();
         String fechaYhora = hoy.getDayOfMonth() + "-" + hoy.getMonthValue() + "-" + hoy.getYear() + " " + hoy.getHour() + ":" + hoy.getMinute() + ":" + hoy.getSecond();
         float totalImpu = crudDetalleCompra.calcularTotal(IDaoCompra.obtenerUltimoId()) / 1.18f;
@@ -778,6 +834,8 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         IDaoCompra.guardarEnArchivo();
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
         JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+        
+        
 
         // Crear la vista de detalles de venta
         JimCompra vistaCompras = new JimCompra();
