@@ -225,5 +225,16 @@ public class ProveedorDaoImpl implements IDaoExtendido<Proveedor> {
     public int total() {
         return proveedores.size();
     }
+    
+    public String obtenerProveedorCorreo(int id) {
+        String correo = "";
+         for (Proveedor proveedor : proveedores) {
+            if (proveedor.getIdProveedor() == id) { 
+                correo = proveedor.getCorreo();
+                break;
+            }
+        }
+        return correo;
+    }
 
 }
