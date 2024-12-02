@@ -8,12 +8,12 @@ import model.Usuario;
 public class FrmLogin extends javax.swing.JFrame {
     UsuarioDoalmpl IDaoUsuario = new UsuarioDoalmpl();
     ArrayList<Usuario> dataUsuarios = new ArrayList<>();
-    
+
     public FrmLogin() {
         initComponents();
         cargarUsuarios();
     }
-    
+
     private void cargarUsuarios() {
         for (Usuario usuario : IDaoUsuario.listar()) {
             if (usuario != null) {
@@ -21,10 +21,11 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private boolean buscarUsuario(Usuario user) {
         for (Usuario usu : dataUsuarios) {
-            if (usu != null && (usu.getUsuario().equalsIgnoreCase(user.getUsuario()) && usu.getContrasena().equalsIgnoreCase(user.getContrasena()))) {
+            if (usu != null && (usu.getUsuario().equalsIgnoreCase(user.getUsuario())
+                    && usu.getContrasena().equalsIgnoreCase(user.getContrasena()))) {
                 return true;
             }
         }
@@ -32,7 +33,8 @@ public class FrmLogin extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
@@ -66,7 +68,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(0, 0, 255));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 204));
-        jLabel4.setText("Contraseña");
+        jLabel4.setText("Contraseï¿½a");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
         jPanel3.add(passContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 250, 30));
         jPanel3.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 250, 30));
@@ -74,7 +76,7 @@ public class FrmLogin extends javax.swing.JFrame {
         btnLogin.setBackground(new java.awt.Color(0, 0, 204));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("Iniciar Sesión");
+        btnLogin.setText("Iniciar Sesiï¿½n");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -109,7 +111,7 @@ public class FrmLogin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLoginActionPerformed
         String nombreUser = txtUsuario.getText().strip();
         String contra = passContrasena.getText().strip();
         if (buscarUsuario(new Usuario(nombreUser, contra))) {
@@ -118,14 +120,19 @@ public class FrmLogin extends javax.swing.JFrame {
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Credenciales invalidas.", "Error", JOptionPane.ERROR_MESSAGE);
+
         }
-    }//GEN-LAST:event_btnLoginActionPerformed
+    }// GEN-LAST:event_btnLoginActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -143,7 +150,7 @@ public class FrmLogin extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

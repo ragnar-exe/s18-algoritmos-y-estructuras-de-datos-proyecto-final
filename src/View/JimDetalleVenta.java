@@ -76,10 +76,12 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         cboCliente.addItem("Seleccionar");
         for (Cliente c : IDaoCliente.listar()) {
             if (c != null) {
-                cboCliente.addItem(c.getNombres());
+                cboCliente.addItem(c.getDni());
             }
         }
+        
     }
+    
 
     private void cargarIdsContiene() {
         cboIdsContiene.removeAllItems();
@@ -238,6 +240,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtColor = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelarDetalle = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taCliente = new javax.swing.JTextArea();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -265,13 +270,18 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 140, 50, 30));
 
         txtPrecio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, 190, -1));
+        getContentPane().add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, 240, -1));
 
         txtCantidad.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 100, 190, -1));
+        getContentPane().add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 100, 240, -1));
 
         cboCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(cboCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 140, 190, -1));
+        cboCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cboCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 140, 240, -1));
 
         btnNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnNuevo.setText("Nuevo");
@@ -390,6 +400,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         btnCancelarDetalle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelarDetalle.setText("Cancelar");
         getContentPane().add(btnCancelarDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 560, -1, 30));
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel12.setText("Datos del Cliente");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 60, -1, -1));
+
+        taCliente.setColumns(20);
+        taCliente.setRows(5);
+        jScrollPane2.setViewportView(taCliente);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 90, 280, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -691,6 +711,21 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void cboClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboClienteActionPerformed
+        // TODO add your handling code here:
+        Object selectedItem = cboCliente.getSelectedItem();
+        if (selectedItem != null) {
+            String valorProveedor = selectedItem.toString();
+            for (Cliente cliente : IDaoCliente.listar()) {
+                if (cliente != null && cliente.getDni().equalsIgnoreCase(valorProveedor)) {
+                    taCliente.setText("ID: " + cliente.getIdPersona() + "\nDNI: " + cliente.getDni()+ "\nNombres: " + cliente.getNombres()+ "\nApellidos: " + cliente.getApellidos()+ "\nCorreo: " + cliente.getCorreo()+ "\nDireccion: " + cliente.getDireccion());
+                }
+            }
+        } else {
+            System.out.println("No se seleccionó ningún proveedor.");
+        }
+    }//GEN-LAST:event_cboClienteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -705,6 +740,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -714,7 +750,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblMensaje;
+    private javax.swing.JTextArea taCliente;
     private javax.swing.JTable tblDVenta;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCantidad;

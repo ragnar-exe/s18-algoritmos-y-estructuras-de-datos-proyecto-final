@@ -75,14 +75,14 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     @Override
     public boolean actualizar(DetalleVenta obj) {
-//        for (DetalleVenta dv : dVentas) {
-//            if (dv != null && dv.getIdDVenta() != obj.getIdDVenta()) {
-//                System.out.println(dv.getIdDVenta());
-//                System.out.println(obj.getIdDVenta());
-//                JOptionPane.showMessageDialog(null, "Etoy aqui");
-//                return false;
-//            }
-//        }
+        // for (DetalleVenta dv : dVentas) {
+        // if (dv != null && dv.getIdDVenta() != obj.getIdDVenta()) {
+        // System.out.println(dv.getIdDVenta());
+        // System.out.println(obj.getIdDVenta());
+        // JOptionPane.showMessageDialog(null, "Etoy aqui");
+        // return false;
+        // }
+        // }
 
         for (int i = 0; i < dVentas.length; i++) {
             if (dVentas[i] != null && dVentas[i].getIdDVenta() == obj.getIdDVenta()) {
@@ -95,7 +95,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                         if (temp.getContiene().getIdContiene() == obj.getIdProducto()) {
                             byte stockContiene = temp.getContiene().getStock();
                             if (stockCalcular > stockContiene) {
-                                JOptionPane.showMessageDialog(null, "La cantidad ingresada es mayor al stock que hay. ("+temp.getContiene().getStock()+")");
+                                JOptionPane.showMessageDialog(null, "La cantidad ingresada es mayor al stock que hay. ("
+                                        + temp.getContiene().getStock() + ")");
                                 return false;
                             } else {
                                 stockContiene = (byte) (temp.getContiene().getStock() - stockCalcular);
@@ -112,7 +113,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                         }
                         temp = temp.siguiente;
                     }
-                    
+
                 } else if (stockCalcular < 0) {
                     while (temp != null) {
                         if (temp.getContiene().getIdContiene() == obj.getIdProducto()) {
@@ -156,7 +157,9 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DVENTA))) {
             for (int i = 0; i < dVentas.length; i++) {
                 if (dVentas[i] != null) {
-                    writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";" + dVentas[i].getIdCliente() + ";" + dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio() + ";" + dVentas[i].getTotal());
+                    writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";"
+                            + dVentas[i].getIdCliente() + ";" + dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio()
+                            + ";" + dVentas[i].getTotal());
                     writer.newLine();
                 }
             }
@@ -182,7 +185,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                     this.enqueue(new DetalleVenta(idDVenta, id, idCliente, cantidad, precio, total));
                 }
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DVENTA, "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DVENTA, "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -201,7 +205,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSDVENTA))) {
                 writer.write("0\n");
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsproductos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsproductos", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -217,7 +222,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de productos", "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return id;
     }
@@ -237,15 +243,16 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                         if (IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
                                 temp.getContiene().getIdProducto(), temp.getContiene().getIdTalla(),
                                 temp.getContiene().getIdColor(), temp.getContiene().getIdMarca(),
-                                temp.getContiene().getPrecio(),  stockContiene))) {                            
+                                temp.getContiene().getPrecio(), stockContiene))) {
                             try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSDVENTA, true))) {
                                 codigos.write(obj.getIdDVenta() + "\n");
                             } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de detalle de venta", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Error al agregar el codigo de detalle de venta",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
                                 IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
-                                temp.getContiene().getIdProducto(), temp.getContiene().getIdTalla(),
-                                temp.getContiene().getIdColor(), temp.getContiene().getIdMarca(),
-                                temp.getContiene().getPrecio(),  temp.getContiene().getStock()));
+                                        temp.getContiene().getIdProducto(), temp.getContiene().getIdTalla(),
+                                        temp.getContiene().getIdColor(), temp.getContiene().getIdMarca(),
+                                        temp.getContiene().getPrecio(), temp.getContiene().getStock()));
                                 return false;
                             }
                             dVentas[end] = obj;
@@ -253,14 +260,14 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                             size++;
                             IDaoContiene.guardarEnArchivo();
                             return true;
-                        } 
+                        }
                         return false;
                     }
                 }
                 temp = temp.siguiente;
             }
-        } 
-        JOptionPane.showMessageDialog(null,"La cola esta llena.");
+        }
+        JOptionPane.showMessageDialog(null, "La cola esta llena.");
         return false;
     }
 
@@ -276,7 +283,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         IDaoObtenerLista<Producto> idaoProducto = new ProductoDaoImpl();
 
         for (DetalleVenta dv : dVentas) {
-            if (dv != null) {  // Verificaci�n para evitar el NullPointerException
+            if (dv != null) { // Verificaci�n para evitar el NullPointerException
                 boolean coincideConId = String.valueOf(dv.getIdProducto()).contains(valorBuscar);
                 String cliente = idaoCliente.obtenerNombre(dv.getIdCliente());
                 String producto = idaoProducto.obtenerNombre(dv.getIdProducto());
@@ -312,7 +319,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         }
         return id;
     }
-    
+
     public int obtenerIdCliente(int idDetalle) {
         int id = -1;
         for (int i = 0; i < dVentas.length; i++) {
