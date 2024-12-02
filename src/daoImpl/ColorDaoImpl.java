@@ -34,7 +34,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSCOLORES))) {
                 writer.write("0\n");
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idscolores", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al crear el archivo idscolores", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -50,7 +50,7 @@ public class ColorDaoImpl implements IDaoExtendido<Color> {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de color", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al obtener el ultimo ID de color", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return id;
     }

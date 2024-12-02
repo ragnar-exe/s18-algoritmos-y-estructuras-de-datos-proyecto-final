@@ -56,7 +56,7 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_IDSCLIENTES))) {
                 writer.write("0\n");
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al crear el archivo idsproductos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al crear el archivo idsproductos", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -72,7 +72,7 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al obtener el ultimo ID de productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al obtener el ultimo ID de productos", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return id;
     }
@@ -135,7 +135,7 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
                 writer.newLine();
             }
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Error al guardar los clientes", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al guardar los clientes", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -156,7 +156,7 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
                     clientes.add(new Cliente(dni, id, nombre, apellido, direccion, correo));
                 }
             } catch (IOException e) {
-                JOptionPane.showConfirmDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al cargar los productos", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
