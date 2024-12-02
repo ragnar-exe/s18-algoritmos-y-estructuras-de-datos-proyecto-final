@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.swing.JOptionPane;
+import model.Compra;
 import model.Contiene;
 import model.DetalleCompra;
 import model.Nodo;
@@ -91,6 +92,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
                             dc.setPrecio(obj.getPrecio());
                             dc.setCantidad(obj.getCantidad());
                             dc.setTotal(obj.getTotal());
+                            dc.setIdCompra(obj.getIdCompra());
                             return true;
                         }
                         temp = temp.getSiguiente();
@@ -146,7 +148,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DCOMPRA))) {
             for (DetalleCompra dc : dCompras) {
-                writer.write(dc.getIdDCompra()+";"+dc.getIdProducto()+ ";" +dc.getIdMarca()+";"+dc.getIdTalla()+";"+dc.getIdColor()+";"+ dc.getPrecio()+";"+dc.getCantidad()+";"+dc.getTotal());
+                writer.write(dc.getIdDCompra()+";"+dc.getIdProducto()+ ";" +dc.getIdMarca()+";"+dc.getIdTalla()+";"+dc.getIdColor()+";"+ dc.getPrecio()+";"+dc.getCantidad()+";"+dc.getTotal()+";"+dc.getIdCompra());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -170,7 +172,8 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
                     float precio = Float.parseFloat(datos[5]);
                     int cantidad = Integer.parseInt(datos[6]);
                     float total = Float.parseFloat(datos[7]);
-                    dCompras.offer(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, total));
+                    int idCompra = Integer.parseInt(datos[8]);
+                    dCompras.offer(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, total,idCompra));
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DCOMPRA, "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -279,14 +282,23 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         return resultado;
     }
     
-    public double calcularTotal() {
+    public float calcularTotal(int idCompra) {
         DecimalFormat df = new DecimalFormat("0.00");
         double total = 0.00;
         for (DetalleCompra dc : dCompras) {
-            if (dc != null) {
+            if (dc != null && dc.getIdCompra() == idCompra) {
                 total += (dc.getPrecio()*dc.getCantidad());
             }
         }
-        return Double.parseDouble(df.format(total));
+        return Float.parseFloat(df.format(total));
+    }
+    
+    public void clearIdVenta(Compra Obj) {
+        for(DetalleCompra detalleCom : dCompras) {
+            if (detalleCom != null && detalleCom.getIdCompra() == Obj.getIdCompra()) {
+                System.out.println("conficonal if for dao");
+                dCompras.remove(Obj);
+            }
+        }
     }
 }

@@ -1,15 +1,55 @@
 package View;
 
+import daoImpl.CompraDaoImpl;
+import daoImpl.ProveedorDaoImpl;
 import javax.swing.JDesktopPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import model.Compra;
+import model.Proveedor;
 
 
 public class JimCompra extends javax.swing.JInternalFrame {
+    private CompraDaoImpl crudCompra;
+    private DefaultTableModel modelo;
+    private final Object[] filaDatos;
+    private ProveedorDaoImpl IDaoProveedor;
+    
     public JimCompra() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto-106);
+        crudCompra = new CompraDaoImpl();
+        modelo = new DefaultTableModel();
+        filaDatos = new Object[6];
+        IDaoProveedor = new ProveedorDaoImpl();
+        listarCompras();
+    }
+    
+    private void limpiarTabla() {
+        modelo = (DefaultTableModel) tblCompras.getModel();
+        modelo.getDataVector().removeAllElements();
+        tblCompras.removeAll();
+    }
+    
+    public void listarCompras() {
+        modelo = (DefaultTableModel) tblCompras.getModel();
+        for (Compra com : crudCompra.listar()) {
+            if (com != null) {
+                filaDatos[0] = com.getIdCompra();
+                filaDatos[1] = com.getFecha();
+                for(Proveedor pro: IDaoProveedor.listar()) {
+                    if (pro != null && pro.getIdProveedor() == com.getIdProveedor()) {
+                        filaDatos[2] = pro.getNombres()+" "+pro.getApellidos();
+                    }
+                }
+                filaDatos[3] = com.getSubTotal();
+                filaDatos[4] = com.getImpuestoTotal();
+                filaDatos[5] = com.getTotal();
+                modelo.addRow(filaDatos);
+            }
+        }
     }
 
     /**
@@ -27,7 +67,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         txtBuscarCompra = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCompras = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         btnGenerarDetalleCompra = new javax.swing.JButton();
@@ -59,7 +99,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
         });
         jPanel1.add(txtBuscarCompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 332, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCompras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -67,7 +107,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
                 "ID", "Fecha", "Proveedor", "Subtotal", "Total impuestos", "Total"
             }
         ));
-        jScrollPane4.setViewportView(jTable1);
+        jScrollPane4.setViewportView(tblCompras);
 
         jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 1136, 340));
 
@@ -159,7 +199,7 @@ public class JimCompra extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblCompras;
     private javax.swing.JTextField txtBuscarCompra;
     // End of variables declaration//GEN-END:variables
 }

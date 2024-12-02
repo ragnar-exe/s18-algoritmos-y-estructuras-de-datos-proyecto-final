@@ -9,15 +9,16 @@ public class DetalleCompra {
     private float precio;
     private int cantidad;
     private float total;
+    private int idCompra;
 
     public DetalleCompra() {
     }
-
+    
     public DetalleCompra(int idDCompra) {
         this.idDCompra = idDCompra;
     }
 
-    public DetalleCompra(int idDCompra, int idProducto, int idMarca, int idTalla, int idColor, float precio, int cantidad, float total) {
+    public DetalleCompra(int idDCompra, int idProducto, int idMarca, int idTalla, int idColor, float precio, int cantidad, float total, int idCompra) {
         this.idDCompra = idDCompra;
         this.idProducto = idProducto;
         this.idMarca = idMarca;
@@ -26,6 +27,7 @@ public class DetalleCompra {
         this.precio = precio;
         this.cantidad = cantidad;
         this.total = total;
+        this.idCompra = idCompra;
     }
 
     public int getIdDCompra() {
@@ -92,10 +94,18 @@ public class DetalleCompra {
         this.total = total;
     }
 
+    public int getIdCompra() {
+        return idCompra;
+    }
+
+    public void setIdCompra(int idCompra) {
+        this.idCompra = idCompra;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 17 * hash + this.idDCompra;
+        int hash = 5;
+        hash = 11 * hash + this.idDCompra;
         return hash;
     }
 
@@ -132,9 +142,10 @@ public class DetalleCompra {
         if (this.cantidad != other.cantidad) {
             return false;
         }
-        return Float.floatToIntBits(this.total) == Float.floatToIntBits(other.total);
+        if (Float.floatToIntBits(this.total) != Float.floatToIntBits(other.total)) {
+            return false;
+        }
+        return this.idCompra == other.idCompra;
     }
 
-    
-    
 }
