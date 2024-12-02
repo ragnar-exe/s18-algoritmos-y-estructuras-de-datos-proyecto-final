@@ -14,7 +14,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Compra;
 
-public class CompraDaoImpl implements IDaoGenerico<Compra>{
+public class CompraDaoImpl implements IDaoGenerico<Compra> {
+
     ArrayList<Compra> compras = new ArrayList<>();
     private static final String FILE_COMPRAS = "compras.txt";
     private static final String FILE_IDSCOMPRAS = "idscompras.txt";
@@ -23,7 +24,17 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
     public CompraDaoImpl() {
         cargarDatos();
     }
-    
+
+    public Compra obtenerPorId(int idCompra) {
+        Compra compraEncontrada = null;
+        for (Compra compra : compras) { // listaDeCompras es tu colección de objetos Compra
+            if (compra != null && compra.getIdCompra() == idCompra) {
+                compraEncontrada = compra;
+                break;
+            }
+        }
+        return compraEncontrada;
+    }
 
     @Override
     public int obtenerUltimoId() {
@@ -58,7 +69,7 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
     @Override
     public boolean agregar(Compra obj) {
         try (BufferedWriter codigos = new BufferedWriter(new FileWriter(FILE_IDSCOMPRAS, true))) {
-            codigos.write(obj.getIdCompra()+ "\n");
+            codigos.write(obj.getIdCompra() + "\n");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error al agregar el codigo de compra", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -70,7 +81,7 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
     @Override
     public boolean actualizar(Compra obj) {
         for (int i = 0; i < compras.size(); i++) {
-            if (compras.get(i).getIdCompra()== obj.getIdCompra()) {
+            if (compras.get(i).getIdCompra() == obj.getIdCompra()) {
                 compras.set(i, obj);
                 return true;
             }
@@ -80,7 +91,7 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
 
     @Override
     public boolean eliminar(Compra obj) {
-        for(Compra com : compras) {
+        for (Compra com : compras) {
             if (com.getIdCompra() == obj.getIdCompra()) {
                 com.setEstado(false);
                 return true;
@@ -93,7 +104,7 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_COMPRAS))) {
             for (Compra compra : compras) {
-                writer.write(compra.getIdCompra()+ ";" + compra.getFecha()+";"+compra.getIdProveedor()+";"+compra.getTotal()+";"+compra.getImpuestoTotal()+";"+compra.getSubTotal()+";"+compra.isEstado());
+                writer.write(compra.getIdCompra() + ";" + compra.getFecha() + ";" + compra.getIdProveedor() + ";" + compra.getTotal() + ";" + compra.getImpuestoTotal() + ";" + compra.getSubTotal() + ";" + compra.isEstado());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -128,16 +139,16 @@ public class CompraDaoImpl implements IDaoGenerico<Compra>{
     public int total() {
         return compras.size();
     }
-    
+
     public List<Compra> listar() {
         guardarEnArchivo();
         return compras;
     }
-    
+
     public int obtenerIdProveedor(int id) {
         int idPro = -1;
-        for(Compra com: compras) {
-            if (com != null && com.getIdProveedor() == id) {
+        for (Compra com : compras) {
+            if (com != null && com.getIdCompra()== id) {
                 idPro = com.getIdProveedor();
                 break;
             }

@@ -64,18 +64,18 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     @Override
     public boolean actualizar(DetalleCompra obj) {
         for (DetalleCompra dc : dCompras) {
-            if ( dc != null && dc.getIdDCompra() == obj.getIdDCompra()) {
+            if (dc != null && dc.getIdDCompra() == obj.getIdDCompra()) {
                 Nodo temp = IDaoContiene.inicio;
                 byte stockActualDCompras = (byte) dc.getCantidad();
                 byte stockActualizar = (byte) obj.getCantidad();
                 byte stockCalcular = (byte) (stockActualizar - stockActualDCompras);
                 if (stockCalcular > 0) {
                     while (temp != null) {
-                        if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
-                            temp.getContiene().getIdMarca() == obj.getIdMarca() &&
-                            temp.getContiene().getIdTalla() == obj.getIdTalla() &&
-                            temp.getContiene().getIdColor() == obj.getIdColor() && 
-                            temp.getContiene().getPrecio() == obj.getPrecio()) {
+                        if (temp.getContiene().getIdProducto() == obj.getIdProducto()
+                                && temp.getContiene().getIdMarca() == obj.getIdMarca()
+                                && temp.getContiene().getIdTalla() == obj.getIdTalla()
+                                && temp.getContiene().getIdColor() == obj.getIdColor()
+                                && temp.getContiene().getPrecio() == obj.getPrecio()) {
                             byte stockContiene = (byte) (temp.getContiene().getStock() + stockCalcular);
                             IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
                                     obj.getIdProducto(),
@@ -99,11 +99,11 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
                     }
                 } else if (stockCalcular < 0) {
                     while (temp != null) {
-                        if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
-                            temp.getContiene().getIdMarca() == obj.getIdMarca() &&
-                            temp.getContiene().getIdTalla() == obj.getIdTalla() &&
-                            temp.getContiene().getIdColor() == obj.getIdColor() && 
-                            temp.getContiene().getPrecio() == obj.getPrecio()) {
+                        if (temp.getContiene().getIdProducto() == obj.getIdProducto()
+                                && temp.getContiene().getIdMarca() == obj.getIdMarca()
+                                && temp.getContiene().getIdTalla() == obj.getIdTalla()
+                                && temp.getContiene().getIdColor() == obj.getIdColor()
+                                && temp.getContiene().getPrecio() == obj.getPrecio()) {
                             byte stockContiene = (byte) (temp.getContiene().getStock() + stockCalcular);
                             IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
                                     temp.getContiene().getIdProducto(),
@@ -148,7 +148,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DCOMPRA))) {
             for (DetalleCompra dc : dCompras) {
-                writer.write(dc.getIdDCompra()+";"+dc.getIdProducto()+ ";" +dc.getIdMarca()+";"+dc.getIdTalla()+";"+dc.getIdColor()+";"+ dc.getPrecio()+";"+dc.getCantidad()+";"+dc.getTotal()+";"+dc.getIdCompra());
+                writer.write(dc.getIdDCompra() + ";" + dc.getIdProducto() + ";" + dc.getIdMarca() + ";" + dc.getIdTalla() + ";" + dc.getIdColor() + ";" + dc.getPrecio() + ";" + dc.getCantidad() + ";" + dc.getTotal() + ";" + dc.getIdCompra());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -173,7 +173,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
                     int cantidad = Integer.parseInt(datos[6]);
                     float total = Float.parseFloat(datos[7]);
                     int idCompra = Integer.parseInt(datos[8]);
-                    dCompras.offer(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, total,idCompra));
+                    dCompras.offer(new DetalleCompra(idDCompra, idProducto, idMarca, idTalla, idColor, precio, cantidad, total, idCompra));
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DCOMPRA, "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -227,11 +227,11 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         }
         Nodo temp = IDaoContiene.inicio;
         while (temp != null) {
-            if (temp.getContiene().getIdProducto() == obj.getIdProducto() &&
-                    temp.getContiene().getIdMarca() == obj.getIdMarca() &&
-                    temp.getContiene().getIdTalla() == obj.getIdTalla() &&
-                    temp.getContiene().getIdColor() == obj.getIdColor() && 
-                    temp.getContiene().getPrecio() == obj.getPrecio()) {
+            if (temp.getContiene().getIdProducto() == obj.getIdProducto()
+                    && temp.getContiene().getIdMarca() == obj.getIdMarca()
+                    && temp.getContiene().getIdTalla() == obj.getIdTalla()
+                    && temp.getContiene().getIdColor() == obj.getIdColor()
+                    && temp.getContiene().getPrecio() == obj.getPrecio()) {
                 byte stockActualizado = (byte) (temp.getContiene().getStock() + obj.getCantidad());
                 IDaoContiene.actualizar(new Contiene(temp.getContiene().getIdContiene(),
                         temp.getContiene().getIdProducto(),
@@ -246,12 +246,12 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
             }
             temp = temp.getSiguiente();
         }
-        IDaoContiene.agregar(new Contiene(IDaoContiene.obtenerUltimoId(), 
-                        obj.getIdProducto(), 
-                        obj.getIdTalla(),
+        IDaoContiene.agregar(new Contiene(IDaoContiene.obtenerUltimoId(),
+                obj.getIdProducto(),
+                obj.getIdTalla(),
                 obj.getIdColor(),
                 obj.getIdMarca(),
-                obj.getPrecio(), 
+                obj.getPrecio(),
                 (byte) obj.getCantidad()));
         IDaoContiene.guardarEnArchivo();
         return dCompras.offer(obj);
@@ -281,24 +281,37 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
 //        }
         return resultado;
     }
-    
+
     public float calcularTotal(int idCompra) {
         DecimalFormat df = new DecimalFormat("0.00");
         double total = 0.00;
         for (DetalleCompra dc : dCompras) {
             if (dc != null && dc.getIdCompra() == idCompra) {
-                total += (dc.getPrecio()*dc.getCantidad());
+                total += (dc.getPrecio() * dc.getCantidad());
             }
         }
         return Float.parseFloat(df.format(total));
     }
-    
+
     public void clearIdVenta(Compra Obj) {
-        for(DetalleCompra detalleCom : dCompras) {
+        for (DetalleCompra detalleCom : dCompras) {
             if (detalleCom != null && detalleCom.getIdCompra() == Obj.getIdCompra()) {
                 System.out.println("conficonal if for dao");
                 dCompras.remove(Obj);
             }
         }
     }
+
+    public List<DetalleCompra> listarPorIdCompra(int idCompra) {
+        List<DetalleCompra> detallesCompra = new LinkedList<>();
+
+        for (DetalleCompra dc : dCompras) {
+            if (dc != null && dc.getIdCompra() == idCompra) {
+                detallesCompra.add(dc);
+            }
+        }
+
+        return detallesCompra;
+    }
+
 }
