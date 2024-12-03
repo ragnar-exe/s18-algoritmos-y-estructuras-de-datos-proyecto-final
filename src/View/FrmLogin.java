@@ -34,7 +34,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
@@ -68,7 +68,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(0, 0, 255));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 204));
-        jLabel4.setText("Contrase�a");
+        jLabel4.setText("Contraseña");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
         jPanel3.add(passContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 250, 30));
         jPanel3.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 250, 30));
@@ -76,7 +76,7 @@ public class FrmLogin extends javax.swing.JFrame {
         btnLogin.setBackground(new java.awt.Color(0, 0, 204));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("Iniciar Sesi�n");
+        btnLogin.setText("Iniciar Sesión");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
