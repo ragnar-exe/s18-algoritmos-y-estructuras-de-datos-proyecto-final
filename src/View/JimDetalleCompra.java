@@ -138,21 +138,21 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         btnNuevo.setEnabled(false);
     }
 
-    public void cargarDatosCompra(int idCompraCliente) {
+    public void cargarDatosCompra(int idCompraProveedor) {
         btnRegresart.setVisible(true);
 
         CompraDaoImpl crudCompra = new CompraDaoImpl();
         DetalleCompraDaoImpl crudDetalle = new DetalleCompraDaoImpl();
 
         // Obtén la compra por ID
-        Compra compra = crudCompra.obtenerPorId(idCompraCliente);
+        Compra compra = crudCompra.obtenerPorId(idCompraProveedor);
         if (compra != null) {
             habilitarCampo(false);
 
             // Luego cargas los datos de la compra
             DefaultTableModel modeloDetalle = (DefaultTableModel) tblDCompra.getModel();
             modeloDetalle.setRowCount(0); // Limpia la tabla
-            for (DetalleCompra dv : crudDetalle.listarPorIdCompra(idCompraCliente)) {
+            for (DetalleCompra dv : crudDetalle.listarPorIdCompra(idCompraProveedor)) {
                 // Aquí es donde manejas la carga de los datos del detalle de la compra
                 if (dv != null) {
                     // Configura los valores en la tabla del detalle
@@ -171,10 +171,10 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
         }
-
         for (Proveedor pro : IDaoProveedor.listar()) {
-            if (pro != null && pro.getIdProveedor() == IDaoCompra.obtenerIdProveedor(idCompraCliente)) {
+            if (pro != null && pro.getIdProveedor() == IDaoCompra.obtenerIdProveedor(idCompraProveedor)) {
                 taProveedor.setEditable(true);
+                System.out.println("iff");
                 taProveedor.setText("ID: " + pro.getIdProveedor() + "\nNombres: " + pro.getNombres() + "\nApellidos: " + pro.getApellidos() + "\nCorreo: " + pro.getCorreo() + "\nTelefono: " + pro.getTelefono());
                 taProveedor.setEditable(false);
             }
@@ -182,26 +182,26 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
 
         bloquearAcciones();
         txtTotal.setEditable(true);
-        txtTotal.setText(crudDetalleCompra.calcularTotal(idCompraCliente) + "");
+        txtTotal.setText(crudDetalleCompra.calcularTotal(idCompraProveedor) + "");
         tblDCompra.setEnabled(false);
     }
 
-    public void cargarDatosCompraEditar(int idCompraCliente) {
+    public void cargarDatosCompraEditar(int idCompraSeleccionada) {
         btnRegresart.setVisible(true);
 //        compraGuardar= editar;
-        idCompraDetalle = idCompraCliente;
+        idCompraDetalle = idCompraSeleccionada;
         CompraDaoImpl crudCompra = new CompraDaoImpl();
         DetalleCompraDaoImpl crudDetalle = new DetalleCompraDaoImpl();
 
         // Obtén la compra por ID
-        Compra compra = crudCompra.obtenerPorId(idCompraCliente);
+        Compra compra = crudCompra.obtenerPorId(idCompraSeleccionada);
         if (compra != null) {
             habilitarCampo(false);
 
             // Luego cargas los datos de la compra
             DefaultTableModel modeloDetalle = (DefaultTableModel) tblDCompra.getModel();
             modeloDetalle.setRowCount(0); // Limpia la tabla
-            for (DetalleCompra dv : crudDetalle.listarPorIdCompra(idCompraCliente)) {
+            for (DetalleCompra dv : crudDetalle.listarPorIdCompra(idCompraSeleccionada)) {
                 // Aquí es donde manejas la carga de los datos del detalle de la compra
                 if (dv != null) {
                     // Configura los valores en la tabla del detalle
@@ -220,17 +220,16 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
         }
-
-        for (Proveedor pro : IDaoProveedor.listar()) {
-            if (pro != null && pro.getIdProveedor() == IDaoCompra.obtenerIdProveedor(idCompraCliente)) {
+        for (Proveedor prov : IDaoProveedor.listar()) {
+            if (prov != null && prov.getIdProveedor() == IDaoCompra.obtenerIdProveedor(idCompraSeleccionada)) {
                 taProveedor.setEditable(true);
-                taProveedor.setText("ID: " + pro.getIdProveedor() + "\nNombres: " + pro.getNombres() + "\nApellidos: " + pro.getApellidos() + "\nCorreo: " + pro.getCorreo() + "\nTelefono: " + pro.getTelefono());
+                taProveedor.setText("ID: " + prov.getIdProveedor() + "\nNombres: " + prov.getNombres() + "\nApellidos: " + prov.getApellidos() + "\nCorreo: " + prov.getCorreo() + "\nTelefono: " + prov.getTelefono());
                 taProveedor.setEditable(false);
             }
         }
         
         txtTotal.setEditable(true);
-        txtTotal.setText(crudDetalleCompra.calcularTotal(idCompraCliente) + "");
+        txtTotal.setText(crudDetalleCompra.calcularTotal(idCompraSeleccionada) + "");
         btnGuardarCompra.setVisible(false);
         btnCancelarCompra.setVisible(false);
     }
