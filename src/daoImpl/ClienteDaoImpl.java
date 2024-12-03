@@ -186,6 +186,14 @@ public class ClienteDaoImpl implements IDaoObtenerLista<Cliente> {
         }
         return false; // El correo no existe en la lista
     }
+     public boolean existeDni(String dni) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getDni().equalsIgnoreCase(dni)) {
+                return true; // El correo ya está en uso
+            }
+        }
+        return false; // El correo no existe en la lista
+    }
     public List<Cliente> listar(String texto) {
         List<Cliente> resultado = new LinkedList<>();
         String valorBuscar = texto.toLowerCase();  // Convierte el texto de búsqueda a minúsculas para comparación

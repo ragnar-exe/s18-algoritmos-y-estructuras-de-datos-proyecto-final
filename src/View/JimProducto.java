@@ -123,8 +123,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
         cboCategoria = new javax.swing.JComboBox<>();
         txtNombre = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -227,14 +225,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 210, 90, 30));
-
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton7.setText("Guardar");
-        getContentPane().add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 580, 90, -1));
-
-        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton8.setText("Cancelar");
-        getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 580, -1, -1));
 
         cboCategoria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 290, 30));
@@ -465,8 +455,6 @@ public class JimProducto extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboCategoria;
     private javax.swing.JComboBox<String> cboOrdenar;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -458,6 +458,16 @@ public class JimCliente extends javax.swing.JInternalFrame {
                 lblMensaje.setText("No se actualizo el cliente.");
             }
         } else {
+             if (crudCliente.existeCorreo(correo)) {
+                JOptionPane.showMessageDialog(null, "Error, el correo ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtCorreo.requestFocus();
+                return;
+            }
+            if (crudCliente.existeDni(dni)) {
+                JOptionPane.showMessageDialog(null, "Error, el Dni ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                txtDni.requestFocus();
+                return;
+            }
             if (crudCliente.agregar(new Cliente(dni, crudCliente.obtenerUltimoId(), nombre, apellido, direccion, correo))) {
                 lblMensaje.setText("Se agrego correctamente el cliente.");
                 limpiarCampos();
