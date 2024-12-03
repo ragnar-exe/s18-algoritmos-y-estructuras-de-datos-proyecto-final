@@ -231,7 +231,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnClearActionPerformed(evt);
             }
         });
-        getContentPane().add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 250, -1, -1));
+        getContentPane().add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 250, -1, 30));
 
         btnE_Atender.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         btnE_Atender.setText("Elemento Atendender");
@@ -267,7 +267,7 @@ public class JimProveedor extends javax.swing.JInternalFrame {
                 btnDequeeeActionPerformed(evt);
             }
         });
-        getContentPane().add(btnDequeee, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 250, -1, -1));
+        getContentPane().add(btnDequeee, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 250, -1, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -466,6 +466,9 @@ public class JimProveedor extends javax.swing.JInternalFrame {
             buscarCampo(false);
             registroBotones(false);
             crudBotones(true);
+            btnCancelar.setEnabled(true);
+            btnClear.setEnabled(true);
+            btnDequeee.setEnabled(true);
             //btnCima.setEnabled(true);
         }
     }//GEN-LAST:event_tblProveedorMouseReleased
