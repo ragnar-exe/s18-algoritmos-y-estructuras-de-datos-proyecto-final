@@ -120,9 +120,16 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                     taCliente.setEditable(false);
                 }
             }
+            txtTotal.setEditable(true);
+            txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaCliente) + "");
+            txtTotal.setEditable(false);
+            tblDVenta.setEnabled(false);
+            btnGuardar.setVisible(false);
+            btnCancelarDetalle.setVisible(false);
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
         }
+        
     }
 
     public void cargarDatosCompraEditar(int idVentaCliente) {
@@ -172,11 +179,8 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 taCliente.setEditable(false);
             }
         }
-
         txtTotal.setEditable(true);
         txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaCliente) + "");
-        btnGuardar.setVisible(false);
-        btnCancelarDetalle.setVisible(false);
     }
 
     private void cargarClientes() {
@@ -237,7 +241,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
 
         txtTotal.setEnabled(true);
-        txtTotal.setText("" + crudDetalleVenta.calcularTotal());
+        txtTotal.setText("" + crudDetalleVenta.calcularTotal(idVentaDetalle));
         txtTotal.setEnabled(false);
     }
 
