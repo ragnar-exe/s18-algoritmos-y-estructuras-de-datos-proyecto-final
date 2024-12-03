@@ -3,21 +3,17 @@ package model;
 public class DetalleVenta {
     private int idDVenta;
     private int idProducto;
-    private int idCliente;
     private int cantidad;
     private float precio;
     private float total;
     private int idVenta;
-    
- 
 
-    public DetalleVenta(int idDVenta, int idProducto,int idCliente, int cantidad, float precio,float total, int idVenta) {
+    public DetalleVenta(int idDVenta, int idProducto, int cantidad, float precio,float total, int idVenta) {
         this.idDVenta = idDVenta;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
         this.precio = precio;
         this.total = total;
-        this.idCliente = idCliente;
         this.idVenta = idVenta;
     }
 
@@ -68,17 +64,6 @@ public class DetalleVenta {
         this.precio = precio;
     }
 
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
-    }
-
-   
-
-
     public float getTotal() {
         return total;
     }
@@ -86,16 +71,5 @@ public class DetalleVenta {
     public void setTotal(float total) {
         this.total = total;
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
