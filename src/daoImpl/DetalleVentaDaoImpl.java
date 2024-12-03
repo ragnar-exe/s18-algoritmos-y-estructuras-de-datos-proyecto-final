@@ -309,17 +309,6 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     }
 
-    public double calcularTotal() {
-        DecimalFormat df = new DecimalFormat("0.00");
-        double total = 0.00;
-        for (DetalleVenta dv : dVentas) {
-            if (dv != null) {
-                total += (dv.getPrecio() * dv.getCantidad());
-            }
-        }
-        return Double.parseDouble(df.format(total));
-    }
-
     public int obtenerIdProducto(int idDetalle) {
         int id = -1;
         for (int i = 0; i < dVentas.length; i++) {
