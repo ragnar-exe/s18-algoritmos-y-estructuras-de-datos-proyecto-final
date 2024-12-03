@@ -50,6 +50,11 @@ public class JimProveedor extends javax.swing.JInternalFrame {
         } else {
             buscarCampo(false);
         }
+        
+        if (pv.total() > 0) {
+            btnClear.setEnabled(false);
+            btnDequeee.setEnabled(false);
+        }
     }
 
     private void limpiarTabla() {
