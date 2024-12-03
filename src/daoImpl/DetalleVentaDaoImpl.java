@@ -169,8 +169,8 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_DVENTA))) {
             for (int i = 0; i < dVentas.length; i++) {
                 if (dVentas[i] != null) {
-                    writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";"
-                            + dVentas[i].getIdCliente() + ";" + dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio()
+                    writer.write(dVentas[i].getIdDVenta() + ";" + dVentas[i].getIdProducto() + ";"+ 
+                            dVentas[i].getCantidad() + ";" + dVentas[i].getPrecio()
                             + ";" + dVentas[i].getTotal() + ";" + dVentas[i].getIdVenta());
                     writer.newLine();
                 }
@@ -190,12 +190,11 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                     String[] datos = linea.split(";");
                     int idDVenta = Integer.parseInt(datos[0]);
                     int id = Integer.parseInt(datos[1]);
-                    int idCliente = Integer.parseInt(datos[2]);
-                    int cantidad = Integer.parseInt(datos[3]);
-                    Float precio = Float.parseFloat(datos[4]);
-                    Float total = Float.parseFloat(datos[5]);
-                    int idVenta = Integer.parseInt(datos[6]);
-                    this.enqueue(new DetalleVenta(idDVenta, id, idCliente, cantidad, precio, total, idVenta));
+                    int cantidad = Integer.parseInt(datos[2]);
+                    float precio = Float.parseFloat(datos[3]);
+                    float total = Float.parseFloat(datos[4]);
+                    int idVenta = Integer.parseInt(datos[5]);
+                    this.enqueue(new DetalleVenta(idDVenta, id, cantidad, precio, total, idVenta));
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al cargar el archivo " + FILE_DVENTA, "ERROR",
@@ -298,12 +297,10 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
         for (DetalleVenta dv : dVentas) {
             if (dv != null) { // Verificaci�n para evitar el NullPointerException
                 boolean coincideConId = String.valueOf(dv.getIdProducto()).contains(valorBuscar);
-                String cliente = idaoCliente.obtenerNombre(dv.getIdCliente());
                 String producto = idaoProducto.obtenerNombre(dv.getIdProducto());
-                boolean coincideConCliente = cliente != null && cliente.contains(valorBuscar);
                 boolean coincideConProducto = producto != null && producto.contains(valorBuscar);
 
-                if (coincideConId || coincideConCliente || coincideConProducto) {
+                if (coincideConId || coincideConProducto) {
                     resultado.add(dv);
                 }
             }
@@ -340,16 +337,6 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
                 dVentas[i] = null; // Elimina el elemento asignando `null`
             }
         }
-    }
-
-    public int obtenerIdCliente(int idDetalle) {
-        int id = -1;
-        for (int i = 0; i < dVentas.length; i++) {
-            if (dVentas[i] != null && dVentas[i].getIdDVenta() == idDetalle) {
-                id = dVentas[i].getIdCliente();
-            }
-        }
-        return id;
     }
 
     public List<DetalleVenta> listarPorIdVenta(int idVenta) {
