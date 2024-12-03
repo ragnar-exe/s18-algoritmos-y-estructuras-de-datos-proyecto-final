@@ -210,6 +210,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
     private void listarDVentas() {
         modelo = (DefaultTableModel) tblDVenta.getModel();
+        totalRegistro = 0;
         for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
             if (dv != null && dv.getIdVenta() == idVentaDetalle) {
                 filaDatos[0] = dv.getIdDVenta();
@@ -227,13 +228,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 filaDatos[6] = dv.getPrecio();
                 filaDatos[7] = dv.getCantidad();
                 filaDatos[8] = dv.getCantidad() * dv.getPrecio();
+                totalRegistro++;
                 modelo.addRow(filaDatos);
             }
-        }
-        if (crudDetalleVenta.total() > 1) {
-            buscarCampo(true);
-        } else {
-            buscarCampo(false);
         }
         if (crudDetalleVenta.total() > 0) {
             cboCliente.setEnabled(false);
@@ -291,11 +288,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         txtPrecio.setText("");
     }
 
-    private void buscarCampo(boolean f) {
-        txtBuscar.setText("");
-        txtBuscar.setEnabled(f);
-    }
-
     public boolean obtenerDatosComboBox(JComboBox<String> comboBox, String idCon) {
         int itemCount = comboBox.getItemCount();
         for (int i = 0; i < itemCount; i++) {
@@ -332,8 +324,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDVenta = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -453,16 +443,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         });
         getContentPane().add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 260, 110, 30));
 
-        jLabel2.setText("Buscar:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, 30));
-
-        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtBuscarKeyReleased(evt);
-            }
-        });
-        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 310, 30));
-
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Total:");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 560, 50, 30));
@@ -545,7 +525,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         habilitarFiltroIds(true);
         crudBotones(false);
         limpiarTabla();
-        buscarCampo(false);
         btnNuevo.setEnabled(false);
         lblMensaje.setText("");
         tblDVenta.clearSelection();
@@ -622,7 +601,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idClient = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idContiene, idClient, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
+            if (crudDetalleVenta.actualizar(new DetalleVenta(idDVenta, idContiene, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
                 lblMensaje.setText("Se actualizó correctamente el detalle con id " + idDVenta + ".");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -645,7 +624,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 }
             }
             int idCliente = IDaoCliente.obtenerId(cboCliente.getSelectedItem().toString());
-            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idContiene, idCliente, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
+            if (crudDetalleVenta.agregar(new DetalleVenta(crudDetalleVenta.obtenerUltimoId(), idContiene, Integer.parseInt(cantidadStr), precio, cantidad * precio, idVentaDetalle))) {
                 lblMensaje.setText("Se agregó correctamente el detalle.");
                 limpiarCampos();
                 habilitarCampo(false);
@@ -686,7 +665,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         crudBotones(false);
         limpiarTabla();
         listarDVentas();
-        buscarCampo(false);
         btnNuevo.setEnabled(false);
         lblMensaje.setText("");
         tblDVenta.clearSelection();
@@ -706,7 +684,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                     lblMensaje.setText("El registro NO se pudo eliminar");
                 }
             }
-            buscarCampo(true);
             limpiarTabla();
             listarDVentas();
             limpiarCampos();
@@ -737,47 +714,15 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             txtPrecio.setText(tblDVenta.getValueAt(fila, 6).toString());
             txtCantidad.setText(tblDVenta.getValueAt(fila, 7).toString());
             if (crudDetalleVenta.total() == 1) {
-                cboCliente.setSelectedItem(IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
-                System.out.println("if" + IDaoCliente.obtenerNombre(crudDetalleVenta.obtenerIdCliente(idDVenta)));
+                cboCliente.setSelectedItem(IDaoCliente.obtenerNombre(IDaoVenta.obtenerIdCliente(idDVenta)));
+                System.out.println("if" + IDaoCliente.obtenerNombre(IDaoVenta.obtenerIdCliente(idDVenta)));
             }
             lblMensaje.setText("");
-            buscarCampo(false);
             registroBotones(false);
             crudBotones(true);
             btnCancelar.setEnabled(true);
         }
     }//GEN-LAST:event_tblDVentaMouseReleased
-
-    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        limpiarTabla();  // Limpia la tabla antes de mostrar los resultados
-        int n = 0;       // Contador de resultados
-        String valorBuscar = txtBuscar.getText().strip();     // Obtiene el texto de búsqueda
-        if (valorBuscar.equalsIgnoreCase("")) {
-            // Si el campo de búsqueda está vacío, muestra todos los productos
-            limpiarTabla();
-            listarDVentas();  // Método para listar todos los productos
-            lblMensaje.setText("");
-        } else {
-            // Llama al método buscar() de ProductoDaoImpl
-            List<DetalleVenta> detallesEncontrados = crudDetalleVenta.listar(valorBuscar);
-
-            // Itera sobre los productos encontrados y los agrega a la tabla
-            for (DetalleVenta dv : detallesEncontrados) {
-                filaDatos[0] = dv.getIdDVenta();
-                filaDatos[1] = IDaoProducto.obtenerNombre(dv.getIdProducto());
-                filaDatos[2] = dv.getPrecio();
-                filaDatos[3] = dv.getCantidad();
-                filaDatos[4] = IDaoCliente.obtenerNombre(dv.getIdCliente());
-                filaDatos[5] = dv.getCantidad() * dv.getPrecio();
-                modelo.addRow(filaDatos);  // Agrega los datos a la tabla
-                n++;  // Incrementa el contador de resultados
-            }
-
-            lblMensaje.setText(n + " registros encontrados.");  // Muestra el número de resultados encontrados
-        }
-        txtCantidad.setText("");  // Limpia el campo de nombre
-        txtPrecio.setText("");
-    }//GEN-LAST:event_txtBuscarKeyReleased
 
     private void cboIdsContieneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboIdsContieneActionPerformed
         Object idCon = cboIdsContiene.getSelectedItem();
@@ -853,16 +798,14 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private void btnCancelarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarDetalleActionPerformed
         // TODO add your handling code here:
         if (totalRegistro > 0) {
-            for (DetalleVenta dv : crudDetalleVenta.listarDetalle()) {
-                if (dv != null && dv.getIdVenta()== IDaoVenta.obtenerUltimoId()) {
-                    crudDetalleVenta.eliminar(new DetalleVenta(dv.getIdVenta(), dv.getIdProducto(), dv.getIdCliente(), dv.getCantidad(), dv.getPrecio(), dv.getTotal(), dv.getIdVenta()));
+            for (DetalleVenta dVenta : crudDetalleVenta.listarDetalle()) {
+                if (dVenta != null && dVenta.getIdVenta()== IDaoVenta.obtenerUltimoId()) {
+                    crudDetalleVenta.eliminar(new DetalleVenta(dVenta.getIdDVenta(), dVenta.getIdProducto(), dVenta.getCantidad(), dVenta.getPrecio(), dVenta.getTotal(), dVenta.getIdVenta()));
                     crudDetalleVenta.guardarEnArchivo();
-
                 }
             }
 
             crudDetalleVenta.clearIdVenta(new Venta(IDaoVenta.obtenerUltimoId()));
-            System.out.println("conficonal if");
         }
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
         JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
@@ -890,7 +833,10 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarDetalleActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+        if (idClienteVenta == 0) {
+            JOptionPane.showMessageDialog(null, "Advertencia, debe tener un cliente agregado.","Advertencia",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         LocalDateTime hoy = LocalDateTime.now();
         String fechaYhora = hoy.getDayOfMonth() + "-" + hoy.getMonthValue() + "-" + hoy.getYear() + " " + hoy.getHour() + ":" + hoy.getMinute() + ":" + hoy.getSecond();
         float totalImpu = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) / 1.18f;
@@ -940,7 +886,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -953,7 +898,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblMensaje;
     private javax.swing.JTextArea taCliente;
     private javax.swing.JTable tblDVenta;
-    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtColor;
     private javax.swing.JTextField txtMarca;
