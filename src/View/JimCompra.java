@@ -218,7 +218,6 @@ public class JimCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtBuscarCompraActionPerformed
 
     private void btnGenerarDetalleCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarDetalleCompraActionPerformed
-        // TODO add your handling code here:
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)

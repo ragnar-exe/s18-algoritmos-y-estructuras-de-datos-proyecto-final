@@ -17,6 +17,8 @@ import model.Marca;
 import model.Producto;
 import model.Talla;
 import dao.IDaoObtenerLista;
+import javax.swing.JDesktopPane;
+import javax.swing.SwingUtilities;
 import model.Nodo;
 
 public class JimContiene extends javax.swing.JInternalFrame {
@@ -188,8 +190,8 @@ public class JimContiene extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        btnGuardarIrStock = new javax.swing.JButton();
+        btnCancelarIrStock = new javax.swing.JButton();
         cboProducto = new javax.swing.JComboBox<>();
         txtStock = new javax.swing.JTextField();
         lblMensaje = new javax.swing.JLabel();
@@ -308,13 +310,23 @@ public class JimContiene extends javax.swing.JInternalFrame {
         });
         getContentPane().add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, 90, 30));
 
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton7.setText("Guardar");
-        getContentPane().add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 580, 90, -1));
+        btnGuardarIrStock.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGuardarIrStock.setText("Guardar");
+        btnGuardarIrStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarIrStockActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGuardarIrStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 580, 90, -1));
 
-        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton8.setText("Cancelar");
-        getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 580, -1, -1));
+        btnCancelarIrStock.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelarIrStock.setText("Cancelar");
+        btnCancelarIrStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarIrStockActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnCancelarIrStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 580, -1, -1));
 
         cboProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(cboProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 290, 30));
@@ -806,22 +818,74 @@ public class JimContiene extends javax.swing.JInternalFrame {
         listarStockProductos(); 
     }//GEN-LAST:event_btnEliminarFinalActionPerformed
 
+    private void btnGuardarIrStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarIrStockActionPerformed
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de compra
+        JimStock vistaStock = new JimStock();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaStock) al JDesktopPane
+            jDesktopPane_menu.add(vistaStock);
+
+            // Hacer visible el JInternalFrame
+            vistaStock.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaStock.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
+    }//GEN-LAST:event_btnGuardarIrStockActionPerformed
+
+    private void btnCancelarIrStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarIrStockActionPerformed
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de compra
+        JimStock vistaStock = new JimStock();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaStock) al JDesktopPane
+            jDesktopPane_menu.add(vistaStock);
+
+            // Hacer visible el JInternalFrame
+            vistaStock.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaStock.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
+    }//GEN-LAST:event_btnCancelarIrStockActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancelarIrStock;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEliminarFinal;
     private javax.swing.JButton btnEliminarInicio;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnGuardarInicio;
+    private javax.swing.JButton btnGuardarIrStock;
     private javax.swing.JButton btnGuardarPosicon;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cboColor;
     private javax.swing.JComboBox<String> cboMarca;
     private javax.swing.JComboBox<String> cboProducto;
     private javax.swing.JComboBox<String> cboTalla;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
