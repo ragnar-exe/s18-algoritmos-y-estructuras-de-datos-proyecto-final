@@ -30,11 +30,11 @@ public class JimCompra extends javax.swing.JInternalFrame {
 
     private void limpiarTabla() {
         modelo = (DefaultTableModel) tblCompras.getModel();
-        modelo.getDataVector().removeAllElements();
-        tblCompras.removeAll();
+        modelo.setRowCount(0);
     }
 
     public void listarCompras() {
+        limpiarTabla();
         modelo = (DefaultTableModel) tblCompras.getModel();
         for (Compra com : crudCompra.listar()) {
             if (com != null && com.isEstado() == true) {
