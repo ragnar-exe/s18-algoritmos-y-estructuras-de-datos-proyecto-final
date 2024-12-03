@@ -501,26 +501,26 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             if (guardar) {
                 if (crudUsuario.actualizar(new Usuario(idUsuario, title))) {
                     
-                    lblMensaje.setText("Se actualizo correctamente el color.");
+                    lblMensaje.setText("Se actualizo correctamente el Usuario.");
                     habilitarCampo(false);
                     registroBotones(false);
                     crudBotones(false);
                     guardar = false;
                 } else {
-                    lblMensaje.setText("No se actualizo el color.");
+                    lblMensaje.setText("No se actualizo el Usuario.");
                 }
             } else {
                 if (crudUsuario.obtenerId(title) == -1) {
                     if (crudUsuario.agregar(new Usuario(crudUsuario.obtenerUltimoId(), title))) {
-                        lblMensaje.setText("Se agrego correctamente el color.");
+                        lblMensaje.setText("Se agrego correctamente el Usuario.");
                         habilitarCampo(false);
                         registroBotones(false);
                         crudBotones(false);
                     } else {
-                        lblMensaje.setText("No se agrego el color.");
+                        lblMensaje.setText("No se agrego el Usuario.");
                     }
                 } else {
-                    lblMensaje.setText("No se agrego el color porque color ya existe.");
+                    lblMensaje.setText("No se agrego el Usuario porque color ya existe.");
                     txtNombreUsuario.requestFocus();
                 }
             }
@@ -529,7 +529,7 @@ public class JimUsuario extends javax.swing.JInternalFrame {
             listarUsuario();
         } else {
             JOptionPane.showMessageDialog(null,
-                    "Advertencia, El nombre del color debe estar entre 1 y 50 letras.",
+                    "Advertencia, El nombre del Usuario debe estar entre 1 y 50 letras.",
                     "Advertencia",
                     JOptionPane.WARNING_MESSAGE);
             return;
