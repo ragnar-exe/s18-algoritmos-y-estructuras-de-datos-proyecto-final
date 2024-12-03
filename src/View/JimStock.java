@@ -7,24 +7,28 @@ import daoImpl.ColorDaoImpl;
 import daoImpl.ContieneDaoImpl;
 import daoImpl.MarcaDaoImpl;
 import daoImpl.ProductoDaoImpl;
+import daoImpl.StockDaoImpl;
 import daoImpl.TallaDaoImpl;
+import javax.swing.JDesktopPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Categoria;
 import model.Color;
 import model.Contiene;
 import model.Marca;
+import model.Nodo;
 import model.Producto;
 import model.Talla;
 
 public class JimStock extends javax.swing.JInternalFrame {
 
-    private IDaoGenerico<Contiene> crudContiene;
-    private IDaoExtendido<Producto> iDaoProducto;
-    private IDaoExtendido<Categoria> iDaoCategoria;
-    private IDaoExtendido<Color> iDaoColor;
-    private IDaoExtendido<Marca> iDaoMarca;
-    private IDaoExtendido<Talla> iDaoTalla;
-    private ProductoDaoImpl producto;
+    private StockDaoImpl crudStock;
+    private ContieneDaoImpl crudContiene;
+    private ProductoDaoImpl IDaoProducto;
+    private CategoriaDaoImpl IDaoCategoria;
+    private ColorDaoImpl IDaoColor;
+    private MarcaDaoImpl IDaoMarca;
+    private TallaDaoImpl IDaoTalla;
     private DefaultTableModel modelo;
     private Object[] filaDatos;
 
@@ -33,36 +37,70 @@ public class JimStock extends javax.swing.JInternalFrame {
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
+        crudStock = new StockDaoImpl();
         crudContiene = new ContieneDaoImpl();
-//        iDaoProducto = new ProductoDaoImpl();
-        producto = new ProductoDaoImpl();
-//        iDaoCategoria = new CategoriaDaoImpl();
-//        iDaoMarca = new MarcaDaoImpl();
+        IDaoProducto = new ProductoDaoImpl();
+        IDaoCategoria = new CategoriaDaoImpl();
+        IDaoMarca = new MarcaDaoImpl();
         filaDatos = new Object[8];
-        iDaoColor = new ColorDaoImpl();
-//        iDaoTalla = new TallaDaoImpl();
+        IDaoColor = new ColorDaoImpl();
+        IDaoTalla = new TallaDaoImpl();
         modelo = new DefaultTableModel();
         limpiarTabla();
-        listarStockProductos();
+        crudStock.cargarDatosContiene();
+//        preOrderKey(crudStock.NodoPrincipal);
+        inOrderKey(crudStock.NodoPrincipal);
     }
 
     private void listarStockProductos() {
         modelo = (DefaultTableModel) tblStockProducto.getModel();
-//        for (Contiene c : crudContiene.listar("ordenar")) {
-//            filaDatos[0] = c.getIdContiene();
-//            filaDatos[1] = iDaoProducto.obtenerNombre(c.getIdProducto());
-//            filaDatos[2] = iDaoCategoria.obtenerNombre(producto.obtenerIdForeignKey(c.getIdProducto()));
-//            filaDatos[3] = iDaoMarca.obtenerNombre(c.getIdMarca());
-//            filaDatos[4] = iDaoTalla.obtenerNombre(c.getIdTalla());
-//            filaDatos[5] = iDaoColor.obtenerNombre(c.getIdColor());
-//            filaDatos[6] = c.getPrecio();
-//            filaDatos[7] = c.getStock();
-//            modelo.addRow(filaDatos);
+//        StockDaoImpl preOrderKey(Nodo nodo_root) {
+//               if (nodo_root != null) {
+//                   System.out.printf("%d - ", nodo_root.getKey());
+//                   preOrderKey(nodo_root.getLchild());
+//                   preOrderKey(nodo_root.getRchild());
+//
+//               }
 //        }
         if (crudContiene.total() > 1) {
             txtBuscar.setEnabled(true);
         } else {
             txtBuscar.setEnabled(false);
+        }
+    }
+
+    public void preOrderKey(Nodo nodo_root) {
+        modelo = (DefaultTableModel) tblStockProducto.getModel();
+        if (nodo_root != null) {
+            filaDatos[0] = nodo_root.getContiene().getIdContiene();
+            filaDatos[1] = IDaoProducto.obtenerNombre(nodo_root.getContiene().getIdProducto());
+            filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(nodo_root.getContiene().getIdProducto()));
+            filaDatos[3] = IDaoMarca.obtenerNombre(nodo_root.getContiene().getIdMarca());
+            filaDatos[4] = IDaoTalla.obtenerNombre(nodo_root.getContiene().getIdTalla());
+            filaDatos[5] = IDaoColor.obtenerNombre(nodo_root.getContiene().getIdColor());
+            filaDatos[6] = nodo_root.getContiene().getPrecio();
+            filaDatos[7] = nodo_root.getContiene().getStock();
+            modelo.addRow(filaDatos);
+            preOrderKey(nodo_root.getLchild());
+            preOrderKey(nodo_root.getRchild());
+
+        }
+    }
+    
+    public void inOrderKey(Nodo nodo_root) {
+        modelo = (DefaultTableModel) tblStockProducto.getModel();
+        if (nodo_root != null) {
+            inOrderKey(nodo_root.getLchild());
+            filaDatos[0] = nodo_root.getContiene().getIdContiene();
+            filaDatos[1] = IDaoProducto.obtenerNombre(nodo_root.getContiene().getIdProducto());
+            filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(nodo_root.getContiene().getIdProducto()));
+            filaDatos[3] = IDaoMarca.obtenerNombre(nodo_root.getContiene().getIdMarca());
+            filaDatos[4] = IDaoTalla.obtenerNombre(nodo_root.getContiene().getIdTalla());
+            filaDatos[5] = IDaoColor.obtenerNombre(nodo_root.getContiene().getIdColor());
+            filaDatos[6] = nodo_root.getContiene().getPrecio();
+            filaDatos[7] = nodo_root.getContiene().getStock();
+            modelo.addRow(filaDatos);
+            inOrderKey(nodo_root.getRchild());            
         }
     }
 
@@ -130,7 +168,31 @@ public class JimStock extends javax.swing.JInternalFrame {
 
     private void btnIrProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrProductosActionPerformed
         limpiarTabla();
-        listarStockProductos();
+        int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+        int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+        FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
+        JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
+
+        // Crear la vista de detalles de compra
+        JimContiene vistaContiene = new JimContiene();
+
+        // Asegúrate de que jDesktopPane_menu no sea null
+        if (jDesktopPane_menu != null) {
+            // Agregar el JInternalFrame (vistaStock) al JDesktopPane
+            jDesktopPane_menu.add(vistaContiene);
+
+            // Hacer visible el JInternalFrame
+            vistaContiene.setVisible(true);
+
+            // Establecer el JInternalFrame en el centro
+            try {
+                vistaContiene.setSelected(true);  // Asegura que esté al frente
+            } catch (java.beans.PropertyVetoException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El JDesktopPane no está inicializado.");
+        }
     }//GEN-LAST:event_btnIrProductosActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
