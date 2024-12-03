@@ -15,8 +15,7 @@ import model.Contiene;
 import model.Nodo;
 
 public class ContieneDaoImpl implements IDaoGenerico<Contiene> {
-
-    private static final String FILE_CONTIENES = "contienes.txt";
+    static final String FILE_CONTIENES = "contienes.txt";
     private static final String FILE_IDSCONTIENE = "idscontienes.txt";
     public Nodo inicio;
     public Nodo fin;
