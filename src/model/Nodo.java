@@ -6,10 +6,13 @@ public class Nodo {
     public Nodo anterior;
     private Contiene contiene;
     private Tipo tipo;
-
+    private Nodo Rchild;
+    private Nodo Lchild;
+    private int key;
+    
     public Nodo() {
     }
-
+    
     public Nodo(Nodo siguiente, Tipo tipo) {
         this.siguiente = siguiente;
         this.tipo = tipo;
@@ -23,9 +26,6 @@ public class Nodo {
         this.tipo = tipo;
     }
     
-    
-    
-
     public Nodo(Marca marca, Nodo siguiente) {
         this.marca = marca;
         this.siguiente = siguiente;
@@ -69,5 +69,41 @@ public class Nodo {
         this.siguiente = siguiente;
     }
 
-    
+    public Nodo(Nodo Rchild, Nodo Lchild, int key, Contiene contiene) {
+        this.Rchild = Rchild;
+        this.Lchild = Lchild;
+        this.key = key;
+        this.contiene = contiene;
+    }
+
+    public Nodo(int key, Contiene contiene) {
+        this.Rchild = null;
+        this.Lchild = null;
+        this.contiene = contiene;
+        this.key = key;
+    }
+
+    public Nodo getRchild() {
+        return Rchild;
+    }
+
+    public void setRchild(Nodo Rchild) {
+        this.Rchild = Rchild;
+    }
+
+    public Nodo getLchild() {
+        return Lchild;
+    }
+
+    public void setLchild(Nodo Lchild) {
+        this.Lchild = Lchild;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
 }
