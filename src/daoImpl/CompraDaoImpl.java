@@ -151,7 +151,6 @@ public class CompraDaoImpl implements IDaoGenerico<Compra> {
         for (Compra com : compras) {
             if (com != null && com.getIdCompra()== id) {
                 idPro = com.getIdProveedor();
-                break;
             }
         }
         return idPro;

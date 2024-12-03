@@ -183,7 +183,6 @@ public class JimCompra extends javax.swing.JInternalFrame {
             Object value = tblCompras.getValueAt(filaSeleccionada, 0);
             if (value instanceof Integer) {
                 int idCompra = (Integer) value;
-
                 // Abre la ventana de detalle con los datos de la compra
                 FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtén la ventana principal
                 JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
@@ -255,7 +254,6 @@ public class JimCompra extends javax.swing.JInternalFrame {
             Object value = tblCompras.getValueAt(filaSeleccionada, 0);
             if (value instanceof Integer) {
                 int idCompra = (Integer) value;
-
                 // Abre la ventana de detalle con los datos de la compra
                 FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtén la ventana principal
                 JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
