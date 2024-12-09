@@ -9,6 +9,7 @@ import daoImpl.MarcaDaoImpl;
 import daoImpl.ProductoDaoImpl;
 import daoImpl.TallaDaoImpl;
 import daoImpl.VentaDaoImpl;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -24,7 +25,7 @@ import model.Producto;
 import model.Venta;
 
 public class JimDetalleVenta extends javax.swing.JInternalFrame {
-
+    DecimalFormat dfo = new DecimalFormat("0.00");
     public static JDesktopPane jDesktopPane_menu;
     private VentaDaoImpl IDaoVenta;
     private final DetalleVentaDaoImpl crudDetalleVenta;
@@ -862,7 +863,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         LocalDateTime hoy = LocalDateTime.now();
         String fechaYhora = hoy.getDayOfMonth() + "-" + hoy.getMonthValue() + "-" + hoy.getYear() + " " + hoy.getHour() + ":" + hoy.getMinute() + ":" + hoy.getSecond();
         float totalImpu = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) / 1.18f;
+        totalImpu = Float.parseFloat(dfo.format(totalImpu));
         float totalCompra = totalImpu + crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId());
+        totalCompra = Float.parseFloat(dfo.format(totalCompra));
         IDaoVenta.agregar(new Venta(IDaoVenta.obtenerUltimoId(), idClienteVenta, crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()), totalCompra, totalImpu, fechaYhora, true));
         IDaoVenta.guardarEnArchivo();
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
