@@ -320,13 +320,24 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     }
 
     public void clearIdVenta(Venta Obj) {
-        for (int i = 0; i < dVentas.length; i++) {
-            if (dVentas[i] != null && dVentas[i].getIdVenta() == Obj.getIdVenta()) {
-                System.out.println("Elemento eliminado en índice: " + i);
-                dVentas[i] = null; // Elimina el elemento asignando `null`
+    for (int i = 0; i < dVentas.length; i++) {
+        if (dVentas[i] != null && dVentas[i].getIdVenta() == Obj.getIdVenta()) {
+            System.out.println("Elemento eliminado en índice: " + i);
+
+            // Desplazar todos los elementos posteriores hacia la izquierda
+            for (int j = i; j < dVentas.length - 1; j++) {
+                dVentas[j] = dVentas[j + 1];
             }
+
+            // Asignar null al último elemento, que queda sin uso
+            dVentas[dVentas.length - 1] = null;
+
+            // Salir del bucle ya que el objeto fue encontrado y eliminado
+            break;
         }
     }
+}
+
 
     public List<DetalleVenta> listarPorIdVenta(int idVenta) {
         List<DetalleVenta> detallesVenta = new LinkedList<>();

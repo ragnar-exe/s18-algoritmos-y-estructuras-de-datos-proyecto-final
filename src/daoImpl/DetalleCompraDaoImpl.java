@@ -293,7 +293,7 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         return Float.parseFloat(df.format(total));
     }
 
-    public void clearIdVenta(Compra Obj) {
+    public void clearIdCompra(Compra Obj) {
         for (DetalleCompra detalleCom : dCompras) {
             if (detalleCom != null && detalleCom.getIdCompra() == Obj.getIdCompra()) {
                 System.out.println("conficonal if for dao");
@@ -312,6 +312,17 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         }
 
         return detallesCompra;
+    }
+    
+    public int buscarIdCompra(int id){
+        int idEncontrado= -1;
+        for (DetalleCompra dc : dCompras) {
+            if (dc != null && dc.getIdDCompra()== id) {
+                idEncontrado = dc.getIdCompra();
+                break;
+            }
+        }
+        return idEncontrado;
     }
 
 }

@@ -169,7 +169,6 @@ public class ProductoDaoImpl implements IDaoObtenerLista<Producto> {
         List<Producto> resultado = new LinkedList<>();
         String valorBuscar = texto.toLowerCase();  // Convierte el texto de búsqueda a minúsculas para comparación
         IDaoObtenerLista<Categoria> idaoCategoria = new CategoriaDaoImpl();
-
         for (Producto producto : productos) {
             // Verifica si el texto coincide con el ID o nombre del producto
             boolean coincideConId = String.valueOf(producto.getIdProducto()).contains(valorBuscar);
