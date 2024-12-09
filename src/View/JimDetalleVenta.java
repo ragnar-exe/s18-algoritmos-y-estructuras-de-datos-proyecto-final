@@ -40,6 +40,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     private final ClienteDaoImpl IDaoCliente;
     private final Object[] filaDatos;
     private int idDVenta;
+    private boolean modoEdicion = false;
     private boolean guardar = false;
     private int idVentaDetalle = 0;
 
@@ -48,6 +49,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto - 106);
+        btnRegresar.setVisible(false);
         filaDatos = new Object[9];
         crudDetalleVenta = new DetalleVentaDaoImpl();
         IDaoProducto = new ProductoDaoImpl();
@@ -78,21 +80,21 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 //            temp = temp.siguiente;
 //        }
 //    }
-    public void cargarDatosVenta(int idVentaCliente) {
+    public void cargarDatosVenta(int idVentaSeleccionada) {
         btnRegresar.setVisible(true);
-
+        idVentaDetalle = idVentaSeleccionada;
         VentaDaoImpl crudVenta = new VentaDaoImpl();
         DetalleVentaDaoImpl crudDetalle = new DetalleVentaDaoImpl();
 
         // Obtén la compra por ID
-        Venta compra = crudVenta.obtenerPorId(idVentaCliente);
+        Venta compra = crudVenta.obtenerPorId(idVentaSeleccionada);
         if (compra != null) {
             habilitarCampo(false);
 
             // Luego cargas los datos de la compra
             DefaultTableModel modeloDetalle = (DefaultTableModel) tblDVenta.getModel();
             modeloDetalle.setRowCount(0); // Limpia la tabla
-            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaCliente)) {
+            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaSeleccionada)) {
                 if (dv != null) {
                     filaDatos[0] = dv.getIdDVenta();
                     Nodo aux = IDaoContiene.inicio;
@@ -114,41 +116,51 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
             }
 
             for (Cliente c : IDaoCliente.listar()) {
-                if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaCliente)) {
+                if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaSeleccionada)) {
                     taCliente.setEditable(true);
                     taCliente.setText("ID: " + c.getIdPersona() + "\nDNI: " + c.getDni() + "\nNombres: " + c.getNombres() + "\nApellidos: " + c.getApellidos() + "\nCorreo: " + c.getCorreo() + "\nDireccion: " + c.getDireccion());
                     taCliente.setEditable(false);
                 }
             }
             txtTotal.setEditable(true);
-            txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaCliente) + "");
+            txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaSeleccionada) + "");
             txtTotal.setEditable(false);
             tblDVenta.setEnabled(false);
             btnGuardar.setVisible(false);
             btnCancelarDetalle.setVisible(false);
+            bloquearAcciones();
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
         }
-        
+
     }
 
-    public void cargarDatosCompraEditar(int idVentaCliente) {
+    public void bloquearAcciones() {
+        btnAgregar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnCancelarDetalle.setEnabled(false);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnGuardar.setEnabled(false);
+        btnNuevo.setEnabled(false);
+    }
+
+    public void cargarDatosVentaEditar(int idVentaSeleccionada) {
         btnRegresar.setVisible(true);
-//        compraGuardar= editar;
-        idVentaCliente = idVentaCliente;
+        totalRegistro = 0;
+        idVentaDetalle = idVentaSeleccionada;
         VentaDaoImpl crudVenta = new VentaDaoImpl();
         DetalleVentaDaoImpl crudDetalle = new DetalleVentaDaoImpl();
 
         // Obtén la compra por ID
-        Venta compra = crudVenta.obtenerPorId(idVentaCliente);
+        Venta compra = crudVenta.obtenerPorId(idVentaSeleccionada);
         if (compra != null) {
             habilitarCampo(false);
 
             // Luego cargas los datos de la compra
             DefaultTableModel modeloDetalle = (DefaultTableModel) tblDVenta.getModel();
             modeloDetalle.setRowCount(0); // Limpia la tabla
-            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaCliente)) {
-                // Aquí es donde manejas la carga de los datos del detalle de la compra
+            for (DetalleVenta dv : crudDetalle.listarPorIdVenta(idVentaSeleccionada)) {
                 if (dv != null) {
                     filaDatos[0] = dv.getIdDVenta();
                     Nodo aux = IDaoContiene.inicio;
@@ -159,6 +171,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                             filaDatos[3] = IDaoMarca.obtenerNombre(aux.getContiene().getIdMarca());
                             filaDatos[4] = IDaoTalla.obtenerNombre(aux.getContiene().getIdTalla());
                             filaDatos[5] = IDaoColor.obtenerNombre(aux.getContiene().getIdColor());
+                            totalRegistro++;
                         }
                         aux = aux.siguiente;
                     }
@@ -168,19 +181,22 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                     modelo.addRow(filaDatos);
                 }
             }
+
+            for (Cliente c : IDaoCliente.listar()) {
+                if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaSeleccionada)) {
+                    taCliente.setEditable(true);
+                    taCliente.setText("ID: " + c.getIdPersona() + "\nDNI: " + c.getDni() + "\nNombres: " + c.getNombres() + "\nApellidos: " + c.getApellidos() + "\nCorreo: " + c.getCorreo() + "\nDireccion: " + c.getDireccion());
+                    taCliente.setEditable(false);
+                }
+            }
+            txtTotal.setEditable(true);
+            txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaSeleccionada) + "");
+            txtTotal.setEditable(false);
+            btnGuardar.setVisible(false);
+            btnCancelarDetalle.setVisible(false);
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron datos para la compra seleccionada.");
         }
-
-        for (Cliente c : IDaoCliente.listar()) {
-            if (c != null && c.getIdPersona() == IDaoVenta.obtenerIdCliente(idVentaCliente)) {
-                taCliente.setEditable(true);
-                taCliente.setText("ID: " + c.getIdPersona() + "\nDNI: " + c.getDni() + "\nNombres: " + c.getNombres() + "\nApellidos: " + c.getApellidos() + "\nCorreo: " + c.getCorreo() + "\nDireccion: " + c.getDireccion());
-                taCliente.setEditable(false);
-            }
-        }
-        txtTotal.setEditable(true);
-        txtTotal.setText(crudDetalleVenta.calcularTotal(idVentaCliente) + "");
     }
 
     private void cargarClientes() {
@@ -236,7 +252,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 modelo.addRow(filaDatos);
             }
         }
-        if (crudDetalleVenta.total() > 0) {
+        if (totalRegistro > 0) {
             cboCliente.setEnabled(false);
         }
 
@@ -521,6 +537,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+
         cargarIdsContiene();
         habilitarCampo(true);
         limpiarCampos();
@@ -531,7 +548,6 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         limpiarTabla();
         btnNuevo.setEnabled(false);
         lblMensaje.setText("");
-        tblDVenta.clearSelection();
         cboCliente.requestFocus();
         guardar = false;
         cboIdsContiene.requestFocus();
@@ -595,7 +611,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
         // Si 'guardar' es verdadero, actualizar el producto; si no, agregar uno nuevo
         if (guardar) {
-            if (crudDetalleVenta.total() == 1) {
+            if (totalRegistro == 1) {
                 if (cboCliente.getSelectedItem().equals("Seleccionar")) {
                     JOptionPane.showMessageDialog(null,
                             "Advertencia, debe seleccionar un cliente.",
@@ -618,7 +634,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
                 lblMensaje.setText("No se actualizó el detalle con id " + idDVenta + ".");
             }
         } else {
-            if (crudDetalleVenta.total() == 0) {
+            if (totalRegistro == 0) {
                 if (cboCliente.getSelectedItem().equals("Seleccionar")) {
                     JOptionPane.showMessageDialog(null,
                             "Advertencia, debe seleccionar un cliente.",
@@ -674,6 +690,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         tblDVenta.clearSelection();
         cboIdsContiene.requestFocus();
 //        cboProducto.requestFocus();
+        if (totalRegistro == 1) {
+            cboCliente.setEnabled(true);
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -800,10 +819,9 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnCancelarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarDetalleActionPerformed
-        // TODO add your handling code here:
         if (totalRegistro > 0) {
             for (DetalleVenta dVenta : crudDetalleVenta.listarDetalle()) {
-                if (dVenta != null && dVenta.getIdVenta()== IDaoVenta.obtenerUltimoId()) {
+                if (dVenta != null && dVenta.getIdVenta() == IDaoVenta.obtenerUltimoId()) {
                     crudDetalleVenta.eliminar(new DetalleVenta(dVenta.getIdDVenta(), dVenta.getIdProducto(), dVenta.getCantidad(), dVenta.getPrecio(), dVenta.getTotal(), dVenta.getIdVenta()));
                     crudDetalleVenta.guardarEnArchivo();
                 }
@@ -838,7 +856,7 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (idClienteVenta == 0) {
-            JOptionPane.showMessageDialog(null, "Advertencia, debe tener un cliente agregado.","Advertencia",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Advertencia, debe tener un cliente agregado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
         LocalDateTime hoy = LocalDateTime.now();

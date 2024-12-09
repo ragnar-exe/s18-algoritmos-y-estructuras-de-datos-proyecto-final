@@ -169,7 +169,7 @@ public class JimVenta extends javax.swing.JInternalFrame {
                 JimDetalleVenta vistaDVentas = new JimDetalleVenta();
 
                 // Pasa el ID de la compra a la vista de detalles
-                vistaDVentas.cargarDatosCompraEditar(idVenta);  // Método que carga los datos
+                vistaDVentas.cargarDatosVentaEditar(idVenta);  // Método que carga los datos
 
                 if (jDesktopPane_menu != null) {
                     jDesktopPane_menu.add(vistaDVentas); // Agrega el JInternalFrame al JDesktopPane

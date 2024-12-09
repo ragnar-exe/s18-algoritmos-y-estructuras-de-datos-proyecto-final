@@ -553,11 +553,10 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 if (dv != null && dv.getIdCompra() == IDaoCompra.obtenerUltimoId()) {
                     crudDetalleCompra.eliminar(new DetalleCompra(dv.getIdDCompra(), dv.getIdProducto(), dv.getIdMarca(), dv.getIdTalla(), dv.getIdColor(), dv.getPrecio(), dv.getCantidad(), dv.getTotal(), dv.getIdCompra()));
                     crudDetalleCompra.guardarEnArchivo();
-
                 }
             }
 
-            crudDetalleCompra.clearIdVenta(new Compra(IDaoCompra.obtenerUltimoId()));
+            crudDetalleCompra.clearIdCompra(new Compra(IDaoCompra.obtenerUltimoId()));
             System.out.println("conficonal if");
         }
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
@@ -746,6 +745,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int fila = tblDCompra.getSelectedRow();
         System.out.println("" + idDCompra);
+        int idCompraEliminar = crudDetalleCompra.buscarIdCompra(idDCompra);
         if (fila < 0) {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
         } else {
@@ -757,7 +757,7 @@ public class JimDetalleCompra extends javax.swing.JInternalFrame {
                 float price = Float.parseFloat(txtPrecio.getText().strip());
                 int count = Integer.parseInt(txtCantidad.getText().strip());
                 float to = price * count;
-                if (crudDetalleCompra.eliminar(new DetalleCompra(idDCompra, idPro, idMa, idTa, idCo, price, count, to, IDaoCompra.obtenerUltimoId()))) {
+                if (crudDetalleCompra.eliminar(new DetalleCompra(idDCompra, idPro, idMa, idTa, idCo, price, count, to, idCompraEliminar))) {
                     lblMensaje.setText("El registro se eliminó correctamente");
                 } else {
                     lblMensaje.setText("El registro NO se pudo eliminar");
