@@ -255,9 +255,19 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
         Queue<DetalleCompra> ordenados = new PriorityQueue<>(
                 Comparator.comparingInt(DetalleCompra::getCantidad)
         );
-        ordenados.clear();
+
+        // Agregar todos los elementos a la cola
         ordenados.addAll(dCompras);
-        return ordenados;
+
+        // Crear una lista temporal para mostrar los elementos ordenados
+        Queue<DetalleCompra> resultado = new LinkedList<>();
+
+        // Extraer los elementos en el orden correcto
+        while (!ordenados.isEmpty()) {
+            resultado.add(ordenados.poll());
+        }
+
+        return resultado;
     }
 
     public List<DetalleCompra> listar(String texto) {
