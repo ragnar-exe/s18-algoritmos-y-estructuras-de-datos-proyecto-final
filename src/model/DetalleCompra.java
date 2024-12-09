@@ -1,6 +1,6 @@
 package model;
 
-public class DetalleCompra {
+public class DetalleCompra implements Comparable<DetalleCompra>{
     private int idDCompra;
     private int idProducto;
     private int idMarca;
@@ -146,6 +146,11 @@ public class DetalleCompra {
             return false;
         }
         return this.idCompra == other.idCompra;
+    }
+
+    @Override
+    public int compareTo(DetalleCompra o) {
+        return Integer.compare(this.cantidad, o.cantidad);
     }
 
 }

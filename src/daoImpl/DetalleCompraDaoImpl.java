@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -25,17 +26,9 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
     private static final String FILE_DCOMPRA = "dcompra.txt";
     private static final String FILE_IDSDCOMPRA = "idsdcompra.txt";
     ContieneDaoImpl IDaoContiene = new ContieneDaoImpl();
+//    Comparator<DetalleCompra> porCantidad = Comparator.comparing(DetalleCompra::getCantidad);
 
-    private Queue<DetalleCompra> dCompras = new PriorityQueue<>(
-            (a, b) -> {
-                int priorityComparison = Integer.compare(a.getIdDCompra(), b.getIdDCompra());
-                if (priorityComparison == 0) {
-                    // Ajusta aqu� si quieres otro criterio de prioridad secundario.
-                    return Float.compare(a.getPrecio(), b.getPrecio());
-                }
-                return priorityComparison;
-            }
-    );
+    private Queue<DetalleCompra> dCompras = new PriorityQueue<>();
 
     public DetalleCompraDaoImpl() {
         cargarDatos();
@@ -259,7 +252,12 @@ public class DetalleCompraDaoImpl implements IDaoGenerico<DetalleCompra> {
 
     public Queue<DetalleCompra> listarDetalle() {
         guardarEnArchivo();
-        return dCompras;
+        Queue<DetalleCompra> ordenados = new PriorityQueue<>(
+                Comparator.comparingInt(DetalleCompra::getCantidad)
+        );
+        ordenados.clear();
+        ordenados.addAll(dCompras);
+        return ordenados;
     }
 
     public List<DetalleCompra> listar(String texto) {
