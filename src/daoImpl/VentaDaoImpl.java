@@ -17,7 +17,7 @@ import model.Venta;
 public class VentaDaoImpl implements IDaoGenerico<Venta> {
    
     ArrayList<Venta> ventas = new ArrayList<>();
-    private static final String FILE_VENTAS = "ventas.txt";
+    static final String FILE_VENTAS = "ventas.txt";
     private static final String FILE_IDSVENTAS = "idsventa.txt";
     private DetalleVentaDaoImpl detalleVentaDao = new DetalleVentaDaoImpl();
 
@@ -25,9 +25,6 @@ public class VentaDaoImpl implements IDaoGenerico<Venta> {
         cargarDatos();
     }
     
-
-   
-
     public Venta obtenerPorId(int idVenta) {
         Venta ventaEncontrada = null;
         for (Venta venta : ventas) { // listaDeCompras es tu colección de objetos Compra
@@ -159,6 +156,4 @@ public class VentaDaoImpl implements IDaoGenerico<Venta> {
         }
         return idCli;
     }
-    
-    
 }
