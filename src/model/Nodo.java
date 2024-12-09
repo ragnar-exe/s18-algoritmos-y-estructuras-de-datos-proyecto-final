@@ -9,6 +9,9 @@ public class Nodo {
     private Nodo Rchild;
     private Nodo Lchild;
     private int key;
+    private Nodo izquierdo;
+    private Nodo derecho;
+    private Venta venta;
     
     public Nodo() {
     }
@@ -105,5 +108,39 @@ public class Nodo {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public Nodo(Venta venta) {
+        this.venta = venta;
+    }
+    
+    public Nodo(Nodo izquierdo, Nodo derecho, Venta venta) {
+        this.izquierdo = izquierdo;
+        this.derecho = derecho;
+        this.venta = venta;
+    }
+
+    public Nodo getIzquierdo() {
+        return izquierdo;
+    }
+
+    public void setIzquierdo(Nodo izquierdo) {
+        this.izquierdo = izquierdo;
+    }
+
+    public Nodo getDerecho() {
+        return derecho;
+    }
+
+    public void setDerecho(Nodo derecho) {
+        this.derecho = derecho;
+    }
+
+    public Venta getVenta() {
+        return venta;
+    }
+
+    public void setVenta(Venta venta) {
+        this.venta = venta;
     }
 }
