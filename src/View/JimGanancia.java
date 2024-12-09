@@ -1,11 +1,58 @@
 package View;
 
+import daoImpl.GananciaDaoImpl;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import model.Nodo;
+
 public class JimGanancia extends javax.swing.JInternalFrame {
+    GananciaDaoImpl crudGanancia = new GananciaDaoImpl();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy");
+    float gananciaHoy = 0.f;
+    String fechaFormateada = "";
+    
     public JimGanancia() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto-106);
+        crudGanancia.cargarDatosVenta();
+    }
+    
+    public void preOrder(Nodo nodo_root) {
+        // preOrder
+        if (nodo_root != null) {
+            gananciaHoy += nodo_root.getVenta().getTotal();
+            preOrder(nodo_root.getIzquierdo());
+            preOrder(nodo_root.getDerecho());
+        }
+    }
+    
+    public String devolverFechaHoy() {
+        LocalDate fechaActual = LocalDate.now();
+        return fechaActual.format(formatter);
+    }
+    
+    public void mostrarHoy(Nodo nodo_root) {
+        // inOrder
+        DecimalFormat df = new DecimalFormat("0.00");
+        if (nodo_root != null) {
+            mostrarHoy(nodo_root.getIzquierdo());
+            String fechaExtraida = nodo_root.getVenta().getFecha().split(" ")[0];
+            if (fechaExtraida.equalsIgnoreCase(fechaFormateada) && nodo_root.getVenta().isEstado() == true) {
+                gananciaHoy += nodo_root.getVenta().getTotal();
+            }
+            mostrarHoy(nodo_root.getDerecho());
+        }
+        if (gananciaHoy == 0.0f) {
+            lblResultado.setText("No hay ganancias en la fecha seleccionada.");
+        } else {
+            lblResultado.setText("La ganancia de hoy es "+gananciaHoy);
+        }
     }
 
     /**
@@ -20,14 +67,10 @@ public class JimGanancia extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnMostrar = new javax.swing.JButton();
         lblResultado = new javax.swing.JLabel();
+        jdcFecha = new com.toedter.calendar.JDateChooser();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -40,55 +83,49 @@ public class JimGanancia extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel2.setText("Mes:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 180, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel3.setText("Dia:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, -1, -1));
+        jLabel2.setText("FECHA:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 180, 60, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("Resultado:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 280, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, 30));
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 180, 130, 30));
-
-        jComboBox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 180, 120, 30));
-
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("Mostrar");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 180, -1, -1));
-
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setText("Seleccionar mes y/o dia");
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 230, -1, -1));
-
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Mostrar danancias de hoy");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 230, -1, -1));
+        btnMostrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnMostrar.setText("Mostrar");
+        btnMostrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnMostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 180, -1, 30));
 
         lblResultado.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        getContentPane().add(lblResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 250, 30));
+        getContentPane().add(lblResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 240, 250, 30));
+        getContentPane().add(jdcFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 180, 140, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
+        Date fechaSelecionada = jdcFecha.getDate();
+        gananciaHoy = 0.0f;
+        if (fechaSelecionada != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("d-M-yyyy");
+            fechaFormateada = formatter.format(fechaSelecionada);
+            mostrarHoy(crudGanancia.nodoGananciaPrincipal);
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una fecha.");
+        }
+    }//GEN-LAST:event_btnMostrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JButton btnMostrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private com.toedter.calendar.JDateChooser jdcFecha;
     private javax.swing.JLabel lblResultado;
     // End of variables declaration//GEN-END:variables
 }
