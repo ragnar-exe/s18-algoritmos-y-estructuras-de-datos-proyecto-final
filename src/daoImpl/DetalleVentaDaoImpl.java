@@ -59,13 +59,13 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
 
     public float calcularTotal(int idVenta) {
         DecimalFormat df = new DecimalFormat("0.00");
-        double total = 0.00;
+        double totalCal = 0.00;
         for (DetalleVenta dv : dVentas) {
             if (dv != null && dv.getIdVenta() == idVenta) {
-                total += (dv.getPrecio() * dv.getCantidad());
+                totalCal += (dv.getPrecio() * dv.getCantidad());
             }
         }
-        return Float.parseFloat(df.format(total));
+        return Float.parseFloat(df.format(totalCal));
     }
 
     public void clear() {
