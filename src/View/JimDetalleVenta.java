@@ -862,11 +862,11 @@ public class JimDetalleVenta extends javax.swing.JInternalFrame {
         }
         LocalDateTime hoy = LocalDateTime.now();
         String fechaYhora = hoy.getDayOfMonth() + "-" + hoy.getMonthValue() + "-" + hoy.getYear() + " " + hoy.getHour() + ":" + hoy.getMinute() + ":" + hoy.getSecond();
-        float totalImpu = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) / 1.18f;
+        float totalImpu = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) * 0.18f;
         totalImpu = Float.parseFloat(dfo.format(totalImpu));
-        float totalCompra = totalImpu + crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId());
-        totalCompra = Float.parseFloat(dfo.format(totalCompra));
-        IDaoVenta.agregar(new Venta(IDaoVenta.obtenerUltimoId(), idClienteVenta, crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()), totalCompra, totalImpu, fechaYhora, true));
+        float subTotl = crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()) - totalImpu;
+        subTotl = Float.parseFloat(dfo.format(subTotl));
+        IDaoVenta.agregar(new Venta(IDaoVenta.obtenerUltimoId(), idClienteVenta, crudDetalleVenta.calcularTotal(IDaoVenta.obtenerUltimoId()), subTotl, totalImpu, fechaYhora, true));
         IDaoVenta.guardarEnArchivo();
         FrmMenu menu = (FrmMenu) SwingUtilities.getWindowAncestor(this);  // Obtiene la ventana principal (FrmMenu)
         JDesktopPane jDesktopPane_menu = menu.getDesktopPane();  // Accede al JDesktopPane
