@@ -29,7 +29,7 @@ public class DetalleVentaDaoImpl implements IDaoGenerico<DetalleVenta> {
     private int size;
     private int star;
     private int end;
-    private static final String FILE_DVENTA = "dventa.txt";
+    static final String FILE_DVENTA = "dventa.txt";
     private static final String FILE_IDSDVENTA = "idsdventa.txt";
 
     public DetalleVentaDaoImpl() {
