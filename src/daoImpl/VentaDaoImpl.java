@@ -105,7 +105,7 @@ public class VentaDaoImpl implements IDaoGenerico<Venta> {
     public void guardarEnArchivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_VENTAS))) {
             for (Venta ven : ventas) {
-                writer.write(ven.getIdVenta()+ ";" + ven.getFecha() + ";" + ven.getIdCliente()+ ";" + ven.getTotal() + ";" + ven.getImpuestoTotal() + ";" + ven.getSubtotal()+ ";" + ven.isEstado());
+                writer.write(ven.getIdVenta()+ ";" + ven.getFecha() + ";" + ven.getIdCliente()+ ";"+ ven.getSubtotal()+ ";" + ven.getImpuestoTotal() +";"+ ven.getTotal()+ ";"+ ven.isEstado());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -124,9 +124,9 @@ public class VentaDaoImpl implements IDaoGenerico<Venta> {
                     int id = Integer.parseInt(datos[0]);
                     String fecha = datos[1];
                     int idCliente = Integer.parseInt(datos[2]);
-                    float total = Float.parseFloat(datos[3]);
+                    float subTotal = Float.parseFloat(datos[3]);
                     float impuesTotal = Float.parseFloat(datos[4]);
-                    float subTotal = Float.parseFloat(datos[5]);
+                    float total = Float.parseFloat(datos[5]);
                     boolean estado = Boolean.parseBoolean(datos[6]);
                     ventas.add(new Venta(id, idCliente, total, subTotal, impuesTotal, fecha, estado));
                 }
