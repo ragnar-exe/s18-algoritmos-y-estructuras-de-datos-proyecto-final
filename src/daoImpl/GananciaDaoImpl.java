@@ -43,9 +43,9 @@ public class GananciaDaoImpl {
                     int id = Integer.parseInt(datos[0]);
                     String fecha = datos[1];
                     int idCliente = Integer.parseInt(datos[2]);
-                    float total = Float.parseFloat(datos[3]);
+                    float subTotal = Float.parseFloat(datos[3]);
                     float impuesTotal = Float.parseFloat(datos[4]);
-                    float subTotal = Float.parseFloat(datos[5]);
+                    float total = Float.parseFloat(datos[5]);
                     boolean estado = Boolean.parseBoolean(datos[6]);
                     Venta venta = new Venta(idCliente, idCliente, total, subTotal, impuesTotal, fecha, estado);
                     if (nodoGananciaPrincipal == null) {
