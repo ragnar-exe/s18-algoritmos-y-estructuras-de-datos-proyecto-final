@@ -46,8 +46,8 @@ public class JimVenta extends javax.swing.JInternalFrame {
                         filaDatos[2] = cli.getNombres() + " " + cli.getApellidos();
                     }
                 }
-                filaDatos[3] = ven.getSubtotal();
-                filaDatos[4] = ven.getImpuestoTotal();
+                filaDatos[3] = ven.getImpuestoTotal();
+                filaDatos[4] = ven.getSubtotal();
                 filaDatos[5] = ven.getTotal();
                 modelo.addRow(filaDatos);
             }
@@ -112,7 +112,7 @@ public class JimVenta extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Fecha", "Cliente", "Subtotal", "Total impuestos", "Total"
+                "ID", "Fecha", "Cliente", "Total Impuestos", "Subtotal", "Total"
             }
         ));
         jScrollPane4.setViewportView(tblVentas);
