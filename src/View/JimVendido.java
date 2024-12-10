@@ -1,16 +1,68 @@
 package View;
 
+import daoImpl.CategoriaDaoImpl;
+import daoImpl.ColorDaoImpl;
+import daoImpl.ContieneDaoImpl;
+import daoImpl.MarcaDaoImpl;
+import daoImpl.ProductoDaoImpl;
+import daoImpl.TallaDaoImpl;
+import daoImpl.VendidoDaoImpl;
 import javax.swing.JDesktopPane;
+import javax.swing.table.DefaultTableModel;
+import model.DetalleVenta;
+import model.Nodo;
 
 
 public class JimVendido extends javax.swing.JInternalFrame {
-
-//    public static JDesktopPane jDesktopPane_menu;
+    private VendidoDaoImpl crudVendido;
+    private DefaultTableModel modelo;
+    private Object[] filaDatos;
+    private ProductoDaoImpl IDaoProducto;
+    private CategoriaDaoImpl IDaoCategoria;
+    private MarcaDaoImpl IDaoMarca;
+    private TallaDaoImpl IDaoTalla;
+    private ColorDaoImpl IDaoColor;
+    private ContieneDaoImpl IDaoContiene;
+    
     public JimVendido() {
         initComponents();
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
         this.setSize(ancho, alto-106);
+        crudVendido = new VendidoDaoImpl();
+        modelo = new DefaultTableModel();
+        filaDatos = new Object[8];
+        IDaoProducto = new ProductoDaoImpl();
+        IDaoCategoria = new CategoriaDaoImpl();
+        IDaoMarca = new MarcaDaoImpl();
+        IDaoTalla = new TallaDaoImpl();
+        IDaoColor = new ColorDaoImpl();
+        IDaoContiene = new ContieneDaoImpl();
+        listarProductosVendidos();
+    }
+    
+    private void listarProductosVendidos() {
+        modelo = (DefaultTableModel) tblProductosVendidos.getModel();
+        for (DetalleVenta devent : crudVendido.listar()) {
+            if (devent != null ) {
+                Nodo aux = IDaoContiene.inicio;
+                while (aux != null) {
+                    if (aux.getContiene().getIdContiene() == devent.getIdProducto()) {
+                        filaDatos[0] = devent.getIdProducto();
+                        filaDatos[1] = IDaoProducto.obtenerNombre(aux.getContiene().getIdProducto());
+                        filaDatos[2] = IDaoCategoria.obtenerNombre(IDaoProducto.obtenerCategoria(aux.getContiene().getIdProducto()));
+                        filaDatos[3] = IDaoMarca.obtenerNombre(aux.getContiene().getIdMarca());
+                        filaDatos[4] = IDaoTalla.obtenerNombre(aux.getContiene().getIdTalla());
+                        filaDatos[5] = IDaoColor.obtenerNombre(aux.getContiene().getIdColor());
+                        filaDatos[6] = devent.getPrecio();
+                        filaDatos[7] = devent.getCantidad();
+                        modelo.addRow(filaDatos);
+                    }
+                    aux = aux.siguiente;
+                }
+            }
+        }
+        
     }
 
     /**
@@ -29,7 +81,7 @@ public class JimVendido extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProductosVendidos = new javax.swing.JTable();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -62,7 +114,7 @@ public class JimVendido extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 150, 83, 32));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProductosVendidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -70,7 +122,7 @@ public class JimVendido extends javax.swing.JInternalFrame {
                 "ID", "Nombre", "Categoría", "Marca", "Talla", "Color", "Precio", "Cantidad"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblProductosVendidos);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 210, 1120, 291));
 
@@ -90,6 +142,6 @@ public class JimVendido extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblProductosVendidos;
     // End of variables declaration//GEN-END:variables
 }
